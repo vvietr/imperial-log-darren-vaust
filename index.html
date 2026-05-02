@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Imperial Datapad - GC-3170</title>
-    <meta property="og:title" content="Imperial Datalog // GC-3170">
-    <meta property="og:description" content="ISB-Pattern Encrypted Terminal. Personal files encrypted. Authorized access only.">
+    
+    <meta property="og:title" content="Imperial Datapad // GC-3170">
+    <meta property="og:description" content="ISB-Pattern Encrypted Terminal. Authorized access only.">
     <meta property="og:type" content="website">
-    
     <meta property="og:url" content="https://vvietr.github.io/imperial-log-darren-vaust/">
-    <meta property="og:image" content="https://vvietr.github.io/imperial-log-darren-vaust/preview.PNG">
-    
-    <meta name="theme-color" content="#8be9fd">
+    <meta property="og:image" content="https://vvietr.github.io/imperial-log-darren-vaust/preview.png">
+    <meta name="theme-color" content="#8be9fd"> 
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
         @import url('https://fonts.cdnfonts.com/css/aurebesh');
@@ -28,71 +28,45 @@
             --term-yellow: #f1fa8c; 
         }
 
-        body {
-            background-color: #050505;
-            display: flex; justify-content: center; align-items: center;
-            height: 100vh; margin: 0;
-            font-family: 'Share Tech Mono', monospace;
-            color: var(--term-white);
-            user-select: none; overflow: hidden; 
-        }
+        body { background-color: #050505; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: 'Share Tech Mono', monospace; color: var(--term-white); user-select: none; overflow: hidden; }
 
-        .datapad-bezel {
-            background-color: var(--bezel-color);
-            padding: 30px 15px 40px 15px; border-radius: 12px;
-            width: 98vw; max-width: 1600px; height: 95vh;
-            display: flex; flex-direction: column; position: relative;
-            transform: perspective(2000px) rotateX(1.5deg);
-            transform-style: preserve-3d;
-            border-bottom: 12px solid #111; border-top: 2px solid #3a3a3a; 
-            box-shadow: inset 0 0 10px #000, 0 30px 60px rgba(0,0,0,0.9); 
-        }
+        .datapad-bezel { background-color: var(--bezel-color); padding: 30px 15px 40px 15px; border-radius: 12px; width: 98vw; max-width: 1600px; height: 95vh; display: flex; flex-direction: column; position: relative; transform: perspective(2000px) rotateX(1.5deg); transform-style: preserve-3d; border-bottom: 12px solid #111; border-top: 2px solid #3a3a3a; box-shadow: inset 0 0 10px #000, 0 30px 60px rgba(0,0,0,0.9); }
 
-        .screen {
-            background-color: var(--term-bg);
-            border: 2px solid var(--term-cyan); border-radius: 30px; 
-            flex-grow: 1; padding: 20px; position: relative;
-            overflow: hidden; display: flex; flex-direction: column;
-            box-shadow: inset 0 0 100px rgba(0,0,0,0.95), inset 0 0 20px var(--term-glow), 0 0 15px var(--term-glow);
-        }
-
-        .screen::before {
-            content: " "; display: block; position: absolute;
-            top: 0; left: 0; bottom: 0; right: 0;
-            background: radial-gradient(circle at 50% 5%, rgba(255, 255, 255, 0.08) 0%, transparent 45%);
-            z-index: 25; pointer-events: none;
-        }
-
-        .screen::after {
-            content: " "; display: block; position: absolute;
-            top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            z-index: 20; background-size: 100% 4px, 3px 100%;
-            pointer-events: none; animation: scrollLines 10s linear infinite;
-        }
+        .screen { background-color: var(--term-bg); border: 2px solid var(--term-cyan); border-radius: 30px; flex-grow: 1; padding: 20px; position: relative; overflow: hidden; display: flex; flex-direction: column; box-shadow: inset 0 0 100px rgba(0,0,0,0.95), inset 0 0 20px var(--term-glow), 0 0 15px var(--term-glow); }
+        .screen::before { content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0; background: radial-gradient(circle at 50% 5%, rgba(255, 255, 255, 0.08) 0%, transparent 45%); z-index: 25; pointer-events: none; }
+        .screen::after { content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); z-index: 20; background-size: 100% 4px, 3px 100%; pointer-events: none; animation: scrollLines 10s linear infinite; }
         @keyframes scrollLines { 0% { background-position: 0 0; } 100% { background-position: 0 100%; } }
 
         #pre-boot-screen { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--term-bg); z-index: 15; display: flex; justify-content: center; align-items: center; cursor: pointer; }
         .blink-text { font-size: 1.5rem; color: var(--term-cyan); animation: blink 1.5s infinite; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-        #boot-sequence { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--term-bg); z-index: 10; padding: 30px; display: none; flex-direction: column; }
+        /* BOOT SCREEN UPDATES */
+        #boot-sequence { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--term-bg); z-index: 10; padding: 40px; display: none; flex-direction: row; justify-content: space-between; align-items: center; }
+        .boot-text-container { flex-grow: 1; display: flex; flex-direction: column; height: 100%; justify-content: center; }
         .boot-header { border-bottom: 1px solid var(--term-cyan); padding-bottom: 10px; margin-bottom: 15px; }
         .layman-line { opacity: 0; margin: 5px 0; font-size: 1.2rem; font-weight: bold; }
-        #jargon-box { display: flex; flex-direction: column; font-size: 0.9rem; color: var(--term-cyan); line-height: 1.1; flex-grow: 1; overflow: hidden; position: relative; margin-top: 10px; }
+        #jargon-box { display: flex; flex-direction: column; font-size: 0.9rem; color: var(--term-cyan); line-height: 1.1; height: 300px; overflow: hidden; position: relative; margin-top: 10px; }
         .jargon-line { margin: 2px 0; font-family: monospace; opacity: 0.7; }
-        .ag-text { opacity: 0; color: var(--term-green); font-weight: bold; font-size: 2rem; text-align: center; margin-top: 20px; }
+        .ag-text { opacity: 0; color: var(--term-green); font-weight: bold; font-size: 2rem; margin-top: 20px; }
+        .boot-logo-container { width: 400px; display: flex; justify-content: center; align-items: center; opacity: 0.2; animation: pulseGlow 4s infinite alternate; }
+        .boot-logo-container img { width: 100%; height: auto; animation: slowSpin 20s linear infinite; }
+        
+        @keyframes slowSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes pulseGlow { 0% { filter: drop-shadow(0 0 10px var(--term-cyan)); } 100% { filter: drop-shadow(0 0 40px var(--term-cyan)); } }
+
         .l-1 { animation: keepText 0.1s 0.5s forwards; } .l-2 { animation: keepText 0.1s 2.0s forwards; } .l-3 { animation: keepText 0.1s 4.0s forwards; } .ag-1 { animation: keepText 0.1s 6.5s forwards; }
         @keyframes keepText { 0% { opacity: 0; } 100% { opacity: 1; } }
         .fade-out { animation: fadeOutEffect 0.5s forwards; pointer-events: none; }
         @keyframes fadeOutEffect { 100% { opacity: 0; visibility: hidden; } }
 
-        header { display: flex; justify-content: space-between; border-bottom: 2px solid var(--term-cyan); padding-bottom: 15px; margin-bottom: 15px; z-index: 5; }
+        /* HEADER UPDATES */
+        header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid var(--term-cyan); padding-bottom: 15px; margin-bottom: 15px; z-index: 5; }
         .header-info { display: flex; flex-direction: column; gap: 5px; }
         .title-main { font-size: 1.2rem; font-weight: bold; color: var(--term-white); border-bottom: 1px dashed var(--term-cyan); padding-bottom: 5px; margin: 5px 0 10px 0; display: inline-block; }
         .aurebesh { font-family: 'Aurebesh', sans-serif; color: var(--term-cyan); font-size: 1.2rem; letter-spacing: 2px; }
-        
-        .imperial-logo { width: 80px; height: 80px; flex-shrink: 0; background-image: radial-gradient(circle, var(--term-white) 20%, transparent 21%), conic-gradient(transparent 10deg, var(--term-white) 11deg 49deg, transparent 50deg 70deg, var(--term-white) 71deg 109deg, transparent 110deg 130deg, var(--term-white) 131deg 169deg, transparent 170deg 190deg, var(--term-white) 191deg 229deg, transparent 230deg 250deg, var(--term-white) 251deg 289deg, transparent 290deg 310deg, var(--term-white) 311deg 349deg, transparent 350deg); border-radius: 50%; border: 4px solid var(--term-white); }
+        .header-logo { width: 80px; height: 80px; flex-shrink: 0; opacity: 0.8; filter: drop-shadow(0 0 8px var(--term-cyan)); }
+
         .connection-bar { height: 8px; width: 100%; background-color: #222; margin-bottom: 15px; position: relative; overflow: hidden; flex-shrink: 0; z-index: 5; }
         .connection-indicator { height: 100%; width: 20%; background-color: var(--term-cyan); position: absolute; animation: ping 3s infinite ease-in-out; }
         @keyframes ping { 0% { left: -20%; } 50% { left: 100%; } 100% { left: -20%; } }
@@ -102,7 +76,7 @@
         .tab-btn:hover { background: var(--term-dim); border-color: var(--term-cyan); }
         .tab-btn.active { background: rgba(139, 233, 253, 0.2); border-color: var(--term-cyan); box-shadow: 0 0 10px var(--term-glow); }
 
-        .content-grid { display: grid; grid-template-columns: 1fr 250px; gap: 20px; flex-grow: 1; overflow: hidden; z-index: 5; }
+        .content-grid { display: grid; grid-template-columns: 1fr 280px; gap: 20px; flex-grow: 1; overflow: hidden; z-index: 5; }
         .log-window { background-color: rgba(139, 233, 253, 0.05); border: 1px solid rgba(139, 233, 253, 0.3); padding: 20px; overflow-y: auto; z-index: 3; scrollbar-width: thin; scrollbar-color: var(--term-cyan) transparent; line-height: 1.6; }
         .tab-content { display: none; height: 100%; }
         .tab-content.active { display: block; animation: fadeIn 0.3s ease-in; }
@@ -110,12 +84,20 @@
 
         .explorer-layout { display: grid; grid-template-columns: 280px 1fr; gap: 20px; height: 100%; }
         .explorer-list { border-right: 1px dashed var(--term-cyan); padding-right: 15px; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; }
-        .explorer-btn { background: rgba(0,0,0,0.5); border: 1px solid var(--term-dim); color: var(--term-cyan); padding: 12px 15px; text-align: left; font-family: 'Share Tech Mono', monospace; cursor: pointer; transition: all 0.2s; clip-path: polygon(0 0, 95% 0, 100% 15px, 100% 100%, 5% 100%, 0 calc(100% - 15px)); }
+        
+        /* UPDATED EXPLORER BUTTON FOR ELLIPSIS AND MULTI-LINE */
+        .explorer-btn { background: rgba(0,0,0,0.5); border: 1px solid var(--term-dim); color: var(--term-cyan); padding: 12px 15px; text-align: left; font-family: 'Share Tech Mono', monospace; cursor: pointer; transition: all 0.2s; clip-path: polygon(0 0, 95% 0, 100% 15px, 100% 100%, 5% 100%, 0 calc(100% - 15px)); display: flex; flex-direction: column; gap: 4px; }
         .explorer-btn:hover { background: var(--term-dim); color: var(--term-white); }
         .explorer-btn.active { background: var(--term-yellow); color: #000; font-weight: bold; border-color: var(--term-yellow); }
+        .btn-date { font-size: 0.75rem; opacity: 0.7; }
+        .btn-title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; font-size: 0.95rem; }
+
         .explorer-view { padding: 5px 15px; overflow-y: auto; position: relative; }
         .entry-content { display: none; }
         .entry-content.active { display: block; animation: fadeIn 0.2s ease-in; }
+
+        /* FULL TITLE HEADER IN ENTRY VIEW */
+        .full-entry-title { font-size: 1.3rem; font-weight: bold; color: var(--term-white); border-bottom: 1px solid var(--term-dim); padding-bottom: 10px; margin-bottom: 15px; text-transform: uppercase; }
 
         .audio-player-ui { border: 1px solid var(--term-cyan); background: rgba(0, 0, 0, 0.4); padding: 15px; margin-bottom: 20px; display: flex; align-items: center; gap: 20px; }
         .play-btn { width: 50px; height: 50px; background: transparent; border: 2px solid var(--term-cyan); color: var(--term-cyan); cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 1.5rem; transition: all 0.1s; }
@@ -126,8 +108,17 @@
         .wave-bar:nth-child(even) { height: 70%; } .wave-bar:nth-child(odd) { height: 30%; } .wave-bar:nth-child(3n) { height: 90%; } .wave-bar:nth-child(5n) { height: 50%; }
         .audio-status { font-family: 'Share Tech Mono', monospace; font-size: 0.9rem; text-align: right; min-width: 150px; }
 
+        /* SIDEBAR SENSOR MODULES */
         .schematics-window { display: flex; flex-direction: column; gap: 15px; z-index: 3; overflow-y: auto; }
-        .schematic-box { border: 1px dashed var(--term-cyan); min-height: 120px; display: flex; justify-content: center; align-items: center; text-align: center; font-size: 0.8rem; opacity: 0.7; }
+        
+        .sensor-readout { border: 1px solid var(--term-cyan); background: rgba(0,0,0,0.5); padding: 15px; display: flex; flex-direction: column; gap: 8px; font-size: 0.85rem; position: relative; }
+        .sensor-readout::before { content: ""; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--term-cyan); }
+        .sensor-header { font-family: 'Aurebesh', sans-serif; color: var(--term-cyan); font-size: 1.1rem; border-bottom: 1px dashed var(--term-dim); padding-bottom: 5px; margin-bottom: 5px; }
+        .sensor-row { display: flex; justify-content: space-between; align-items: center; }
+        .sensor-label { opacity: 0.7; }
+        .sensor-val { font-weight: bold; color: var(--term-white); }
+        .sensor-val.danger { color: var(--term-red); animation: blink 1.5s infinite; }
+
         .sys-log-box { border: 1px solid rgba(139, 233, 253, 0.3); background-color: rgba(0,0,0,0.5); padding: 10px; flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
         .sys-log-header { font-size: 0.8rem; border-bottom: 1px solid var(--term-dim); padding-bottom: 5px; margin-bottom: 5px; color: var(--term-cyan); }
         #sys-log-content { font-size: 0.75rem; color: rgba(139, 233, 253, 0.6); display: flex; flex-direction: column; justify-content: flex-end; flex-grow: 1; gap: 4px; }
@@ -143,19 +134,16 @@
     <audio id="snd-boot-loop" src="boot_loop.mp3" loop></audio>
     <audio id="snd-boot-finish" src="boot_finish.mp3"></audio>
     <audio id="snd-ambient" src="ambient.mp3" loop></audio>
-
     <audio id="snd-beep-1" src="beep_1.mp3"></audio>
     <audio id="snd-beep-2" src="beep_2.mp3"></audio>
     <audio id="snd-beep-3" src="beep_3.mp3"></audio>
     <audio id="snd-beep-4" src="beep_4.mp3"></audio>
     <audio id="snd-beep-5" src="beep_5.mp3"></audio>
-    
     <audio id="snd-beepboop-1" src="beepboop_1.mp3"></audio>
     <audio id="snd-beepboop-2" src="beepboop_2.mp3"></audio>
     <audio id="snd-beepboop-3" src="beepboop_3.mp3"></audio>
     <audio id="snd-beepboop-4" src="beepboop_4.mp3"></audio>
     <audio id="snd-beepboop-5" src="beepboop_5.mp3"></audio>
-
     <audio id="snd-denied" src="denied.mp3"></audio>
     <audio id="snd-whirup-1" src="whirup_1.mp3"></audio>
     <audio id="snd-whirup-2" src="whirup_2.mp3"></audio>
@@ -172,13 +160,18 @@
             <div id="pre-boot-screen"><p class="blink-text">> AWAITING USER INPUT. CLICK TO INITIALIZE.</p></div>
 
             <div id="boot-sequence">
-                <div class="boot-header">
-                    <p class="layman-line l-1">> SYSTEM INITIALIZATION...</p>
-                    <p class="layman-line l-2">> VERIFYING LOCAL CLEARANCE CODES...</p>
-                    <p class="layman-line l-3">> VALIDATING ISB ENCRYPTION PROTOCOLS...</p>
+                <div class="boot-text-container">
+                    <div class="boot-header">
+                        <p class="layman-line l-1">> SYSTEM INITIALIZATION...</p>
+                        <p class="layman-line l-2">> VERIFYING LOCAL CLEARANCE CODES...</p>
+                        <p class="layman-line l-3">> VALIDATING ISB ENCRYPTION PROTOCOLS...</p>
+                    </div>
+                    <div id="jargon-box"></div>
+                    <p class="ag-text ag-1 aurebesh">ACCESS GRANTED</p>
                 </div>
-                <div id="jargon-box"></div>
-                <p class="ag-text ag-1 aurebesh">ACCESS GRANTED</p>
+                <div class="boot-logo-container">
+                    <img src="empire_logo_blue.PNG" alt="Imperial Crest">
+                </div>
             </div>
 
             <header>
@@ -189,7 +182,7 @@
                     <span>TERMINAL ID: T-88-FELUCIA</span>
                     <span>CURRENT USER: [GUEST_AUTHORIZATION]</span>
                 </div>
-                <div class="imperial-logo"></div>
+                <img src="empire_logo_blue.PNG" class="header-logo" alt="Imperial Crest">
             </header>
 
             <div class="connection-bar"><div class="connection-indicator"></div></div>
@@ -210,7 +203,7 @@
                         <div style="color: var(--term-cyan); opacity: 0.4; letter-spacing: 2px; margin-bottom: 15px;">// ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬ //</div>
                         <p><span class="highlight">[■] TROOPER NAME:</span> Darren Vaust</p>
                         <p><span class="highlight">[■] DESIGNATION:</span> GC-3170</p>
-                        <p><span class="highlight">[■] D.O.B:</span>05.10.17</p>
+                        <p><span class="highlight">[■] D.O.B:</span> 05.10.17</p>
                         <p><span class="highlight">[■] PLACE OF ORIGIN:</span> Coronet City, Corellia</p>
                         <p><span class="highlight">[■] RANK:</span> Enlisted - Corporal</p>
                         <div style="color: var(--term-cyan); opacity: 0.4; letter-spacing: 2px; margin: 15px 0;">// ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬ //</div>
@@ -227,15 +220,18 @@
                     <div id="commendations" class="tab-content">
                         <div class="explorer-layout">
                             <div class="explorer-list" id="list-commendations">
-                                <button class="explorer-btn active" onclick="openEntry('com-master', this); playBeep(2)">[ AWARDS MASTER FILE ]</button>
+                                <button class="explorer-btn active" onclick="openEntry('com-master', this); playBeep(2)">
+                                    <div class="btn-title">[ AWARDS MASTER FILE ]</div>
+                                </button>
                             </div>
                             <div class="explorer-view" id="view-commendations">
                                 <div id="com-master" class="entry-content active">
+                                    <div class="full-entry-title">Awards Master File</div>
                                     <div style="color: var(--term-cyan); opacity: 0.4; letter-spacing: 2px; margin-bottom: 15px;">// ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬ //</div>
                                     <p><span class="highlight">[■] COMMENDATION RECORDS</span></p>
                                     <div style="color: var(--term-cyan); opacity: 0.4; letter-spacing: 2px; margin: 15px 0;">// ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬ //</div>
-                                    <p><strong>► Sienar Fleet Systems - Technician of the month x2 (32.9, 32.10);</strong><br> Awarded for superior performance in grid management and power electronics logistics and repair.</p><br>
-                                    <p><strong>► Sienar Fleet Systems - Technician of the year, 32;</strong><br> Awarded for outstanding performance in grid management and power electronics logistics and repair.</p><br>
+                                    <p><strong>► Sienar Fleet Systems - Technician of the month x2;</strong><br> Awarded for superior performance in grid management and power electronics logistics and repair.</p><br>
+                                    <p><strong>► Sienar Fleet Systems - Technician of the year, 3 BBY;</strong><br> Awarded for outstanding performance in grid management and power electronics logistics and repair.</p><br>
                                     <p><strong>► 327th - Imperial Valor Citation</strong><br> As detailed in both his and the adjoining sapper squadron ESK's report of the expedition, in the absence of sufficient escort personnel, GC-3170 volunteered to run over 4000 units through untenable forest-geography between a drill site on Felucia and its overseeing garrison base to acquire a critical repair component. His justification was that he was "out of ammo, out of time, left with only one thing to do: deliver despite the odds". His selfless dedication to service resulted in the restoration of drill 1 and the return of the sapper squad intact.</p>
                                 </div>
                             </div>
@@ -245,10 +241,13 @@
                     <div id="infractions" class="tab-content">
                         <div class="explorer-layout">
                             <div class="explorer-list" id="list-infractions">
-                                <button class="explorer-btn active" onclick="openEntry('inf-master', this); playBeep(2)">[ PENAL MASTER FILE ]</button>
+                                <button class="explorer-btn active" onclick="openEntry('inf-master', this); playBeep(2)">
+                                    <div class="btn-title">[ PENAL MASTER FILE ]</div>
+                                </button>
                             </div>
                             <div class="explorer-view" id="view-infractions">
                                 <div id="inf-master" class="entry-content active">
+                                    <div class="full-entry-title">Penal Master File</div>
                                     <div style="color: var(--term-cyan); opacity: 0.4; letter-spacing: 2px; margin-bottom: 15px;">// ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬ //</div>
                                     <p><span class="highlight">[■] INFRACTION RECORDS</span></p>
                                     <div style="color: var(--term-cyan); opacity: 0.4; letter-spacing: 2px; margin: 15px 0;">// ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬ //</div>
@@ -275,12 +274,15 @@
                     <div id="evaluations" class="tab-content">
                          <div class="explorer-layout">
                             <div class="explorer-list" id="list-evaluations">
-                                <button class="explorer-btn active" onclick="openEntry('eval-master', this); playBeep(2)">[ PEER EVALUATION ]</button>
+                                <button class="explorer-btn active" onclick="openEntry('eval-master', this); playBeep(2)">
+                                    <div class="btn-title">[ PEER EVALUATION ]</div>
+                                </button>
                             </div>
                             <div class="explorer-view" id="view-evaluations">
                                 <div id="eval-master" class="entry-content active">
+                                    <div class="full-entry-title">Peer Evaluation System</div>
                                     <div style="color: var(--term-cyan); opacity: 0.4; letter-spacing: 2px; margin-bottom: 15px;">// ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬ //</div>
-                                    <p><span class="highlight">[■] PEER EVALUATION SYSTEM</span></p>
+                                    <p><span class="highlight">[■] NOTICE</span></p>
                                     <div style="color: var(--term-cyan); opacity: 0.4; letter-spacing: 2px; margin: 15px 0;">// ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬ //</div>
                                     <p style="color: var(--term-red);">[!] Notice: Direct terminal injection is offline due to local Felucian grid instability. All personnel files must be submitted via secondary relay.</p><br>
                                     <p style="opacity: 0.6; font-style: italic;">[ AWAITING FUTURE FORM INTEGRATION ]</p>
@@ -292,7 +294,31 @@
                 </div>
 
                 <div class="schematics-window">
-                    <div class="schematic-box" style="min-height: 100px;">[GRID MAP]</div>
+                    
+                    <div class="sensor-readout">
+                        <div class="sensor-header">LOCAL TELEMETRY</div>
+                        <div class="sensor-row">
+                            <span class="sensor-label">DATE:</span>
+                            <span class="sensor-val" id="telemetry-date">--.--.--</span>
+                        </div>
+                        <div class="sensor-row">
+                            <span class="sensor-label">LOCAL CYCLE:</span>
+                            <span class="sensor-val" id="telemetry-time">--.-h</span>
+                        </div>
+                        <div class="sensor-row">
+                            <span class="sensor-label">WEATHER:</span>
+                            <span class="sensor-val" id="telemetry-weather">SCANNING...</span>
+                        </div>
+                        <div class="sensor-row">
+                            <span class="sensor-label">SURFACE TEMP:</span>
+                            <span class="sensor-val" id="telemetry-temp">--°F</span>
+                        </div>
+                        <div class="sensor-row">
+                            <span class="sensor-label">VISIBILITY:</span>
+                            <span class="sensor-val" id="telemetry-vis">--%</span>
+                        </div>
+                    </div>
+
                     <div class="sys-log-box">
                         <div class="sys-log-header aurebesh">SYS LOG MONITOR</div>
                         <div id="sys-log-content"></div>
@@ -306,19 +332,8 @@
     <script src="database.js"></script>
 
     <script>
-        function playAudio(id, vol = 1.0) {
-            const sound = document.getElementById(id);
-            if(sound) {
-                sound.currentTime = 0; sound.volume = vol;
-                sound.play().catch(e => console.log("Audio not found:", id));
-            }
-        }
-        
-        function pauseAudio(id) {
-            const sound = document.getElementById(id);
-            if(sound) sound.pause();
-        }
-
+        function playAudio(id, vol = 1.0) { const sound = document.getElementById(id); if(sound) { sound.currentTime = 0; sound.volume = vol; sound.play().catch(e => console.log("Audio not found:", id)); } }
+        function pauseAudio(id) { const sound = document.getElementById(id); if(sound) sound.pause(); }
         function playBeep(num) { playAudio('snd-beep-' + num, 1.0); }
         function playWhirup(num) { playAudio('snd-whirup-' + num, 1.0); }
         function playDenied() { playAudio('snd-denied', 1.0); }
@@ -350,6 +365,7 @@
                 setTimeout(() => {
                     document.getElementById('boot-sequence').classList.add('fade-out');
                     startRandomActivity();
+                    initEnvironment(); // Launch weather calc after boot
                 }, 1500);
             }, 7000);
         });
@@ -388,44 +404,46 @@
             setTimeout(() => { statusText.innerText = "[ STANDBY ]"; statusText.style.color = "var(--term-cyan)"; }, 2000);
         }
 
-        // --- DATABASE RENDERING LOGIC ---
         function generateTerminalID(type, seedString) {
             if (!type) return "<span style='color:var(--term-red)'>[ UNREADABLE ]</span>";
             let t = type.toLowerCase();
             if (t === 'tablet') return "GC3170-PERSONAL-PAD";
-            
-            // Seeded hashing math
             let hash = 0;
             for (let i = 0; i < seedString.length; i++) { hash = seedString.charCodeAt(i) + ((hash << 5) - hash); }
             hash = Math.abs(hash);
-
             if (t === 'command') return "CMD-RELAY-" + (hash % 4 + 1).toString().padStart(2, '0');
             if (t === 'barracks') return "BRK-TERM-" + (hash % 3 + 1).toString().padStart(2, '0');
             if (t === 'field') return "FLD-NODE-" + hash.toString(16).toUpperCase().substring(0, 4);
             return "<span style='color:var(--term-red)'>[ UNKNOWN ORIGIN ]</span>";
         }
 
+        // Parse date for sorting math (YY.M.DD)
+        function parseGRSDate(dateStr) {
+            let cleanDate = dateStr.split('|')[0].trim();
+            let parts = cleanDate.split('.');
+            let yy = parseInt(parts[0]) || 0;
+            let mm = parseInt(parts[1]) || 0;
+            let dd = parseInt(parts[2]) || 0;
+            return (yy * 10000) + (mm * 100) + dd;
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
             if(typeof imperialLogs !== 'undefined') {
                 const audioContainer = document.getElementById('dynamic-audio-container');
                 
+                // SORT THE LOGS ARRAY (Newest First)
+                imperialLogs.sort((a, b) => parseGRSDate(b.date) - parseGRSDate(a.date));
+                
                 imperialLogs.forEach((log, index) => {
                     const listContainer = document.getElementById(`list-${log.tab}`);
                     const viewContainer = document.getElementById(`view-${log.tab}`);
-                    if (!listContainer || !viewContainer) return; // Failsafe
+                    if (!listContainer || !viewContainer) return;
 
-                    // 1. Logic Processing
                     let personnelData = log.personnel.trim() === "" ? "N/A" : log.personnel;
-                    let authorData = log.author.trim();
-                    if (authorData === "") {
-                        authorData = (log.tab === "logs") ? "GC-3170" : "<span style='color:var(--term-red)'>[ AUTHOR UNRETRIEVABLE ]</span>";
-                    }
+                    let authorData = log.author.trim() === "" ? (log.tab === "logs" ? "GC-3170" : "<span style='color:var(--term-red)'>[ AUTHOR UNRETRIEVABLE ]</span>") : log.author;
                     let terminalID = generateTerminalID(log.terminal, log.id + log.date);
-                    
-                    // Format the text body (preserves paragraph spaces)
                     let formattedBody = log.body.split('\n').map(p => p.trim() ? `<p>${p}</p>` : `<br>`).join('');
                     
-                    // Image Logic
                     let imageHTML = "";
                     if (log.imageExt && log.imageExt.trim() !== "") {
                         let imgName = `${log.id}_img.${log.imageExt.replace('.','')}`;
@@ -436,26 +454,27 @@
                         </div>`;
                     }
 
-                    // 2. Inject Audio Player File Hole
                     let audioFileID = `audio-${log.id}`;
                     audioContainer.innerHTML += `<audio id="${audioFileID}" src="${log.id}_audio.mp3"></audio>`;
 
-                    // 3. Create Explorer Button
+                    // Generate truncated explorer button with date
                     let btn = document.createElement('button');
-                    // If it's the very first item in an empty 'logs' tab, make it active
                     let isFirstItem = (listContainer.children.length === 0 && log.tab === "logs");
                     btn.className = isFirstItem ? "explorer-btn active" : "explorer-btn";
-                    btn.innerHTML = `[ ${log.title.substring(0,20).toUpperCase()} ]`;
                     btn.onclick = function() { openEntry(log.id, this); playBeep(2); };
+                    btn.innerHTML = `
+                        <div class="btn-date">[ ${log.date.split('|')[0].trim()} ]</div>
+                        <div class="btn-title">${log.title.toUpperCase()}</div>
+                    `;
                     listContainer.appendChild(btn);
 
-                    // 4. Create Explorer View
+                    // Generate full view with large header
                     let view = document.createElement('div');
                     view.className = isFirstItem ? "entry-content active" : "entry-content";
                     view.id = log.id;
                     view.innerHTML = `
+                        <div class="full-entry-title">${log.title}</div>
                         <div style="color: var(--term-cyan); opacity: 0.4; letter-spacing: 2px; margin-bottom: 15px;">// ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬ //</div>
-                        
                         <div class="audio-player-ui">
                             <button class="play-btn" onclick="triggerAudioLog('${audioFileID}', 'status-${log.id}')">▶</button>
                             <div class="waveform">
@@ -463,7 +482,6 @@
                             </div>
                             <div id="status-${log.id}" class="audio-status" style="color: var(--term-cyan);">[ STANDBY ]</div>
                         </div>
-
                         <div style="color: var(--term-cyan); opacity: 0.4; letter-spacing: 2px; margin: 15px 0;">// ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬ //</div>
                         <p><span class="highlight">[■] DATE:</span> ${log.date}</p>
                         <p><span class="highlight">[■] AUTHOR:</span> ${authorData}</p>
@@ -478,6 +496,62 @@
                 });
             }
         });
+
+        // --- DYNAMIC ENVIRONMENT ALGORITHM ---
+        function initEnvironment() {
+            // 1. Calculate Date (+1 Day from latest log)
+            let latestDateStr = (typeof imperialLogs !== 'undefined' && imperialLogs.length > 0) ? imperialLogs[0].date.split('|')[0].trim() : "34.1.01";
+            let parts = latestDateStr.split('.');
+            let yy = parseInt(parts[0]); let mm = parseInt(parts[1]); let dd = parseInt(parts[2]) + 1;
+            if(dd > 35) { dd = 1; mm++; } // Assuming ~35 days in a standard month
+            if(mm > 10) { mm = 1; yy++; }
+            document.getElementById('telemetry-date').innerText = `${yy}.${mm}.${dd.toString().padStart(2, '0')}`;
+
+            // 2. Calculate Felucian Time
+            let realDate = new Date();
+            let percentOfDay = (realDate.getHours() * 60 + realDate.getMinutes()) / 1440;
+            let feluciaHour = percentOfDay * 34;
+            document.getElementById('telemetry-time').innerText = `${feluciaHour.toFixed(1)}h`;
+
+            // 3. Roll Weather
+            const weatherRolls = [
+                { name: "CLEAR", prob: 40, visPenalty: 0 },
+                { name: "LIGHT PRECIPITATION", prob: 30, visPenalty: 20 },
+                { name: "HEAVY PRECIPITATION", prob: 15, visPenalty: 50 },
+                { name: "SPORE STORM", prob: 10, visPenalty: 85, danger: true },
+                { name: "ION STORM", prob: 5, visPenalty: 95, danger: true }
+            ];
+            
+            let r = Math.random() * 100;
+            let cumulative = 0;
+            let currentWeath = weatherRolls[0];
+            for(let w of weatherRolls) {
+                cumulative += w.prob;
+                if(r <= cumulative) { currentWeath = w; break; }
+            }
+            
+            let wText = document.getElementById('telemetry-weather');
+            wText.innerText = currentWeath.name;
+            if(currentWeath.danger) wText.classList.add('danger');
+
+            // 4. Calculate Temperature (Sine curve peaking at 17h)
+            // 40F base + up to 45F variance based on time
+            let temp = Math.round(40 + 45 * Math.sin((feluciaHour / 34) * Math.PI));
+            document.getElementById('telemetry-temp').innerText = `${temp}°F`;
+
+            // 5. Calculate Visibility
+            // Night penalty: furthest from 17h (noon) = higher penalty. Max penalty = -30%
+            let distanceFromNoon = Math.abs(feluciaHour - 17); // 0 to 17
+            let nightPenalty = (distanceFromNoon / 17) * 30; 
+            
+            let visibility = 100 - currentWeath.visPenalty - nightPenalty;
+            if(visibility < 0) visibility = 0;
+            if(visibility > 100) visibility = 100;
+            
+            let vText = document.getElementById('telemetry-vis');
+            vText.innerText = `${Math.round(visibility)}%`;
+            if(visibility < 25) vText.classList.add('danger');
+        }
 
         function startRandomActivity() {
             const logBox = document.getElementById('sys-log-content');
