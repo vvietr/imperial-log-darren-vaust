@@ -311,15 +311,15 @@
             const sound = document.getElementById(id);
             if(sound) {
                 // Remove the // below when files are uploaded to enable sound playback
-                // sound.currentTime = 0;
-                // sound.play().catch(e => console.log("Audio not found:", id));
+                sound.currentTime = 0;
+                sound.play().catch(e => console.log("Audio not found:", id));
             }
         }
         
         function pauseAudio(id) {
             const sound = document.getElementById(id);
             // Remove the // below when files are uploaded
-            // if(sound) sound.pause();
+            if(sound) sound.pause();
         }
 
         // Specific sound triggers
