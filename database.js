@@ -101,6 +101,7 @@ Moronic.`
 // 3. CUSTOM OVERRIDE: Every 10th message ignores the randomizer and plays 
 //    an exact object from 'customMessages'. Use for lore or direct orders.
 // ==========================================
+//{ user: "", body: "" },
 const chatDatabase = {
     names: ["TK-882", "GC-119", "SGT. KALLUS", "TECH-4", "RN-33", "BASE-CMD", "DX-DROID", "MAINT-LEAD", "GC-3170", "LT. VANE", "TK-8821", "TK-4211", "TK-1138", "TK-9091", "TK-5562", "TK-7741", "TK-3312", "TK-8144", "TK-2187", "TK-6651", "TK-4921", "TK-8819", "TK-1044", "TK-7332", "TK-5114", "GC-3170", "GC-8192", "GC-4451", "GC-9912", "GC-5531", "GC-7714", "GC-2291", "GC-8843", "GC-1104", "GC-3991", "GC-6112", "GC-4041", "GC-7881", "SP-8812", "SP-4190", "SP-2214", "SP-9981", "SP-5512", "SP-7124", "SP-1144", "SP-3392", "SP-8113", "SP-6621", "TP-3311", "TP-6641", "TP-8123", "TP-1142", "TP-9915", "TP-4418", "TP-7721", "TP-5519", "FT-4412", "FT-8814", "FT-2291", "FT-7713", "FT-5151", "FT-9911", "FT-3324", "FT-6118", "SGC-1124", "SGC-8841", "SGC-3319", "SGC-5511", "SGC-7721", "SGC-9914", "SGC-4412", "SGT. RENN", "SGT. VEX", "SGT. KALLUS", "SGT. DORN", "SGT. TARN", "SGT. VANE", "SGT. BRANT", "SGT. TYREE", "SGT. 8112", "SGT. 4419", "SGT. 7113", "IG-11", "IG-88", "IG-86", "IG-90", "IG-72", "IG-44", "IG-12", "BMD-7", "BMD-12", "BMD-1", "BMD-44", "BMD-9", "BMD-3", "BMD-81", "MD-5", "MD-1", "MD-9", "MD-2", "MD-11", "MD-77"],
     sectors: ["Sector 4", "Perimeter Alpha", "Drill Site", "Reactor B", "Spore Filter 2", "Mess Hall", "Hangar Bay", "Barracks", "Comms Relay", "Sector 4", "Sector 7G", "Sector 2", "Perimeter Alpha", "Perimeter Cresh", "Perimeter Aurek", "Drill Site 1", "Drill Site 2", "Drill Site 4", "Reactor Core", "Secondary Reactor", "Spore Filter 1", "Spore Filter 2", "Spore Filter 4", "Mess Hall", "Main Hangar", "Hangar Bay 32", "Hangar Bay 7", "Barracks Block A", "Barracks Block C", "Officer Quarters", "Comms Relay", "Primary Uplink", "Shield Generator", "Detention Block", "Armory", "Vehicle Bay", "AT-ST Walker Pen", "Command Center", "Medical Bay", "Supply Depot", "East Watchtower", "North Ridge Post", "Jungle Patrol Route", "Landing Pad Aurek", "Landing Pad Besh", "Coolant Tower", "Turbolift Shaft 4", "Turbolift Shaft 1", "Outer Perimeter", "Scrap Yard", "Droid Maintenance"],
@@ -111,5 +112,12 @@ const chatDatabase = {
         { user: "SGT_VEX", body: "All off-duty personnel report to courtyard for inspection." },
         { user: "GC-9033", body: "Who forgot to seal the secondary exhaust port filter-pod?" },
         { user: "TB-9006", body: "Which fatass ate all the fruit?" },
+        { user: "FT-1313", body: "I think a felucian dropped a big one in the toilet..." },
+        { user: "SGM-8351", body: "I don't have resentment for anyone except TBS-7385" },
+        { user: "TK-4498", body: "I propose that SGMs make all troopers assemble for drills." },
+        { user: "TK-4498", body: "Gotta whip them into shape." },
+        { user: "SGM-8351", body: "You jelly baby boy." },
+        { user: "GC-3170", body: "God forbid a team communicate..." },
+    
     ]
 };
