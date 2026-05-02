@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Imperial Datapad - GC-3170</title>
     
-    <meta property="og:title" content="Imperial Datapad // GC-3170">
-    <meta property="og:description" content="ISB-Pattern Encrypted Terminal. Authorized access only.">
+    <meta property="og:title" content="Imperial Datalog // GC-3170">
+    <meta property="og:description" content="ISB-Pattern Encrypted Terminal. Personal files encrypted. Authorized access only.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://vvietr.github.io/imperial-log-darren-vaust/">
     <meta property="og:image" content="https://vvietr.github.io/imperial-log-darren-vaust/preview.png">
@@ -37,46 +37,69 @@
         .screen::after { content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); z-index: 20; background-size: 100% 4px, 3px 100%; pointer-events: none; animation: scrollLines 10s linear infinite; }
         @keyframes scrollLines { 0% { background-position: 0 0; } 100% { background-position: 0 100%; } }
 
-        #pre-boot-screen { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--term-bg); z-index: 15; display: flex; justify-content: center; align-items: center; cursor: pointer; }
+        #pre-boot-screen { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--term-bg); z-index: 30; display: flex; justify-content: center; align-items: center; cursor: pointer; }
         .blink-text { font-size: 1.5rem; color: var(--term-cyan); animation: blink 1.5s infinite; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-        /* BOOT SCREEN UPDATES */
-        #boot-sequence { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--term-bg); z-index: 10; padding: 40px; display: none; flex-direction: row; justify-content: space-between; align-items: center; }
-        .boot-text-container { flex-grow: 1; display: flex; flex-direction: column; height: 100%; justify-content: center; }
+        /* --- UPDATED BOOT SCREEN --- */
+        #boot-sequence { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--term-bg); z-index: 20; padding: 40px; display: none; overflow: hidden; }
+        
+        .boot-text-column { position: relative; z-index: 5; height: 100%; width: 55%; display: flex; flex-direction: column; justify-content: space-between; }
+        
         .boot-header { border-bottom: 1px solid var(--term-cyan); padding-bottom: 10px; margin-bottom: 15px; }
         .layman-line { opacity: 0; margin: 5px 0; font-size: 1.2rem; font-weight: bold; }
-        #jargon-box { display: flex; flex-direction: column; font-size: 0.9rem; color: var(--term-cyan); line-height: 1.1; height: 300px; overflow: hidden; position: relative; margin-top: 10px; }
+        #jargon-box { display: flex; flex-direction: column; font-size: 0.9rem; color: var(--term-cyan); line-height: 1.1; flex-grow: 1; overflow: hidden; position: relative; margin-top: 10px; }
         .jargon-line { margin: 2px 0; font-family: monospace; opacity: 0.7; }
         .ag-text { opacity: 0; color: var(--term-green); font-weight: bold; font-size: 2rem; margin-top: 20px; }
-        .boot-logo-container { width: 400px; display: flex; justify-content: center; align-items: center; opacity: 0.2; animation: pulseGlow 4s infinite alternate; }
-        .boot-logo-container img { width: 100%; height: auto; animation: slowSpin 20s linear infinite; }
+
+        /* THE MASSIVE HERO LOGO (Shrouded with Gradient) */
+        .boot-logo-hero { 
+            position: absolute; right: -10%; top: -5%; height: 110%; width: 70%; 
+            z-index: 2; opacity: 0.25; pointer-events: none;
+            mask-image: linear-gradient(to right, black 20%, transparent 80%);
+            -webkit-mask-image: linear-gradient(to right, black 20%, transparent 80%);
+        }
+
+        /* --- CONCENTRIC SLICED LOGO SYSTEM --- */
+        .sliced-logo-container { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
+        .logo-slice { position: absolute; width: 100%; height: 100%; object-fit: contain; transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1); }
         
-        @keyframes slowSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        @keyframes pulseGlow { 0% { filter: drop-shadow(0 0 10px var(--term-cyan)); } 100% { filter: drop-shadow(0 0 40px var(--term-cyan)); } }
+        /* Clipping the rings */
+        .slice-outer { clip-path: circle(50% at 50% 50%); }
+        .slice-mid   { clip-path: circle(34% at 50% 50%); }
+        .slice-inner { clip-path: circle(19% at 50% 50%); }
+
+        /* Animations for "Processing" state (Out of sync rotations) */
+        .processing .slice-outer { animation: spinSlice 15s linear infinite; }
+        .processing .slice-mid   { animation: spinSlice 9s linear infinite reverse; }
+        .processing .slice-inner { animation: spinSlice 6s linear infinite; }
+
+        @keyframes spinSlice { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
         .l-1 { animation: keepText 0.1s 0.5s forwards; } .l-2 { animation: keepText 0.1s 2.0s forwards; } .l-3 { animation: keepText 0.1s 4.0s forwards; } .ag-1 { animation: keepText 0.1s 6.5s forwards; }
         @keyframes keepText { 0% { opacity: 0; } 100% { opacity: 1; } }
         .fade-out { animation: fadeOutEffect 0.5s forwards; pointer-events: none; }
         @keyframes fadeOutEffect { 100% { opacity: 0; visibility: hidden; } }
 
-        /* HEADER UPDATES */
-        header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid var(--term-cyan); padding-bottom: 15px; margin-bottom: 15px; z-index: 5; }
+        /* --- HEADER UPDATES --- */
+        header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid var(--term-cyan); padding-bottom: 15px; margin-bottom: 15px; z-index: 10; }
         .header-info { display: flex; flex-direction: column; gap: 5px; }
         .title-main { font-size: 1.2rem; font-weight: bold; color: var(--term-white); border-bottom: 1px dashed var(--term-cyan); padding-bottom: 5px; margin: 5px 0 10px 0; display: inline-block; }
         .aurebesh { font-family: 'Aurebesh', sans-serif; color: var(--term-cyan); font-size: 1.2rem; letter-spacing: 2px; }
-        .header-logo { width: 80px; height: 80px; flex-shrink: 0; opacity: 0.8; filter: drop-shadow(0 0 8px var(--term-cyan)); }
+        
+        /* Small Sliced Header Logo */
+        .header-logo-box { width: 85px; height: 85px; flex-shrink: 0; filter: drop-shadow(0 0 5px var(--term-cyan)); }
 
-        .connection-bar { height: 8px; width: 100%; background-color: #222; margin-bottom: 15px; position: relative; overflow: hidden; flex-shrink: 0; z-index: 5; }
+        .connection-bar { height: 8px; width: 100%; background-color: #222; margin-bottom: 15px; position: relative; overflow: hidden; flex-shrink: 0; z-index: 10; }
         .connection-indicator { height: 100%; width: 20%; background-color: var(--term-cyan); position: absolute; animation: ping 3s infinite ease-in-out; }
         @keyframes ping { 0% { left: -20%; } 50% { left: 100%; } 100% { left: -20%; } }
 
-        .tab-nav { display: flex; gap: 10px; margin-bottom: 15px; border-bottom: 1px solid var(--term-dim); padding-bottom: 10px; flex-wrap: wrap; z-index: 5; }
+        .tab-nav { display: flex; gap: 10px; margin-bottom: 15px; border-bottom: 1px solid var(--term-dim); padding-bottom: 10px; flex-wrap: wrap; z-index: 10; }
         .tab-btn { background: transparent; color: var(--term-white); border: 1px solid var(--term-dim); padding: 8px 15px; font-family: 'Share Tech Mono', monospace; cursor: pointer; transition: all 0.1s; }
         .tab-btn:hover { background: var(--term-dim); border-color: var(--term-cyan); }
         .tab-btn.active { background: rgba(139, 233, 253, 0.2); border-color: var(--term-cyan); box-shadow: 0 0 10px var(--term-glow); }
 
-        .content-grid { display: grid; grid-template-columns: 1fr 280px; gap: 20px; flex-grow: 1; overflow: hidden; z-index: 5; }
+        .content-grid { display: grid; grid-template-columns: 1fr 280px; gap: 20px; flex-grow: 1; overflow: hidden; z-index: 10; }
         .log-window { background-color: rgba(139, 233, 253, 0.05); border: 1px solid rgba(139, 233, 253, 0.3); padding: 20px; overflow-y: auto; z-index: 3; scrollbar-width: thin; scrollbar-color: var(--term-cyan) transparent; line-height: 1.6; }
         .tab-content { display: none; height: 100%; }
         .tab-content.active { display: block; animation: fadeIn 0.3s ease-in; }
@@ -85,8 +108,7 @@
         .explorer-layout { display: grid; grid-template-columns: 280px 1fr; gap: 20px; height: 100%; }
         .explorer-list { border-right: 1px dashed var(--term-cyan); padding-right: 15px; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; }
         
-        /* UPDATED EXPLORER BUTTON FOR ELLIPSIS AND MULTI-LINE */
-        .explorer-btn { background: rgba(0,0,0,0.5); border: 1px solid var(--term-dim); color: var(--term-cyan); padding: 12px 15px; text-align: left; font-family: 'Share Tech Mono', monospace; cursor: pointer; transition: all 0.2s; clip-path: polygon(0 0, 95% 0, 100% 15px, 100% 100%, 5% 100%, 0 calc(100% - 15px)); display: flex; flex-direction: column; gap: 4px; }
+        .explorer-btn { background: rgba(0,0,0,0.5); border: 1px solid var(--term-dim); color: var(--term-cyan); padding: 12px 15px; text-align: left; font-family: 'Share Tech Mono', monospace; cursor: pointer; transition: all 0.2s; clip-path: polygon(0 0, 95% 0, 100% 15px, 100% 100%, 5% 100%, 0 calc(100% - 15px)); display: flex; flex-direction: column; gap: 4px; overflow: hidden; }
         .explorer-btn:hover { background: var(--term-dim); color: var(--term-white); }
         .explorer-btn.active { background: var(--term-yellow); color: #000; font-weight: bold; border-color: var(--term-yellow); }
         .btn-date { font-size: 0.75rem; opacity: 0.7; }
@@ -96,7 +118,6 @@
         .entry-content { display: none; }
         .entry-content.active { display: block; animation: fadeIn 0.2s ease-in; }
 
-        /* FULL TITLE HEADER IN ENTRY VIEW */
         .full-entry-title { font-size: 1.3rem; font-weight: bold; color: var(--term-white); border-bottom: 1px solid var(--term-dim); padding-bottom: 10px; margin-bottom: 15px; text-transform: uppercase; }
 
         .audio-player-ui { border: 1px solid var(--term-cyan); background: rgba(0, 0, 0, 0.4); padding: 15px; margin-bottom: 20px; display: flex; align-items: center; gap: 20px; }
@@ -108,8 +129,7 @@
         .wave-bar:nth-child(even) { height: 70%; } .wave-bar:nth-child(odd) { height: 30%; } .wave-bar:nth-child(3n) { height: 90%; } .wave-bar:nth-child(5n) { height: 50%; }
         .audio-status { font-family: 'Share Tech Mono', monospace; font-size: 0.9rem; text-align: right; min-width: 150px; }
 
-        /* SIDEBAR SENSOR MODULES */
-        .schematics-window { display: flex; flex-direction: column; gap: 15px; z-index: 3; overflow-y: auto; }
+        .schematics-window { display: flex; flex-direction: column; gap: 15px; z-index: 5; overflow-y: auto; }
         
         .sensor-readout { border: 1px solid var(--term-cyan); background: rgba(0,0,0,0.5); padding: 15px; display: flex; flex-direction: column; gap: 8px; font-size: 0.85rem; position: relative; }
         .sensor-readout::before { content: ""; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--term-cyan); }
@@ -160,7 +180,7 @@
             <div id="pre-boot-screen"><p class="blink-text">> AWAITING USER INPUT. CLICK TO INITIALIZE.</p></div>
 
             <div id="boot-sequence">
-                <div class="boot-text-container">
+                <div class="boot-text-column">
                     <div class="boot-header">
                         <p class="layman-line l-1">> SYSTEM INITIALIZATION...</p>
                         <p class="layman-line l-2">> VERIFYING LOCAL CLEARANCE CODES...</p>
@@ -169,8 +189,13 @@
                     <div id="jargon-box"></div>
                     <p class="ag-text ag-1 aurebesh">ACCESS GRANTED</p>
                 </div>
-                <div class="boot-logo-container">
-                    <img src="empire_logo_blue.PNG" alt="Imperial Crest">
+
+                <div class="boot-logo-hero processing">
+                    <div class="sliced-logo-container">
+                        <img src="empire_logo_blue.PNG" class="logo-slice slice-outer">
+                        <img src="empire_logo_blue.PNG" class="logo-slice slice-mid">
+                        <img src="empire_logo_blue.PNG" class="logo-slice slice-inner">
+                    </div>
                 </div>
             </div>
 
@@ -182,7 +207,14 @@
                     <span>TERMINAL ID: T-88-FELUCIA</span>
                     <span>CURRENT USER: [GUEST_AUTHORIZATION]</span>
                 </div>
-                <img src="empire_logo_blue.PNG" class="header-logo" alt="Imperial Crest">
+                
+                <div id="header-logo-box" class="header-logo-box">
+                    <div class="sliced-logo-container">
+                        <img src="empire_logo_blue.PNG" class="logo-slice slice-outer">
+                        <img src="empire_logo_blue.PNG" class="logo-slice slice-mid">
+                        <img src="empire_logo_blue.PNG" class="logo-slice slice-inner">
+                    </div>
+                </div>
             </header>
 
             <div class="connection-bar"><div class="connection-indicator"></div></div>
@@ -198,7 +230,6 @@
             <div class="content-grid">
                 
                 <div class="log-window">
-                    
                     <div id="file" class="tab-content active">
                         <div style="color: var(--term-cyan); opacity: 0.4; letter-spacing: 2px; margin-bottom: 15px;">// ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬ //</div>
                         <p><span class="highlight">[■] TROOPER NAME:</span> Darren Vaust</p>
@@ -294,31 +325,14 @@
                 </div>
 
                 <div class="schematics-window">
-                    
                     <div class="sensor-readout">
                         <div class="sensor-header">LOCAL TELEMETRY</div>
-                        <div class="sensor-row">
-                            <span class="sensor-label">DATE:</span>
-                            <span class="sensor-val" id="telemetry-date">--.--.--</span>
-                        </div>
-                        <div class="sensor-row">
-                            <span class="sensor-label">LOCAL CYCLE:</span>
-                            <span class="sensor-val" id="telemetry-time">--.-h</span>
-                        </div>
-                        <div class="sensor-row">
-                            <span class="sensor-label">WEATHER:</span>
-                            <span class="sensor-val" id="telemetry-weather">SCANNING...</span>
-                        </div>
-                        <div class="sensor-row">
-                            <span class="sensor-label">SURFACE TEMP:</span>
-                            <span class="sensor-val" id="telemetry-temp">--°F</span>
-                        </div>
-                        <div class="sensor-row">
-                            <span class="sensor-label">VISIBILITY:</span>
-                            <span class="sensor-val" id="telemetry-vis">--%</span>
-                        </div>
+                        <div class="sensor-row"><span class="sensor-label">DATE:</span><span class="sensor-val" id="telemetry-date">--.--.--</span></div>
+                        <div class="sensor-row"><span class="sensor-label">LOCAL CYCLE:</span><span class="sensor-val" id="telemetry-time">--.-h</span></div>
+                        <div class="sensor-row"><span class="sensor-label">WEATHER:</span><span class="sensor-val" id="telemetry-weather">SCANNING...</span></div>
+                        <div class="sensor-row"><span class="sensor-label">SURFACE TEMP:</span><span class="sensor-val" id="telemetry-temp">--°F</span></div>
+                        <div class="sensor-row"><span class="sensor-label">VISIBILITY:</span><span class="sensor-val" id="telemetry-vis">--%</span></div>
                     </div>
-
                     <div class="sys-log-box">
                         <div class="sys-log-header aurebesh">SYS LOG MONITOR</div>
                         <div id="sys-log-content"></div>
@@ -332,7 +346,7 @@
     <script src="database.js"></script>
 
     <script>
-        function playAudio(id, vol = 1.0) { const sound = document.getElementById(id); if(sound) { sound.currentTime = 0; sound.volume = vol; sound.play().catch(e => console.log("Audio not found:", id)); } }
+        function playAudio(id, vol = 1.0) { const sound = document.getElementById(id); if(sound) { sound.currentTime = 0; sound.volume = vol; sound.play().catch(e => console.log("Audio blocked:", id)); } }
         function pauseAudio(id) { const sound = document.getElementById(id); if(sound) sound.pause(); }
         function playBeep(num) { playAudio('snd-beep-' + num, 1.0); }
         function playWhirup(num) { playAudio('snd-whirup-' + num, 1.0); }
@@ -343,7 +357,7 @@
             if(hasBooted) return;
             hasBooted = true;
             document.getElementById('pre-boot-screen').style.display = 'none';
-            document.getElementById('boot-sequence').style.display = 'flex';
+            document.getElementById('boot-sequence').style.display = 'block';
             
             playAudio('snd-boot-init', 1.0); playAudio('snd-boot-loop', 1.0); playAudio('snd-ambient', 1.0);
 
@@ -362,10 +376,14 @@
 
             setTimeout(() => {
                 clearInterval(bootInterval); pauseAudio('snd-boot-loop'); playAudio('snd-boot-finish', 1.0);
+                
+                // UNLOCK LOGO (Stop spinning slices)
+                document.querySelector('.boot-logo-hero').classList.remove('processing');
+
                 setTimeout(() => {
                     document.getElementById('boot-sequence').classList.add('fade-out');
                     startRandomActivity();
-                    initEnvironment(); // Launch weather calc after boot
+                    initEnvironment();
                 }, 1500);
             }, 7000);
         });
@@ -417,7 +435,6 @@
             return "<span style='color:var(--term-red)'>[ UNKNOWN ORIGIN ]</span>";
         }
 
-        // Parse date for sorting math (YY.M.DD)
         function parseGRSDate(dateStr) {
             let cleanDate = dateStr.split('|')[0].trim();
             let parts = cleanDate.split('.');
@@ -430,8 +447,6 @@
         window.addEventListener('DOMContentLoaded', () => {
             if(typeof imperialLogs !== 'undefined') {
                 const audioContainer = document.getElementById('dynamic-audio-container');
-                
-                // SORT THE LOGS ARRAY (Newest First)
                 imperialLogs.sort((a, b) => parseGRSDate(b.date) - parseGRSDate(a.date));
                 
                 imperialLogs.forEach((log, index) => {
@@ -440,117 +455,52 @@
                     if (!listContainer || !viewContainer) return;
 
                     let personnelData = log.personnel.trim() === "" ? "N/A" : log.personnel;
-                    let authorData = log.author.trim() === "" ? (log.tab === "logs" ? "GC-3170" : "<span style='color:var(--term-red)'>[ AUTHOR UNRETRIEVABLE ]</span>") : log.author;
+                    let authorData = log.author.trim() === "" ? (log.tab === "logs" ? "GC-3170" : "[ AUTHOR UNRETRIEVABLE ]") : log.author;
                     let terminalID = generateTerminalID(log.terminal, log.id + log.date);
                     let formattedBody = log.body.split('\n').map(p => p.trim() ? `<p>${p}</p>` : `<br>`).join('');
-                    
                     let imageHTML = "";
                     if (log.imageExt && log.imageExt.trim() !== "") {
-                        let imgName = `${log.id}_img.${log.imageExt.replace('.','')}`;
-                        imageHTML = `
-                        <div style="border: 1px dashed var(--term-cyan); padding: 10px; margin-top: 20px; background: rgba(0,0,0,0.3);">
-                            <p style="opacity:0.6; margin:0 0 10px 0; font-family:'Share Tech Mono';">[ ATTACHED VISUAL ASSET ]</p>
-                            <img src="${imgName}" class="img-attachment" onerror="this.parentElement.style.display='none'">
-                        </div>`;
+                        imageHTML = `<div style="border: 1px dashed var(--term-cyan); padding: 10px; margin-top: 20px; background: rgba(0,0,0,0.3);"><p style="opacity:0.6; margin:0 0 10px 0; font-family:'Share Tech Mono';">[ ATTACHED VISUAL ASSET ]</p><img src="${log.id}_img.${log.imageExt.replace('.','')}" class="img-attachment" onerror="this.parentElement.style.display='none'"></div>`;
                     }
-
                     let audioFileID = `audio-${log.id}`;
                     audioContainer.innerHTML += `<audio id="${audioFileID}" src="${log.id}_audio.mp3"></audio>`;
 
-                    // Generate truncated explorer button with date
                     let btn = document.createElement('button');
                     let isFirstItem = (listContainer.children.length === 0 && log.tab === "logs");
                     btn.className = isFirstItem ? "explorer-btn active" : "explorer-btn";
                     btn.onclick = function() { openEntry(log.id, this); playBeep(2); };
-                    btn.innerHTML = `
-                        <div class="btn-date">[ ${log.date.split('|')[0].trim()} ]</div>
-                        <div class="btn-title">${log.title.toUpperCase()}</div>
-                    `;
+                    btn.innerHTML = `<div class="btn-date">[ ${log.date.split('|')[0].trim()} ]</div><div class="btn-title">${log.title.toUpperCase()}</div>`;
                     listContainer.appendChild(btn);
 
-                    // Generate full view with large header
                     let view = document.createElement('div');
                     view.className = isFirstItem ? "entry-content active" : "entry-content";
                     view.id = log.id;
-                    view.innerHTML = `
-                        <div class="full-entry-title">${log.title}</div>
-                        <div style="color: var(--term-cyan); opacity: 0.4; letter-spacing: 2px; margin-bottom: 15px;">// ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬ //</div>
-                        <div class="audio-player-ui">
-                            <button class="play-btn" onclick="triggerAudioLog('${audioFileID}', 'status-${log.id}')">▶</button>
-                            <div class="waveform">
-                                <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
-                            </div>
-                            <div id="status-${log.id}" class="audio-status" style="color: var(--term-cyan);">[ STANDBY ]</div>
-                        </div>
-                        <div style="color: var(--term-cyan); opacity: 0.4; letter-spacing: 2px; margin: 15px 0;">// ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬ //</div>
-                        <p><span class="highlight">[■] DATE:</span> ${log.date}</p>
-                        <p><span class="highlight">[■] AUTHOR:</span> ${authorData}</p>
-                        <p><span class="highlight">[■] TERMINAL ORIGIN:</span> ${terminalID}</p>
-                        <p><span class="highlight">[■] MENTIONED PERSONNEL:</span> ${personnelData}</p>
-                        <div style="color: var(--term-cyan); opacity: 0.4; letter-spacing: 2px; margin: 15px 0;">// ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬ //</div>
-                        <br>
-                        ${formattedBody}
-                        ${imageHTML}
-                    `;
+                    view.innerHTML = `<div class="full-entry-title">${log.title}</div><div style="color: var(--term-cyan); opacity: 0.4; letter-spacing: 2px; margin-bottom: 15px;">// ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬ //</div><div class="audio-player-ui"><button class="play-btn" onclick="triggerAudioLog('${audioFileID}', 'status-${log.id}')">▶</button><div class="waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div><div id="status-${log.id}" class="audio-status" style="color: var(--term-cyan);">[ STANDBY ]</div></div><div style="color: var(--term-cyan); opacity: 0.4; letter-spacing: 2px; margin: 15px 0;">// ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬ //</div><p><span class="highlight">[■] DATE:</span> ${log.date}</p><p><span class="highlight">[■] AUTHOR:</span> ${authorData}</p><p><span class="highlight">[■] TERMINAL ORIGIN:</span> ${terminalID}</p><p><span class="highlight">[■] MENTIONED PERSONNEL:</span> ${personnelData}</p><div style="color: var(--term-cyan); opacity: 0.4; letter-spacing: 2px; margin: 15px 0;">// ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬ //</div><br>${formattedBody}${imageHTML}`;
                     viewContainer.appendChild(view);
                 });
             }
         });
 
-        // --- DYNAMIC ENVIRONMENT ALGORITHM ---
         function initEnvironment() {
-            // 1. Calculate Date (+1 Day from latest log)
             let latestDateStr = (typeof imperialLogs !== 'undefined' && imperialLogs.length > 0) ? imperialLogs[0].date.split('|')[0].trim() : "34.1.01";
             let parts = latestDateStr.split('.');
             let yy = parseInt(parts[0]); let mm = parseInt(parts[1]); let dd = parseInt(parts[2]) + 1;
-            if(dd > 35) { dd = 1; mm++; } // Assuming ~35 days in a standard month
-            if(mm > 10) { mm = 1; yy++; }
+            if(dd > 35) { dd = 1; mm++; } if(mm > 10) { mm = 1; yy++; }
             document.getElementById('telemetry-date').innerText = `${yy}.${mm}.${dd.toString().padStart(2, '0')}`;
-
-            // 2. Calculate Felucian Time
             let realDate = new Date();
             let percentOfDay = (realDate.getHours() * 60 + realDate.getMinutes()) / 1440;
             let feluciaHour = percentOfDay * 34;
             document.getElementById('telemetry-time').innerText = `${feluciaHour.toFixed(1)}h`;
-
-            // 3. Roll Weather
-            const weatherRolls = [
-                { name: "CLEAR", prob: 40, visPenalty: 0 },
-                { name: "LIGHT PRECIPITATION", prob: 30, visPenalty: 20 },
-                { name: "HEAVY PRECIPITATION", prob: 15, visPenalty: 50 },
-                { name: "SPORE STORM", prob: 10, visPenalty: 85, danger: true },
-                { name: "ION STORM", prob: 5, visPenalty: 95, danger: true }
-            ];
-            
-            let r = Math.random() * 100;
-            let cumulative = 0;
-            let currentWeath = weatherRolls[0];
-            for(let w of weatherRolls) {
-                cumulative += w.prob;
-                if(r <= cumulative) { currentWeath = w; break; }
-            }
-            
-            let wText = document.getElementById('telemetry-weather');
-            wText.innerText = currentWeath.name;
-            if(currentWeath.danger) wText.classList.add('danger');
-
-            // 4. Calculate Temperature (Sine curve peaking at 17h)
-            // 40F base + up to 45F variance based on time
+            const weatherRolls = [{ name: "CLEAR", prob: 40, visPenalty: 0 }, { name: "LIGHT PRECIPITATION", prob: 30, visPenalty: 20 }, { name: "HEAVY PRECIPITATION", prob: 15, visPenalty: 50 }, { name: "SPORE STORM", prob: 10, visPenalty: 85, danger: true }, { name: "ION STORM", prob: 5, visPenalty: 95, danger: true }];
+            let r = Math.random() * 100; let cumulative = 0; let currentWeath = weatherRolls[0];
+            for(let w of weatherRolls) { cumulative += w.prob; if(r <= cumulative) { currentWeath = w; break; } }
+            let wText = document.getElementById('telemetry-weather'); wText.innerText = currentWeath.name; if(currentWeath.danger) wText.classList.add('danger');
             let temp = Math.round(40 + 45 * Math.sin((feluciaHour / 34) * Math.PI));
             document.getElementById('telemetry-temp').innerText = `${temp}°F`;
-
-            // 5. Calculate Visibility
-            // Night penalty: furthest from 17h (noon) = higher penalty. Max penalty = -30%
-            let distanceFromNoon = Math.abs(feluciaHour - 17); // 0 to 17
-            let nightPenalty = (distanceFromNoon / 17) * 30; 
-            
+            let distanceFromNoon = Math.abs(feluciaHour - 17); let nightPenalty = (distanceFromNoon / 17) * 30; 
             let visibility = 100 - currentWeath.visPenalty - nightPenalty;
-            if(visibility < 0) visibility = 0;
-            if(visibility > 100) visibility = 100;
-            
-            let vText = document.getElementById('telemetry-vis');
-            vText.innerText = `${Math.round(visibility)}%`;
-            if(visibility < 25) vText.classList.add('danger');
+            if(visibility < 0) visibility = 0; if(visibility > 100) visibility = 100;
+            let vText = document.getElementById('telemetry-vis'); vText.innerText = `${Math.round(visibility)}%`; if(visibility < 25) vText.classList.add('danger');
         }
 
         function startRandomActivity() {
@@ -558,20 +508,16 @@
             const prefixes = ["SYS", "NET", "SEC", "PWR", "ENV", "COM", "NODE"];
             const normalStatuses = ["NOMINAL", "ISB-PATTERN VERIFIED", "SPORE FILTER CYCLING", "THERMAL STABLE", "HANDSHAKE ACKNOWLEDGED", "FUSION CORE BALANCED", "GRID OPTIMIZING", "ENCRYPTION ROTATED", "PACKET LOSS: 0%", "ROUTING SECURED", "BACTA RESERVES NOMINAL", "LOCAL PING: 12ms", "DEFLECTOR HARMONICS ALIGNED", "MEMORY CACHE PURGED", "UPLINK SYNCED"];
             const minorWarnings = ["MINOR FLUCTUATION DETECTED", "LATENCY SPIKE COMPENSATED", "REROUTING FROM DEAD ZONE", "SPORE BUILDUP CLEARED", "VOLTAGE ANOMALY LOGGED", "DROPPED PACKET RECOVERED"];
-            
             function triggerRandomEvent() {
-                let randSound = Math.floor(Math.random() * 5) + 1;
-                playAudio('snd-beepboop-' + randSound, 0.5); 
+                let randSound = Math.floor(Math.random() * 5) + 1; playAudio('snd-beepboop-' + randSound, 0.5); 
                 let randHex = Math.floor(Math.random()*65535).toString(16).toUpperCase().padStart(4, '0');
                 let prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
                 let isWarning = Math.random() > 0.85; 
                 let statusText = isWarning ? minorWarnings[Math.floor(Math.random() * minorWarnings.length)] : normalStatuses[Math.floor(Math.random() * normalStatuses.length)];
                 let colorStyle = isWarning ? "color: var(--term-red);" : "color: var(--term-cyan);";
-                
                 let line = document.createElement("div"); line.className = "log-entry";
                 line.innerHTML = `<span style="font-weight:bold; ${colorStyle}">[${prefix}-${randHex}]</span> - ${statusText}`;
-                logBox.appendChild(line);
-                if(logBox.children.length > 8) logBox.removeChild(logBox.firstChild);
+                logBox.appendChild(line); if(logBox.children.length > 8) logBox.removeChild(logBox.firstChild);
                 setTimeout(triggerRandomEvent, Math.floor(Math.random() * 16000) + 6000);
             }
             setTimeout(triggerRandomEvent, 4000);
