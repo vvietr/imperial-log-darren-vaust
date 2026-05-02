@@ -34,9 +34,9 @@ const imperialLogs = [
         body: `Based on helmet-recorded media and available imagery - along with word of mouth from the scouts and our more experienced troopers - I've compiled a crude overlay with a relatively recent orbital scan to create a map of the region surrounding the main base here on Felucia. My cartography skills are... limited, I'll admit that, but it should at least be better than "o' yea I've got it right 'er in me noggin!" from whomever we choose to lead an expedition.
 
 There are some interesting conclusions supported by this map, though: Drills 1 and 2 are most definitely the easiest to maintain. Drills 3 and 4, however, are quite entrenched in the forestry and, unfortunately, very near to known nesting locations for aggressive fauna. Oh well, I don't suppose there's much you can do but rely on the aim of your average trooper being true.`
-    }
+    },
 
-    ,{
+    {
         id: "bff_1",
         tab: "logs",
         date: "33.2.01 | ~07h",
@@ -50,10 +50,10 @@ There are some interesting conclusions supported by this map, though: Drills 1 a
 Seriously... in all its wisdom, the Imperial engineers couldn't come up with a series of pumps and pipes to put water in our purifiers? We've got fucking moisture vaporators for Marka's-sake! I'd expect to see those -maybe- as a backup, in the direst sense of the word, for a desert-based facility... but in a swamp? A region that is, by definition, saturated with water!
 
 Does a promotion to Imperial Engineering Officer come with a complimentary fucking cranial excavation or something?`
-    }
+    },
     // --- COPY AND PASTE THIS BLANK TEMPLATE FOR NEW ENTRIES ---
     /*
-    ,{
+    {
         id: "unique_name_here",
         tab: "logs",
         date: "YY.M.DD | ~00h",
@@ -65,6 +65,6 @@ Does a promotion to Imperial Engineering Officer come with a complimentary fucki
         body: `Your text goes here. 
         
         Use the enter key twice to make a new paragraph.`
-    }
+    },
     */
 ];
