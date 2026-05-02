@@ -19,6 +19,7 @@
             --term-green: #50fa7b;
             --term-dim: rgba(139, 233, 253, 0.2);
             --term-red: #ff5555;
+            --term-yellow: #f1fa8c; /* For SOMA-style active highlights */
         }
 
         body {
@@ -33,15 +34,15 @@
             user-select: none;
         }
 
-        /* The Tablet Hardware */
+        /* The Tablet Hardware (Expanded Width) */
         .datapad-bezel {
             background-color: var(--bezel-color);
             padding: 30px 15px 40px 15px;
             border-radius: 12px;
             box-shadow: inset 0 0 10px #000, 0 10px 30px rgba(0,0,0,0.8);
-            width: 95vw;
-            max-width: 1400px;
-            height: 92vh;
+            width: 98vw;
+            max-width: 1600px;
+            height: 95vh;
             display: flex;
             flex-direction: column;
             position: relative;
@@ -161,14 +162,97 @@
         .content-grid { display: grid; grid-template-columns: 1fr 250px; gap: 20px; flex-grow: 1; overflow: hidden; }
         
         .log-window { background-color: rgba(139, 233, 253, 0.05); border: 1px solid rgba(139, 233, 253, 0.3); padding: 20px; overflow-y: auto; z-index: 3; scrollbar-width: thin; scrollbar-color: var(--term-cyan) transparent; line-height: 1.6; }
-        .tab-content { display: none; }
+        .tab-content { display: none; height: 100%; }
         .tab-content.active { display: block; animation: fadeIn 0.3s ease-in; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* --- SOMA EXPLORER LAYOUT --- */
+        .explorer-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 20px;
+            height: 100%;
+        }
+
+        .explorer-list {
+            border-right: 1px dashed var(--term-cyan);
+            padding-right: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            overflow-y: auto;
+        }
+
+        .explorer-btn {
+            background: rgba(0,0,0,0.5);
+            border: 1px solid var(--term-dim);
+            color: var(--term-cyan);
+            padding: 12px 15px;
+            text-align: left;
+            font-family: 'Share Tech Mono', monospace;
+            cursor: pointer;
+            transition: all 0.2s;
+            clip-path: polygon(0 0, 95% 0, 100% 15px, 100% 100%, 5% 100%, 0 calc(100% - 15px));
+        }
+
+        .explorer-btn:hover { background: var(--term-dim); color: var(--term-white); }
+        .explorer-btn.active { background: var(--term-yellow); color: #000; font-weight: bold; border-color: var(--term-yellow); }
+
+        .explorer-view {
+            padding: 5px 15px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .entry-content { display: none; }
+        .entry-content.active { display: block; animation: fadeIn 0.2s ease-in; }
+
+        /* --- AUDIO PLAYER UI --- */
+        .audio-player-ui {
+            border: 1px solid var(--term-cyan);
+            background: rgba(0, 0, 0, 0.4);
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .play-btn {
+            width: 50px; height: 50px;
+            background: transparent;
+            border: 2px solid var(--term-cyan);
+            color: var(--term-cyan);
+            cursor: pointer;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 1.5rem;
+            transition: all 0.1s;
+        }
+
+        .play-btn:hover { background: var(--term-cyan); color: #000; }
+        .play-btn:active { transform: scale(0.95); }
+
+        .waveform {
+            display: flex; align-items: flex-end; gap: 3px; height: 40px; flex-grow: 1;
+        }
+
+        .wave-bar { width: 5px; background: var(--term-cyan); opacity: 0.6; }
+        .wave-bar:nth-child(even) { height: 70%; }
+        .wave-bar:nth-child(odd) { height: 30%; }
+        .wave-bar:nth-child(3n) { height: 90%; }
+        .wave-bar:nth-child(5n) { height: 50%; }
+
+        .audio-status {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.9rem;
+            text-align: right;
+            min-width: 150px;
+        }
+
+        /* Sidebar Elements */
         .schematics-window { display: flex; flex-direction: column; gap: 15px; z-index: 3; overflow-y: auto; }
         .schematic-box { border: 1px dashed var(--term-cyan); min-height: 120px; display: flex; justify-content: center; align-items: center; text-align: center; font-size: 0.8rem; opacity: 0.7; }
         
-        /* Sidebar System Log Feed */
         .sys-log-box { border: 1px solid rgba(139, 233, 253, 0.3); background-color: rgba(0,0,0,0.5); padding: 10px; flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
         .sys-log-header { font-size: 0.8rem; border-bottom: 1px solid var(--term-dim); padding-bottom: 5px; margin-bottom: 5px; color: var(--term-cyan); }
         #sys-log-content { font-size: 0.75rem; color: rgba(139, 233, 253, 0.6); display: flex; flex-direction: column; justify-content: flex-end; flex-grow: 1; gap: 4px; }
@@ -204,6 +288,8 @@
     <audio id="snd-alert" src="alert.mp3" loop></audio>
     <audio id="snd-keystroke" src="keystroke.mp3"></audio>
 
+    <audio id="audio-log-1" src="vaust_log_1.mp3"></audio>
+
     <div class="datapad-bezel">
         <div class="screen">
             
@@ -213,9 +299,9 @@
 
             <div id="boot-sequence">
                 <div class="boot-header">
-                    <p class="layman-line l-1">> SYSTEM WAKE...</p>
-                    <p class="layman-line l-2">> BYPASSING FELUCIA SECURITY GRID...</p>
-                    <p class="layman-line l-3">> DECRYPTING ISB-PATTERN...</p>
+                    <p class="layman-line l-1">> SYSTEM INITIALIZATION...</p>
+                    <p class="layman-line l-2">> VERIFYING LOCAL CLEARANCE CODES...</p>
+                    <p class="layman-line l-3">> VALIDATING ISB ENCRYPTION PROTOCOLS...</p>
                 </div>
                 <div id="jargon-box"></div>
                 <p class="ag-text ag-1 aurebesh">ACCESS GRANTED</p>
@@ -238,8 +324,8 @@
                 <button class="tab-btn active" onmouseover="playBeep(1)" onclick="openTab('file', this)">[ PERSONNEL FILE ]</button>
                 <button class="tab-btn" onmouseover="playBeep(1)" onclick="openTab('commendations', this)">[ COMMENDATIONS ]</button>
                 <button class="tab-btn" onmouseover="playBeep(1)" onclick="openTab('infractions', this)">[ INFRACTIONS ]</button>
-                <button class="tab-btn" onmouseover="playBeep(1)" onclick="openTab('logs', this, true)">[ PERSONAL LOGS ]</button>
-                <button class="tab-btn" onmouseover="playBeep(1)" onclick="openTab('peer', this, true)">[ PEER EVALUATIONS ]</button>
+                <button class="tab-btn" onmouseover="playBeep(1)" onclick="openTab('logs', this)">[ PERSONAL LOGS ]</button>
+                <button class="tab-btn" onmouseover="playBeep(1)" onclick="openTab('peer', this)">[ PEER EVALUATIONS ]</button>
             </div>
 
             <div class="content-grid">
@@ -264,33 +350,85 @@
                     </div>
 
                     <div id="commendations" class="tab-content">
-                        <p>▰▰▰▰▰▰</p>
-                        <p><span class="highlight"><:: COMMENDATION RECORDS</span></p>
-                        <p>▰▰▰▰▰▰</p>
-                        <p><strong><:: Sienar Fleet Systems - Technician of the month x2;</strong> Awarded for superior performance in grid management and power electronics logistics and repair ::></p><br>
-                        <p><strong><:: Sienar Fleet Systems - Technician of the year, 3 BBY;</strong> Awarded for outstanding performance in grid management and power electronics logistics and repair ::></p><br>
-                        <p><strong><:: 327th - Imperial Valor Citation -</strong> As detailed in both his and the adjoining sapper squadron ESK's report of the expedition, in the absence of sufficient escort personnel, GC-3170 volunteered to run over 4000 units through untenable forest-geography between a drill site on Felucia and its overseeing garrison base to acquire a critical repair component. His justification was that he was "out of ammo, out of time, left with only one thing to do: deliver despite the odds". His selfless dedication to service resulted in the restoration of drill 1 and the return of the sapper squad intact. ::></p>
+                        <div class="explorer-layout">
+                            <div class="explorer-list">
+                                <button class="explorer-btn active" onclick="openEntry('com-1', this); playBeep(2)">[ AWARDS MASTER FILE ]</button>
+                            </div>
+                            <div class="explorer-view">
+                                <div id="com-1" class="entry-content active">
+                                    <p>▰▰▰▰▰▰</p>
+                                    <p><span class="highlight"><:: COMMENDATION RECORDS</span></p>
+                                    <p>▰▰▰▰▰▰</p>
+                                    <p><strong><:: Sienar Fleet Systems - Technician of the month x2;</strong> Awarded for superior performance in grid management and power electronics logistics and repair ::></p><br>
+                                    <p><strong><:: Sienar Fleet Systems - Technician of the year, 3 BBY;</strong> Awarded for outstanding performance in grid management and power electronics logistics and repair ::></p><br>
+                                    <p><strong><:: 327th - Imperial Valor Citation -</strong> As detailed in both his and the adjoining sapper squadron ESK's report of the expedition, in the absence of sufficient escort personnel, GC-3170 volunteered to run over 4000 units through untenable forest-geography between a drill site on Felucia and its overseeing garrison base to acquire a critical repair component. His justification was that he was "out of ammo, out of time, left with only one thing to do: deliver despite the odds". His selfless dedication to service resulted in the restoration of drill 1 and the return of the sapper squad intact. ::></p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div id="infractions" class="tab-content">
-                        <p>▰▰▰▰▰▰</p>
-                        <p><span class="highlight"><:: INFRACTION RECORDS</span></p>
-                        <p><em>Technical information included in the following infraction reports are classified beyond the level of personnel records management - Contact the CSM for full-records access...</em></p>
-                        <p>▰▰▰▰▰▰</p>
-                        <p><:: Misdemeanor tampering in the third degree of low-sentience imperial droids - Verbal reprimand ::></p>
-                        <p><:: Misdemeanor tampering in the second degree of moderate-sentience imperial droids- Verbal reprimand, 2 week suspension of elevated code privledges ::></p>
-                        <p><:: /'/'/ RECORD EXPUNGED /'/'/ ::></p>
-                        <p><:: Technical insubordination of the third degree - Verbal reprimand, formal write-up ::></p>
-                        <p><:: /'/'/ RECORD EXPUNGED /'/'/ ::></p>
-                        <p><:: /'/'/ RECORD EXPUNGED /'/'/ ::></p>
-                        <p><:: Misdemeanor tampering in the first degree of low-sentience imperial droids - Board reprimand, letter of Imperial indebtedness totaling ⏹⏹⏹,⏹⏹⏹ Credits, docked from future wages ::></p>
+                        <div class="explorer-layout">
+                            <div class="explorer-list">
+                                <button class="explorer-btn active" onclick="openEntry('inf-1', this); playBeep(2)">[ PENAL MASTER FILE ]</button>
+                            </div>
+                            <div class="explorer-view">
+                                <div id="inf-1" class="entry-content active">
+                                    <p>▰▰▰▰▰▰</p>
+                                    <p><span class="highlight"><:: INFRACTION RECORDS</span></p>
+                                    <p><em>Technical information included in the following infraction reports are classified beyond the level of personnel records management - Contact the CSM for full-records access...</em></p>
+                                    <p>▰▰▰▰▰▰</p>
+                                    <p><:: Misdemeanor tampering in the third degree of low-sentience imperial droids - Verbal reprimand ::></p>
+                                    <p><:: Misdemeanor tampering in the second degree of moderate-sentience imperial droids- Verbal reprimand, 2 week suspension of elevated code privledges ::></p>
+                                    <p><:: /'/'/ RECORD EXPUNGED /'/'/ ::></p>
+                                    <p><:: Technical insubordination of the third degree - Verbal reprimand, formal write-up ::></p>
+                                    <p><:: /'/'/ RECORD EXPUNGED /'/'/ ::></p>
+                                    <p><:: /'/'/ RECORD EXPUNGED /'/'/ ::></p>
+                                    <p><:: Misdemeanor tampering in the first degree of low-sentience imperial droids - Board reprimand, letter of Imperial indebtedness totaling ⏹⏹⏹,⏹⏹⏹ Credits, docked from future wages ::></p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div id="logs" class="tab-content">
+                        <div class="explorer-layout">
+                            <div class="explorer-list">
+                                <button class="explorer-btn active" onclick="openEntry('log-1', this); playBeep(2)">[ EMPTY SLOT ]</button>
+                            </div>
+                            <div class="explorer-view">
+                                
+                                <div id="log-1" class="entry-content active">
+                                    <div class="audio-player-ui">
+                                        <button class="play-btn" onclick="triggerAudioLog('missing-audio', 'status-log-1')">▶</button>
+                                        <div class="waveform">
+                                            <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+                                        </div>
+                                        <div id="status-log-1" class="audio-status" style="color: var(--term-cyan);">[ STANDBY ]</div>
+                                    </div>
+                                    <p><em>[ NO TRANSCRIPT UPLOADED ]</em></p>
+                                </div>
+
+                            </div>
                         </div>
+                    </div>
 
                     <div id="peer" class="tab-content">
-                         </div>
+                         <div class="explorer-layout">
+                            <div class="explorer-list">
+                                <button class="explorer-btn active" onclick="openEntry('eval-1', this); playBeep(2)">[ SYS_NOTICE ]</button>
+                            </div>
+                            <div class="explorer-view">
+                                <div id="eval-1" class="entry-content active">
+                                    <p>▰▰▰▰▰▰</p>
+                                    <p><span class="highlight"><:: PEER EVALUATION SYSTEM</span></p>
+                                    <p>▰▰▰▰▰▰</p>
+                                    <p>Notice: Direct terminal injection is offline due to local Felucian grid instability. All personnel files must be submitted via secondary relay.</p><br>
+                                    <p><em>[ AWAITING FUTURE FORM INTEGRATION ]</em></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
                 <div class="schematics-window">
@@ -307,25 +445,26 @@
 
     <script>
         // --- AUDIO HELPERS ---
-        function playAudio(id) {
+        // Added a volume parameter (default 1.0)
+        function playAudio(id, vol = 1.0) {
             const sound = document.getElementById(id);
             if(sound) {
                 // Remove the // below when files are uploaded to enable sound playback
-                sound.currentTime = 0;
-                sound.play().catch(e => console.log("Audio not found:", id));
+                // sound.currentTime = 0;
+                // sound.volume = vol;
+                // sound.play().catch(e => console.log("Audio not found:", id));
             }
         }
         
         function pauseAudio(id) {
             const sound = document.getElementById(id);
             // Remove the // below when files are uploaded
-            if(sound) sound.pause();
+            // if(sound) sound.pause();
         }
 
-        // Specific sound triggers
-        function playBeep(num) { playAudio('snd-beep-' + num); }
-        function playWhirup(num) { playAudio('snd-whirup-' + num); }
-        function playDenied() { playAudio('snd-denied'); }
+        function playBeep(num) { playAudio('snd-beep-' + num, 1.0); }
+        function playWhirup(num) { playAudio('snd-whirup-' + num, 1.0); }
+        function playDenied() { playAudio('snd-denied', 1.0); }
 
         // --- PRE-BOOT TO BOOT SEQUENCE ---
         let hasBooted = false;
@@ -336,9 +475,9 @@
             document.getElementById('pre-boot-screen').style.display = 'none';
             document.getElementById('boot-sequence').style.display = 'flex';
             
-            playAudio('snd-boot-init');
-            playAudio('snd-boot-loop');
-            playAudio('snd-ambient');
+            playAudio('snd-boot-init', 1.0);
+            playAudio('snd-boot-loop', 1.0);
+            playAudio('snd-ambient', 1.0);
 
             const jargonBox = document.getElementById('jargon-box');
             const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
@@ -359,7 +498,7 @@
             setTimeout(() => {
                 clearInterval(bootInterval);
                 pauseAudio('snd-boot-loop');
-                playAudio('snd-boot-finish');
+                playAudio('snd-boot-finish', 1.0);
                 
                 setTimeout(() => {
                     document.getElementById('boot-sequence').classList.add('fade-out');
@@ -368,26 +507,22 @@
             }, 7000);
         });
 
-        // --- TAB NAVIGATION WITH DENIED LOGIC ---
+        // --- MAIN TAB NAVIGATION ---
         function openTab(tabId, element, isLocked = false) {
-            // If the tab is marked as locked, play denied sound and flash red
             if(isLocked) {
                 playDenied();
                 let originalText = element.innerText;
                 element.innerText = "[ ACCESS DENIED ]";
                 element.style.color = "var(--term-red)";
                 element.style.borderColor = "var(--term-red)";
-                
-                // Revert after 1 second
                 setTimeout(() => {
                     element.innerText = originalText;
                     element.style.color = "";
                     element.style.borderColor = "";
                 }, 1000);
-                return; // Stop execution here so the tab doesn't actually switch
+                return; 
             }
 
-            // If valid, play success sounds
             playBeep(2);
             playWhirup(1);
 
@@ -401,29 +536,102 @@
             element.classList.add("active");
         }
 
+        // --- SOMA EXPLORER NAVIGATION ---
+        function openEntry(entryId, element) {
+            // Find the specific explorer layout we are currently inside
+            let layout = element.closest('.explorer-layout');
+            
+            // Hide all contents in this specific view
+            let contents = layout.getElementsByClassName("entry-content");
+            for(let i=0; i < contents.length; i++) contents[i].classList.remove("active");
+            
+            // Remove active class from all buttons in this specific list
+            let btns = layout.getElementsByClassName("explorer-btn");
+            for(let i=0; i < btns.length; i++) btns[i].classList.remove("active");
+            
+            // Show new content
+            document.getElementById(entryId).classList.add("active");
+            element.classList.add("active");
+            playWhirup(2);
+        }
+
+        // --- AUDIO LOG LOGIC ---
+        function triggerAudioLog(audioId, statusId) {
+            const statusText = document.getElementById(statusId);
+            
+            // INSTRUCTION: To activate a real voice log, uncomment the block below.
+            // Until then, the system will assume the file is missing and trigger the DENIED protocol.
+            
+            /*
+            const sound = document.getElementById(audioId);
+            if (sound && sound.readyState >= 2) { 
+                sound.volume = 1.0;
+                sound.currentTime = 0;
+                sound.play();
+                statusText.innerText = "[ PLAYING... ]";
+                statusText.style.color = "var(--term-green)";
+                return;
+            }
+            */
+
+            // Default fallback when locked/missing:
+            playDenied();
+            statusText.innerText = "[ FILE MISSING ]";
+            statusText.style.color = "var(--term-red)";
+            setTimeout(() => {
+                statusText.innerText = "[ STANDBY ]";
+                statusText.style.color = "var(--term-cyan)";
+            }, 2000);
+        }
+
         // --- RANDOM AMBIENT BEEPBOOP & SYS LOG TEXT ---
         function startRandomActivity() {
             const logBox = document.getElementById('sys-log-content');
-            const statuses = ["NOMINAL", "REROUTED", "STANDBY", "SYNCING", "OVERRIDE"];
+            
+            const prefixes = ["SYS", "NET", "SEC", "PWR", "ENV", "COM", "NODE"];
+            const normalStatuses = [
+                "NOMINAL", "ISB-PATTERN VERIFIED", "SPORE FILTER CYCLING", "THERMAL STABLE",
+                "HANDSHAKE ACKNOWLEDGED", "FUSION CORE BALANCED", "GRID OPTIMIZING",
+                "ENCRYPTION ROTATED", "PACKET LOSS: 0%", "ROUTING SECURED",
+                "BACTA RESERVES NOMINAL", "LOCAL PING: 12ms", "DEFLECTOR HARMONICS ALIGNED",
+                "MEMORY CACHE PURGED", "UPLINK SYNCED"
+            ];
+            const minorWarnings = [
+                "MINOR FLUCTUATION DETECTED", "LATENCY SPIKE COMPENSATED",
+                "REROUTING FROM DEAD ZONE", "SPORE BUILDUP CLEARED",
+                "VOLTAGE ANOMALY LOGGED", "DROPPED PACKET RECOVERED"
+            ];
             
             function triggerRandomEvent() {
+                // Play random beepboop sound at 50% volume
                 let randSound = Math.floor(Math.random() * 5) + 1;
-                playAudio('snd-beepboop-' + randSound);
+                playAudio('snd-beepboop-' + randSound, 0.5); 
 
-                let randHex = Math.floor(Math.random()*9999).toString(16).toUpperCase();
-                let randStatus = statuses[Math.floor(Math.random() * statuses.length)];
+                let randHex = Math.floor(Math.random()*65535).toString(16).toUpperCase().padStart(4, '0');
+                let prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
+                let isWarning = Math.random() > 0.85; 
+
+                let statusText = "";
+                let colorStyle = "";
+
+                if (isWarning) {
+                    statusText = minorWarnings[Math.floor(Math.random() * minorWarnings.length)];
+                    colorStyle = "color: var(--term-red);";
+                } else {
+                    statusText = normalStatuses[Math.floor(Math.random() * normalStatuses.length)];
+                    colorStyle = "color: var(--term-cyan);";
+                }
                 
                 let line = document.createElement("div");
                 line.className = "log-entry";
-                line.innerHTML = `<span class="highlight">[NODE ${randHex}]</span> - ${randStatus}`;
+                line.innerHTML = `<span style="font-weight:bold; ${colorStyle}">[${prefix}-${randHex}]</span> - ${statusText}`;
                 
                 logBox.appendChild(line);
                 if(logBox.children.length > 8) logBox.removeChild(logBox.firstChild);
 
-                let nextEventTime = Math.floor(Math.random() * 17000) + 8000;
+                let nextEventTime = Math.floor(Math.random() * 16000) + 6000;
                 setTimeout(triggerRandomEvent, nextEventTime);
             }
-            
             setTimeout(triggerRandomEvent, 4000);
         }
     </script>
