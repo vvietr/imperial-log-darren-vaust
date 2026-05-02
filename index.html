@@ -5,11 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Imperial Datapad - GC-3170</title>
     <style>
-        /* Import Fonts */
         @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
         @import url('https://fonts.cdnfonts.com/css/aurebesh');
 
-        /* Base Settings */
         :root {
             --term-cyan: #8be9fd;
             --term-white: #f8f8f2;
@@ -24,264 +22,111 @@
 
         body {
             background-color: #050505;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
+            display: flex; justify-content: center; align-items: center;
+            height: 100vh; margin: 0;
             font-family: 'Share Tech Mono', monospace;
             color: var(--term-white);
-            user-select: none;
-            overflow: hidden; /* Prevents scrollbars from the 3D tilt */
+            user-select: none; overflow: hidden; 
         }
 
-        /* --- THE TABLET HARDWARE (With 3D Tilt) --- */
         .datapad-bezel {
             background-color: var(--bezel-color);
-            padding: 30px 15px 40px 15px;
-            border-radius: 12px;
-            width: 98vw;
-            max-width: 1600px;
-            height: 95vh;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            
-            /* The 3D Perspective Tilt */
+            padding: 30px 15px 40px 15px; border-radius: 12px;
+            width: 98vw; max-width: 1600px; height: 95vh;
+            display: flex; flex-direction: column; position: relative;
             transform: perspective(2000px) rotateX(1.5deg);
             transform-style: preserve-3d;
-            border-bottom: 12px solid #111; /* Simulates physical thickness on the bottom edge */
-            border-top: 2px solid #3a3a3a; /* Light catch on the top edge */
-            box-shadow: inset 0 0 10px #000, 0 30px 60px rgba(0,0,0,0.9); /* Heavy drop shadow */
+            border-bottom: 12px solid #111; border-top: 2px solid #3a3a3a; 
+            box-shadow: inset 0 0 10px #000, 0 30px 60px rgba(0,0,0,0.9); 
         }
 
-        /* --- THE GLOWING CRT SCREEN --- */
         .screen {
             background-color: var(--term-bg);
-            border: 2px solid var(--term-cyan);
-            border-radius: 30px; /* Highly rounded corners to mimic a glass tube inside the square bezel */
-            flex-grow: 1;
-            padding: 20px;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            
-            /* The Vignette: Heavy black shadow pushing inward to create a pseudo-bulge */
-            box-shadow: 
-                inset 0 0 100px rgba(0,0,0,0.95), 
-                inset 0 0 20px var(--term-glow), 
-                0 0 15px var(--term-glow);
+            border: 2px solid var(--term-cyan); border-radius: 30px; 
+            flex-grow: 1; padding: 20px; position: relative;
+            overflow: hidden; display: flex; flex-direction: column;
+            box-shadow: inset 0 0 100px rgba(0,0,0,0.95), inset 0 0 20px var(--term-glow), 0 0 15px var(--term-glow);
         }
 
-        /* The Glass Dome Glare */
         .screen::before {
-            content: " ";
-            display: block;
-            position: absolute;
+            content: " "; display: block; position: absolute;
             top: 0; left: 0; bottom: 0; right: 0;
             background: radial-gradient(circle at 50% 5%, rgba(255, 255, 255, 0.08) 0%, transparent 45%);
-            z-index: 25;
-            pointer-events: none;
+            z-index: 25; pointer-events: none;
         }
 
-        /* Moving CRT Scanline Overlay */
         .screen::after {
-            content: " ";
-            display: block;
-            position: absolute;
+            content: " "; display: block; position: absolute;
             top: 0; left: 0; bottom: 0; right: 0;
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            z-index: 20;
-            background-size: 100% 4px, 3px 100%;
-            pointer-events: none;
-            animation: scrollLines 10s linear infinite;
+            z-index: 20; background-size: 100% 4px, 3px 100%;
+            pointer-events: none; animation: scrollLines 10s linear infinite;
         }
+        @keyframes scrollLines { 0% { background-position: 0 0; } 100% { background-position: 0 100%; } }
 
-        @keyframes scrollLines {
-            0% { background-position: 0 0; }
-            100% { background-position: 0 100%; }
-        }
-
-        /* --- PRE-BOOT SCREEN --- */
-        #pre-boot-screen {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: var(--term-bg);
-            z-index: 15;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-        }
-
-        .blink-text {
-            font-size: 1.5rem;
-            color: var(--term-cyan);
-            animation: blink 1.5s infinite;
-        }
+        #pre-boot-screen { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--term-bg); z-index: 15; display: flex; justify-content: center; align-items: center; cursor: pointer; }
+        .blink-text { font-size: 1.5rem; color: var(--term-cyan); animation: blink 1.5s infinite; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-        /* --- BOOT SEQUENCE ANIMATIONS --- */
-        #boot-sequence {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: var(--term-bg);
-            z-index: 10;
-            padding: 30px;
-            display: none;
-            flex-direction: column;
-        }
-
+        #boot-sequence { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--term-bg); z-index: 10; padding: 30px; display: none; flex-direction: column; }
         .boot-header { border-bottom: 1px solid var(--term-cyan); padding-bottom: 10px; margin-bottom: 15px; }
         .layman-line { opacity: 0; margin: 5px 0; font-size: 1.2rem; font-weight: bold; }
-        
-        #jargon-box { 
-            display: flex; 
-            flex-direction: column; 
-            font-size: 0.9rem; 
-            color: var(--term-cyan); 
-            line-height: 1.1; 
-            flex-grow: 1; 
-            overflow: hidden; 
-            position: relative;
-            margin-top: 10px;
-        }
-
+        #jargon-box { display: flex; flex-direction: column; font-size: 0.9rem; color: var(--term-cyan); line-height: 1.1; flex-grow: 1; overflow: hidden; position: relative; margin-top: 10px; }
         .jargon-line { margin: 2px 0; font-family: monospace; opacity: 0.7; }
         .ag-text { opacity: 0; color: var(--term-green); font-weight: bold; font-size: 2rem; text-align: center; margin-top: 20px; }
-
-        .l-1 { animation: keepText 0.1s 0.5s forwards; } 
-        .l-2 { animation: keepText 0.1s 2.0s forwards; } 
-        .l-3 { animation: keepText 0.1s 4.0s forwards; }
-        .ag-1 { animation: keepText 0.1s 6.5s forwards; }
-
+        .l-1 { animation: keepText 0.1s 0.5s forwards; } .l-2 { animation: keepText 0.1s 2.0s forwards; } .l-3 { animation: keepText 0.1s 4.0s forwards; } .ag-1 { animation: keepText 0.1s 6.5s forwards; }
         @keyframes keepText { 0% { opacity: 0; } 100% { opacity: 1; } }
         .fade-out { animation: fadeOutEffect 0.5s forwards; pointer-events: none; }
         @keyframes fadeOutEffect { 100% { opacity: 0; visibility: hidden; } }
 
-        /* Layout Grid */
-        header { display: flex; justify-content: space-between; border-bottom: 2px solid var(--term-cyan); padding-bottom: 15px; margin-bottom: 15px; }
+        header { display: flex; justify-content: space-between; border-bottom: 2px solid var(--term-cyan); padding-bottom: 15px; margin-bottom: 15px; z-index: 5; }
         .header-info { display: flex; flex-direction: column; gap: 5px; }
         .title-main { font-size: 1.2rem; font-weight: bold; color: var(--term-white); border-bottom: 1px dashed var(--term-cyan); padding-bottom: 5px; margin: 5px 0 10px 0; display: inline-block; }
         .aurebesh { font-family: 'Aurebesh', sans-serif; color: var(--term-cyan); font-size: 1.2rem; letter-spacing: 2px; }
         
-        .imperial-logo {
-            width: 80px; height: 80px; flex-shrink: 0;
-            background-image: radial-gradient(circle, var(--term-white) 20%, transparent 21%), conic-gradient(transparent 10deg, var(--term-white) 11deg 49deg, transparent 50deg 70deg, var(--term-white) 71deg 109deg, transparent 110deg 130deg, var(--term-white) 131deg 169deg, transparent 170deg 190deg, var(--term-white) 191deg 229deg, transparent 230deg 250deg, var(--term-white) 251deg 289deg, transparent 290deg 310deg, var(--term-white) 311deg 349deg, transparent 350deg);
-            border-radius: 50%; border: 4px solid var(--term-white);
-        }
-
-        .connection-bar { height: 8px; width: 100%; background-color: #222; margin-bottom: 15px; position: relative; overflow: hidden; flex-shrink: 0; }
+        .imperial-logo { width: 80px; height: 80px; flex-shrink: 0; background-image: radial-gradient(circle, var(--term-white) 20%, transparent 21%), conic-gradient(transparent 10deg, var(--term-white) 11deg 49deg, transparent 50deg 70deg, var(--term-white) 71deg 109deg, transparent 110deg 130deg, var(--term-white) 131deg 169deg, transparent 170deg 190deg, var(--term-white) 191deg 229deg, transparent 230deg 250deg, var(--term-white) 251deg 289deg, transparent 290deg 310deg, var(--term-white) 311deg 349deg, transparent 350deg); border-radius: 50%; border: 4px solid var(--term-white); }
+        .connection-bar { height: 8px; width: 100%; background-color: #222; margin-bottom: 15px; position: relative; overflow: hidden; flex-shrink: 0; z-index: 5; }
         .connection-indicator { height: 100%; width: 20%; background-color: var(--term-cyan); position: absolute; animation: ping 3s infinite ease-in-out; }
         @keyframes ping { 0% { left: -20%; } 50% { left: 100%; } 100% { left: -20%; } }
 
-        /* TAB NAVIGATION SYSTEM */
         .tab-nav { display: flex; gap: 10px; margin-bottom: 15px; border-bottom: 1px solid var(--term-dim); padding-bottom: 10px; flex-wrap: wrap; z-index: 5; }
         .tab-btn { background: transparent; color: var(--term-white); border: 1px solid var(--term-dim); padding: 8px 15px; font-family: 'Share Tech Mono', monospace; cursor: pointer; transition: all 0.1s; }
         .tab-btn:hover { background: var(--term-dim); border-color: var(--term-cyan); }
         .tab-btn.active { background: rgba(139, 233, 253, 0.2); border-color: var(--term-cyan); box-shadow: 0 0 10px var(--term-glow); }
 
         .content-grid { display: grid; grid-template-columns: 1fr 250px; gap: 20px; flex-grow: 1; overflow: hidden; z-index: 5; }
-        
         .log-window { background-color: rgba(139, 233, 253, 0.05); border: 1px solid rgba(139, 233, 253, 0.3); padding: 20px; overflow-y: auto; z-index: 3; scrollbar-width: thin; scrollbar-color: var(--term-cyan) transparent; line-height: 1.6; }
         .tab-content { display: none; height: 100%; }
         .tab-content.active { display: block; animation: fadeIn 0.3s ease-in; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- SOMA EXPLORER LAYOUT --- */
-        .explorer-layout {
-            display: grid;
-            grid-template-columns: 280px 1fr;
-            gap: 20px;
-            height: 100%;
-        }
-
-        .explorer-list {
-            border-right: 1px dashed var(--term-cyan);
-            padding-right: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            overflow-y: auto;
-        }
-
-        .explorer-btn {
-            background: rgba(0,0,0,0.5);
-            border: 1px solid var(--term-dim);
-            color: var(--term-cyan);
-            padding: 12px 15px;
-            text-align: left;
-            font-family: 'Share Tech Mono', monospace;
-            cursor: pointer;
-            transition: all 0.2s;
-            clip-path: polygon(0 0, 95% 0, 100% 15px, 100% 100%, 5% 100%, 0 calc(100% - 15px));
-        }
-
+        .explorer-layout { display: grid; grid-template-columns: 280px 1fr; gap: 20px; height: 100%; }
+        .explorer-list { border-right: 1px dashed var(--term-cyan); padding-right: 15px; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; }
+        .explorer-btn { background: rgba(0,0,0,0.5); border: 1px solid var(--term-dim); color: var(--term-cyan); padding: 12px 15px; text-align: left; font-family: 'Share Tech Mono', monospace; cursor: pointer; transition: all 0.2s; clip-path: polygon(0 0, 95% 0, 100% 15px, 100% 100%, 5% 100%, 0 calc(100% - 15px)); }
         .explorer-btn:hover { background: var(--term-dim); color: var(--term-white); }
         .explorer-btn.active { background: var(--term-yellow); color: #000; font-weight: bold; border-color: var(--term-yellow); }
-
-        .explorer-view {
-            padding: 5px 15px;
-            overflow-y: auto;
-            position: relative;
-        }
-
+        .explorer-view { padding: 5px 15px; overflow-y: auto; position: relative; }
         .entry-content { display: none; }
         .entry-content.active { display: block; animation: fadeIn 0.2s ease-in; }
 
-        /* --- AUDIO PLAYER UI --- */
-        .audio-player-ui {
-            border: 1px solid var(--term-cyan);
-            background: rgba(0, 0, 0, 0.4);
-            padding: 15px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .play-btn {
-            width: 50px; height: 50px;
-            background: transparent;
-            border: 2px solid var(--term-cyan);
-            color: var(--term-cyan);
-            cursor: pointer;
-            display: flex; justify-content: center; align-items: center;
-            font-size: 1.5rem;
-            transition: all 0.1s;
-        }
-
+        .audio-player-ui { border: 1px solid var(--term-cyan); background: rgba(0, 0, 0, 0.4); padding: 15px; margin-bottom: 20px; display: flex; align-items: center; gap: 20px; }
+        .play-btn { width: 50px; height: 50px; background: transparent; border: 2px solid var(--term-cyan); color: var(--term-cyan); cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 1.5rem; transition: all 0.1s; }
         .play-btn:hover { background: var(--term-cyan); color: #000; }
         .play-btn:active { transform: scale(0.95); }
-
-        .waveform {
-            display: flex; align-items: flex-end; gap: 3px; height: 40px; flex-grow: 1;
-        }
-
+        .waveform { display: flex; align-items: flex-end; gap: 3px; height: 40px; flex-grow: 1; }
         .wave-bar { width: 5px; background: var(--term-cyan); opacity: 0.6; }
-        .wave-bar:nth-child(even) { height: 70%; }
-        .wave-bar:nth-child(odd) { height: 30%; }
-        .wave-bar:nth-child(3n) { height: 90%; }
-        .wave-bar:nth-child(5n) { height: 50%; }
+        .wave-bar:nth-child(even) { height: 70%; } .wave-bar:nth-child(odd) { height: 30%; } .wave-bar:nth-child(3n) { height: 90%; } .wave-bar:nth-child(5n) { height: 50%; }
+        .audio-status { font-family: 'Share Tech Mono', monospace; font-size: 0.9rem; text-align: right; min-width: 150px; }
 
-        .audio-status {
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 0.9rem;
-            text-align: right;
-            min-width: 150px;
-        }
-
-        /* Sidebar Elements */
         .schematics-window { display: flex; flex-direction: column; gap: 15px; z-index: 3; overflow-y: auto; }
         .schematic-box { border: 1px dashed var(--term-cyan); min-height: 120px; display: flex; justify-content: center; align-items: center; text-align: center; font-size: 0.8rem; opacity: 0.7; }
-        
         .sys-log-box { border: 1px solid rgba(139, 233, 253, 0.3); background-color: rgba(0,0,0,0.5); padding: 10px; flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
         .sys-log-header { font-size: 0.8rem; border-bottom: 1px solid var(--term-dim); padding-bottom: 5px; margin-bottom: 5px; color: var(--term-cyan); }
         #sys-log-content { font-size: 0.75rem; color: rgba(139, 233, 253, 0.6); display: flex; flex-direction: column; justify-content: flex-end; flex-grow: 1; gap: 4px; }
         .log-entry { animation: fadeIn 0.2s; word-wrap: break-word;}
-
         .highlight { color: var(--term-cyan); font-weight: bold; }
+        
+        .img-attachment { max-width: 100%; border: 1px solid var(--term-cyan); margin-top: 10px; display: block; }
     </style>
 </head>
 <body>
@@ -311,14 +156,12 @@
     <audio id="snd-alert" src="alert.mp3" loop></audio>
     <audio id="snd-keystroke" src="keystroke.mp3"></audio>
 
-    <audio id="audio-log-1" src="vaust_log_1.mp3"></audio>
+    <div id="dynamic-audio-container"></div>
 
     <div class="datapad-bezel">
         <div class="screen">
             
-            <div id="pre-boot-screen">
-                <p class="blink-text">> AWAITING USER INPUT. CLICK TO INITIALIZE.</p>
-            </div>
+            <div id="pre-boot-screen"><p class="blink-text">> AWAITING USER INPUT. CLICK TO INITIALIZE.</p></div>
 
             <div id="boot-sequence">
                 <div class="boot-header">
@@ -348,12 +191,13 @@
                 <button class="tab-btn" onmouseover="playBeep(1)" onclick="openTab('commendations', this)">[ COMMENDATIONS ]</button>
                 <button class="tab-btn" onmouseover="playBeep(1)" onclick="openTab('infractions', this)">[ INFRACTIONS ]</button>
                 <button class="tab-btn" onmouseover="playBeep(1)" onclick="openTab('logs', this)">[ PERSONAL LOGS ]</button>
-                <button class="tab-btn" onmouseover="playBeep(1)" onclick="openTab('peer', this)">[ PEER EVALUATIONS ]</button>
+                <button class="tab-btn" onmouseover="playBeep(1)" onclick="openTab('evaluations', this)">[ EVALUATIONS ]</button>
             </div>
 
             <div class="content-grid">
                 
                 <div class="log-window">
+                    
                     <div id="file" class="tab-content active">
                         <div style="color: var(--term-cyan); opacity: 0.4; letter-spacing: 2px; margin-bottom: 15px;">// ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬ //</div>
                         <p><span class="highlight">[■] TROOPER NAME:</span> Darren Vaust</p>
@@ -374,11 +218,11 @@
 
                     <div id="commendations" class="tab-content">
                         <div class="explorer-layout">
-                            <div class="explorer-list">
-                                <button class="explorer-btn active" onclick="openEntry('com-1', this); playBeep(2)">[ AWARDS MASTER FILE ]</button>
+                            <div class="explorer-list" id="list-commendations">
+                                <button class="explorer-btn active" onclick="openEntry('com-master', this); playBeep(2)">[ AWARDS MASTER FILE ]</button>
                             </div>
-                            <div class="explorer-view">
-                                <div id="com-1" class="entry-content active">
+                            <div class="explorer-view" id="view-commendations">
+                                <div id="com-master" class="entry-content active">
                                     <div style="color: var(--term-cyan); opacity: 0.4; letter-spacing: 2px; margin-bottom: 15px;">// ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬ //</div>
                                     <p><span class="highlight">[■] COMMENDATION RECORDS</span></p>
                                     <div style="color: var(--term-cyan); opacity: 0.4; letter-spacing: 2px; margin: 15px 0;">// ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬ //</div>
@@ -392,16 +236,15 @@
 
                     <div id="infractions" class="tab-content">
                         <div class="explorer-layout">
-                            <div class="explorer-list">
-                                <button class="explorer-btn active" onclick="openEntry('inf-1', this); playBeep(2)">[ PENAL MASTER FILE ]</button>
+                            <div class="explorer-list" id="list-infractions">
+                                <button class="explorer-btn active" onclick="openEntry('inf-master', this); playBeep(2)">[ PENAL MASTER FILE ]</button>
                             </div>
-                            <div class="explorer-view">
-                                <div id="inf-1" class="entry-content active">
+                            <div class="explorer-view" id="view-infractions">
+                                <div id="inf-master" class="entry-content active">
                                     <div style="color: var(--term-cyan); opacity: 0.4; letter-spacing: 2px; margin-bottom: 15px;">// ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬ //</div>
                                     <p><span class="highlight">[■] INFRACTION RECORDS</span></p>
                                     <div style="color: var(--term-cyan); opacity: 0.4; letter-spacing: 2px; margin: 15px 0;">// ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬ //</div>
                                     <p style="font-style: italic; opacity: 0.8; margin-bottom: 15px;">[!] Technical information included in the following infraction reports are classified beyond the level of personnel records management. Contact the CSM for full-records access.</p>
-                                    
                                     <p>► Misdemeanor tampering in the third degree of low-sentience imperial droids - Verbal reprimand.</p>
                                     <p>► Misdemeanor tampering in the second degree of moderate-sentience imperial droids - Verbal reprimand, 2 week suspension of elevated code privileges.</p>
                                     <p style="color: var(--term-dim);">► [ RECORD EXPUNGED ]</p>
@@ -416,33 +259,18 @@
 
                     <div id="logs" class="tab-content">
                         <div class="explorer-layout">
-                            <div class="explorer-list">
-                                <button class="explorer-btn active" onclick="openEntry('log-1', this); playBeep(2)">[ EMPTY SLOT ]</button>
-                            </div>
-                            <div class="explorer-view">
-                                
-                                <div id="log-1" class="entry-content active">
-                                    <div class="audio-player-ui">
-                                        <button class="play-btn" onclick="triggerAudioLog('missing-audio', 'status-log-1')">▶</button>
-                                        <div class="waveform">
-                                            <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
-                                        </div>
-                                        <div id="status-log-1" class="audio-status" style="color: var(--term-cyan);">[ STANDBY ]</div>
-                                    </div>
-                                    <p style="opacity: 0.6; font-style: italic;">[!] NO TRANSCRIPT UPLOADED</p>
-                                </div>
-
-                            </div>
+                            <div class="explorer-list" id="list-logs"></div>
+                            <div class="explorer-view" id="view-logs"></div>
                         </div>
                     </div>
 
-                    <div id="peer" class="tab-content">
+                    <div id="evaluations" class="tab-content">
                          <div class="explorer-layout">
-                            <div class="explorer-list">
-                                <button class="explorer-btn active" onclick="openEntry('eval-1', this); playBeep(2)">[ SYS_NOTICE ]</button>
+                            <div class="explorer-list" id="list-evaluations">
+                                <button class="explorer-btn active" onclick="openEntry('eval-master', this); playBeep(2)">[ PEER EVALUATION ]</button>
                             </div>
-                            <div class="explorer-view">
-                                <div id="eval-1" class="entry-content active">
+                            <div class="explorer-view" id="view-evaluations">
+                                <div id="eval-master" class="entry-content active">
                                     <div style="color: var(--term-cyan); opacity: 0.4; letter-spacing: 2px; margin-bottom: 15px;">// ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬ //</div>
                                     <p><span class="highlight">[■] PEER EVALUATION SYSTEM</span></p>
                                     <div style="color: var(--term-cyan); opacity: 0.4; letter-spacing: 2px; margin: 15px 0;">// ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬ //</div>
@@ -464,117 +292,37 @@
                 </div>
             </div>
 
-                    <div id="infractions" class="tab-content">
-                        <div class="explorer-layout">
-                            <div class="explorer-list">
-                                <button class="explorer-btn active" onclick="openEntry('inf-1', this); playBeep(2)">[ PENAL MASTER FILE ]</button>
-                            </div>
-                            <div class="explorer-view">
-                                <div id="inf-1" class="entry-content active">
-                                    <p>▰▰▰▰▰▰</p>
-                                    <p><span class="highlight"><:: INFRACTION RECORDS</span></p>
-                                    <p><em>Technical information included in the following infraction reports are classified beyond the level of personnel records management - Contact the CSM for full-records access...</em></p>
-                                    <p>▰▰▰▰▰▰</p>
-                                    <p><:: Misdemeanor tampering in the third degree of low-sentience imperial droids - Verbal reprimand ::></p>
-                                    <p><:: Misdemeanor tampering in the second degree of moderate-sentience imperial droids- Verbal reprimand, 2 week suspension of elevated code privledges ::></p>
-                                    <p><:: /'/'/ RECORD EXPUNGED /'/'/ ::></p>
-                                    <p><:: Technical insubordination of the third degree - Verbal reprimand, formal write-up ::></p>
-                                    <p><:: /'/'/ RECORD EXPUNGED /'/'/ ::></p>
-                                    <p><:: /'/'/ RECORD EXPUNGED /'/'/ ::></p>
-                                    <p><:: Misdemeanor tampering in the first degree of low-sentience imperial droids - Board reprimand, letter of Imperial indebtedness totaling ⏹⏹⏹,⏹⏹⏹ Credits, docked from future wages ::></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="logs" class="tab-content">
-                        <div class="explorer-layout">
-                            <div class="explorer-list">
-                                <button class="explorer-btn active" onclick="openEntry('log-1', this); playBeep(2)">[ EMPTY SLOT ]</button>
-                            </div>
-                            <div class="explorer-view">
-                                
-                                <div id="log-1" class="entry-content active">
-                                    <div class="audio-player-ui">
-                                        <button class="play-btn" onclick="triggerAudioLog('missing-audio', 'status-log-1')">▶</button>
-                                        <div class="waveform">
-                                            <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
-                                        </div>
-                                        <div id="status-log-1" class="audio-status" style="color: var(--term-cyan);">[ STANDBY ]</div>
-                                    </div>
-                                    <p><em>[ NO TRANSCRIPT UPLOADED ]</em></p>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="peer" class="tab-content">
-                         <div class="explorer-layout">
-                            <div class="explorer-list">
-                                <button class="explorer-btn active" onclick="openEntry('eval-1', this); playBeep(2)">[ SYS_NOTICE ]</button>
-                            </div>
-                            <div class="explorer-view">
-                                <div id="eval-1" class="entry-content active">
-                                    <p>▰▰▰▰▰▰</p>
-                                    <p><span class="highlight"><:: PEER EVALUATION SYSTEM</span></p>
-                                    <p>▰▰▰▰▰▰</p>
-                                    <p>Notice: Direct terminal injection is offline due to local Felucian grid instability. All personnel files must be submitted via secondary relay.</p><br>
-                                    <p><em>[ AWAITING FUTURE FORM INTEGRATION ]</em></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="schematics-window">
-                    <div class="schematic-box" style="min-height: 100px;">[GRID MAP]</div>
-                    <div class="sys-log-box">
-                        <div class="sys-log-header aurebesh">SYS LOG MONITOR</div>
-                        <div id="sys-log-content"></div>
-                    </div>
-                </div>
-            </div>
-
         </div>
     </div>
 
+    <script src="database.js"></script>
+
     <script>
-        // --- AUDIO HELPERS (FIXED: UNCOMMENTED THE PLAY COMMANDS) ---
         function playAudio(id, vol = 1.0) {
             const sound = document.getElementById(id);
             if(sound) {
-                // These are now un-commented so the audio will play!
-                sound.currentTime = 0;
-                sound.volume = vol;
-                sound.play().catch(e => console.log("Audio not found or blocked by browser:", id));
+                sound.currentTime = 0; sound.volume = vol;
+                sound.play().catch(e => console.log("Audio not found:", id));
             }
         }
         
         function pauseAudio(id) {
             const sound = document.getElementById(id);
-            // Un-commented to allow audio to pause (used during boot sequence transition)
             if(sound) sound.pause();
         }
 
-        // Specific sound triggers
         function playBeep(num) { playAudio('snd-beep-' + num, 1.0); }
         function playWhirup(num) { playAudio('snd-whirup-' + num, 1.0); }
         function playDenied() { playAudio('snd-denied', 1.0); }
 
-        // --- PRE-BOOT TO BOOT SEQUENCE ---
         let hasBooted = false;
         document.getElementById('pre-boot-screen').addEventListener('click', () => {
             if(hasBooted) return;
             hasBooted = true;
-            
             document.getElementById('pre-boot-screen').style.display = 'none';
             document.getElementById('boot-sequence').style.display = 'flex';
             
-            playAudio('snd-boot-init', 1.0);
-            playAudio('snd-boot-loop', 1.0);
-            playAudio('snd-ambient', 1.0);
+            playAudio('snd-boot-init', 1.0); playAudio('snd-boot-loop', 1.0); playAudio('snd-ambient', 1.0);
 
             const jargonBox = document.getElementById('jargon-box');
             const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
@@ -583,20 +331,14 @@
                 let randomHex = "0x" + Math.floor(Math.random()*16777215).toString(16).toUpperCase();
                 let randomAurebesh = "";
                 for(let i=0; i<8; i++) randomAurebesh += chars.charAt(Math.floor(Math.random() * chars.length));
-                
-                let line = document.createElement("p");
-                line.className = "jargon-line";
+                let line = document.createElement("p"); line.className = "jargon-line";
                 line.innerHTML = `> ${randomHex}: ALLOCATING... <span class="aurebesh">${randomAurebesh}</span> SYS_OK`;
                 jargonBox.appendChild(line);
-                
                 if(jargonBox.children.length > 25) jargonBox.removeChild(jargonBox.firstChild);
             }, 60);
 
             setTimeout(() => {
-                clearInterval(bootInterval);
-                pauseAudio('snd-boot-loop');
-                playAudio('snd-boot-finish', 1.0);
-                
+                clearInterval(bootInterval); pauseAudio('snd-boot-loop'); playAudio('snd-boot-finish', 1.0);
                 setTimeout(() => {
                     document.getElementById('boot-sequence').classList.add('fade-out');
                     startRandomActivity();
@@ -604,127 +346,151 @@
             }, 7000);
         });
 
-        // --- MAIN TAB NAVIGATION ---
-        function openTab(tabId, element, isLocked = false) {
-            if(isLocked) {
-                playDenied();
-                let originalText = element.innerText;
-                element.innerText = "[ ACCESS DENIED ]";
-                element.style.color = "var(--term-red)";
-                element.style.borderColor = "var(--term-red)";
-                setTimeout(() => {
-                    element.innerText = originalText;
-                    element.style.color = "";
-                    element.style.borderColor = "";
-                }, 1000);
-                return; 
-            }
-
-            playBeep(2);
-            playWhirup(1);
-
+        function openTab(tabId, element) {
+            playBeep(2); playWhirup(1);
             let contents = document.getElementsByClassName("tab-content");
             for (let i = 0; i < contents.length; i++) contents[i].classList.remove("active");
-
             let buttons = document.getElementsByClassName("tab-btn");
             for (let i = 0; i < buttons.length; i++) buttons[i].classList.remove("active");
-
             document.getElementById(tabId).classList.add("active");
             element.classList.add("active");
         }
 
-        // --- SOMA EXPLORER NAVIGATION ---
         function openEntry(entryId, element) {
-            // Find the specific explorer layout we are currently inside
             let layout = element.closest('.explorer-layout');
-            
-            // Hide all contents in this specific view
             let contents = layout.getElementsByClassName("entry-content");
             for(let i=0; i < contents.length; i++) contents[i].classList.remove("active");
-            
-            // Remove active class from all buttons in this specific list
             let btns = layout.getElementsByClassName("explorer-btn");
             for(let i=0; i < btns.length; i++) btns[i].classList.remove("active");
-            
-            // Show new content
             document.getElementById(entryId).classList.add("active");
             element.classList.add("active");
             playWhirup(2);
         }
 
-        // --- AUDIO LOG LOGIC ---
         function triggerAudioLog(audioId, statusId) {
             const statusText = document.getElementById(statusId);
-            
-            // The logic below has also been un-commented. If the audio file does not exist, 
-            // the system will immediately catch the failure and trigger the fallback [ FILE MISSING ] error.
             const sound = document.getElementById(audioId);
             if (sound && sound.readyState >= 2) { 
-                sound.volume = 1.0;
-                sound.currentTime = 0;
-                sound.play();
-                statusText.innerText = "[ PLAYING... ]";
-                statusText.style.color = "var(--term-green)";
+                sound.volume = 1.0; sound.currentTime = 0; sound.play();
+                statusText.innerText = "[ PLAYING... ]"; statusText.style.color = "var(--term-green)";
                 return;
             }
-
-            // Default fallback when locked/missing:
             playDenied();
-            statusText.innerText = "[ FILE MISSING ]";
-            statusText.style.color = "var(--term-red)";
-            setTimeout(() => {
-                statusText.innerText = "[ STANDBY ]";
-                statusText.style.color = "var(--term-cyan)";
-            }, 2000);
+            statusText.innerText = "[ FILE MISSING ]"; statusText.style.color = "var(--term-red)";
+            setTimeout(() => { statusText.innerText = "[ STANDBY ]"; statusText.style.color = "var(--term-cyan)"; }, 2000);
         }
 
-        // --- RANDOM AMBIENT BEEPBOOP & SYS LOG TEXT ---
+        // --- DATABASE RENDERING LOGIC ---
+        function generateTerminalID(type, seedString) {
+            if (!type) return "<span style='color:var(--term-red)'>[ UNREADABLE ]</span>";
+            let t = type.toLowerCase();
+            if (t === 'tablet') return "GC3170-PERSONAL-PAD";
+            
+            // Seeded hashing math
+            let hash = 0;
+            for (let i = 0; i < seedString.length; i++) { hash = seedString.charCodeAt(i) + ((hash << 5) - hash); }
+            hash = Math.abs(hash);
+
+            if (t === 'command') return "CMD-RELAY-" + (hash % 4 + 1).toString().padStart(2, '0');
+            if (t === 'barracks') return "BRK-TERM-" + (hash % 3 + 1).toString().padStart(2, '0');
+            if (t === 'field') return "FLD-NODE-" + hash.toString(16).toUpperCase().substring(0, 4);
+            return "<span style='color:var(--term-red)'>[ UNKNOWN ORIGIN ]</span>";
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            if(typeof imperialLogs !== 'undefined') {
+                const audioContainer = document.getElementById('dynamic-audio-container');
+                
+                imperialLogs.forEach((log, index) => {
+                    const listContainer = document.getElementById(`list-${log.tab}`);
+                    const viewContainer = document.getElementById(`view-${log.tab}`);
+                    if (!listContainer || !viewContainer) return; // Failsafe
+
+                    // 1. Logic Processing
+                    let personnelData = log.personnel.trim() === "" ? "N/A" : log.personnel;
+                    let authorData = log.author.trim();
+                    if (authorData === "") {
+                        authorData = (log.tab === "logs") ? "GC-3170" : "<span style='color:var(--term-red)'>[ AUTHOR UNRETRIEVABLE ]</span>";
+                    }
+                    let terminalID = generateTerminalID(log.terminal, log.id + log.date);
+                    
+                    // Format the text body (preserves paragraph spaces)
+                    let formattedBody = log.body.split('\n').map(p => p.trim() ? `<p>${p}</p>` : `<br>`).join('');
+                    
+                    // Image Logic
+                    let imageHTML = "";
+                    if (log.imageExt && log.imageExt.trim() !== "") {
+                        let imgName = `${log.id}_img.${log.imageExt.replace('.','')}`;
+                        imageHTML = `
+                        <div style="border: 1px dashed var(--term-cyan); padding: 10px; margin-top: 20px; background: rgba(0,0,0,0.3);">
+                            <p style="opacity:0.6; margin:0 0 10px 0; font-family:'Share Tech Mono';">[ ATTACHED VISUAL ASSET ]</p>
+                            <img src="${imgName}" class="img-attachment" onerror="this.parentElement.style.display='none'">
+                        </div>`;
+                    }
+
+                    // 2. Inject Audio Player File Hole
+                    let audioFileID = `audio-${log.id}`;
+                    audioContainer.innerHTML += `<audio id="${audioFileID}" src="${log.id}_audio.mp3"></audio>`;
+
+                    // 3. Create Explorer Button
+                    let btn = document.createElement('button');
+                    // If it's the very first item in an empty 'logs' tab, make it active
+                    let isFirstItem = (listContainer.children.length === 0 && log.tab === "logs");
+                    btn.className = isFirstItem ? "explorer-btn active" : "explorer-btn";
+                    btn.innerHTML = `[ ${log.title.substring(0,20).toUpperCase()} ]`;
+                    btn.onclick = function() { openEntry(log.id, this); playBeep(2); };
+                    listContainer.appendChild(btn);
+
+                    // 4. Create Explorer View
+                    let view = document.createElement('div');
+                    view.className = isFirstItem ? "entry-content active" : "entry-content";
+                    view.id = log.id;
+                    view.innerHTML = `
+                        <div style="color: var(--term-cyan); opacity: 0.4; letter-spacing: 2px; margin-bottom: 15px;">// ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬ //</div>
+                        
+                        <div class="audio-player-ui">
+                            <button class="play-btn" onclick="triggerAudioLog('${audioFileID}', 'status-${log.id}')">▶</button>
+                            <div class="waveform">
+                                <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+                            </div>
+                            <div id="status-${log.id}" class="audio-status" style="color: var(--term-cyan);">[ STANDBY ]</div>
+                        </div>
+
+                        <div style="color: var(--term-cyan); opacity: 0.4; letter-spacing: 2px; margin: 15px 0;">// ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬ //</div>
+                        <p><span class="highlight">[■] DATE:</span> ${log.date}</p>
+                        <p><span class="highlight">[■] AUTHOR:</span> ${authorData}</p>
+                        <p><span class="highlight">[■] TERMINAL ORIGIN:</span> ${terminalID}</p>
+                        <p><span class="highlight">[■] MENTIONED PERSONNEL:</span> ${personnelData}</p>
+                        <div style="color: var(--term-cyan); opacity: 0.4; letter-spacing: 2px; margin: 15px 0;">// ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬ //</div>
+                        <br>
+                        ${formattedBody}
+                        ${imageHTML}
+                    `;
+                    viewContainer.appendChild(view);
+                });
+            }
+        });
+
         function startRandomActivity() {
             const logBox = document.getElementById('sys-log-content');
-            
             const prefixes = ["SYS", "NET", "SEC", "PWR", "ENV", "COM", "NODE"];
-            const normalStatuses = [
-                "NOMINAL", "ISB-PATTERN VERIFIED", "SPORE FILTER CYCLING", "THERMAL STABLE",
-                "HANDSHAKE ACKNOWLEDGED", "FUSION CORE BALANCED", "GRID OPTIMIZING",
-                "ENCRYPTION ROTATED", "PACKET LOSS: 0%", "ROUTING SECURED",
-                "BACTA RESERVES NOMINAL", "LOCAL PING: 12ms", "DEFLECTOR HARMONICS ALIGNED",
-                "MEMORY CACHE PURGED", "UPLINK SYNCED"
-            ];
-            const minorWarnings = [
-                "MINOR FLUCTUATION DETECTED", "LATENCY SPIKE COMPENSATED",
-                "REROUTING FROM DEAD ZONE", "SPORE BUILDUP CLEARED",
-                "VOLTAGE ANOMALY LOGGED", "DROPPED PACKET RECOVERED"
-            ];
+            const normalStatuses = ["NOMINAL", "ISB-PATTERN VERIFIED", "SPORE FILTER CYCLING", "THERMAL STABLE", "HANDSHAKE ACKNOWLEDGED", "FUSION CORE BALANCED", "GRID OPTIMIZING", "ENCRYPTION ROTATED", "PACKET LOSS: 0%", "ROUTING SECURED", "BACTA RESERVES NOMINAL", "LOCAL PING: 12ms", "DEFLECTOR HARMONICS ALIGNED", "MEMORY CACHE PURGED", "UPLINK SYNCED"];
+            const minorWarnings = ["MINOR FLUCTUATION DETECTED", "LATENCY SPIKE COMPENSATED", "REROUTING FROM DEAD ZONE", "SPORE BUILDUP CLEARED", "VOLTAGE ANOMALY LOGGED", "DROPPED PACKET RECOVERED"];
             
             function triggerRandomEvent() {
-                // Play random beepboop sound at 50% volume
                 let randSound = Math.floor(Math.random() * 5) + 1;
                 playAudio('snd-beepboop-' + randSound, 0.5); 
-
                 let randHex = Math.floor(Math.random()*65535).toString(16).toUpperCase().padStart(4, '0');
                 let prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
                 let isWarning = Math.random() > 0.85; 
-
-                let statusText = "";
-                let colorStyle = "";
-
-                if (isWarning) {
-                    statusText = minorWarnings[Math.floor(Math.random() * minorWarnings.length)];
-                    colorStyle = "color: var(--term-red);";
-                } else {
-                    statusText = normalStatuses[Math.floor(Math.random() * normalStatuses.length)];
-                    colorStyle = "color: var(--term-cyan);";
-                }
+                let statusText = isWarning ? minorWarnings[Math.floor(Math.random() * minorWarnings.length)] : normalStatuses[Math.floor(Math.random() * normalStatuses.length)];
+                let colorStyle = isWarning ? "color: var(--term-red);" : "color: var(--term-cyan);";
                 
-                let line = document.createElement("div");
-                line.className = "log-entry";
+                let line = document.createElement("div"); line.className = "log-entry";
                 line.innerHTML = `<span style="font-weight:bold; ${colorStyle}">[${prefix}-${randHex}]</span> - ${statusText}`;
-                
                 logBox.appendChild(line);
                 if(logBox.children.length > 8) logBox.removeChild(logBox.firstChild);
-
-                let nextEventTime = Math.floor(Math.random() * 16000) + 6000;
-                setTimeout(triggerRandomEvent, nextEventTime);
+                setTimeout(triggerRandomEvent, Math.floor(Math.random() * 16000) + 6000);
             }
             setTimeout(triggerRandomEvent, 4000);
         }
