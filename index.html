@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imperial Datapad - GC-3170</title>
+    <style>
+        /* Import Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+        @import url('https://fonts.cdnfonts.com/css/aurebesh');
+
+        /* Base Settings */
+        :root {
+            --term-cyan: #8be9fd;
+            --term-white: #f8f8f2;
+            --term-bg: #0d1117;
+            --term-glow: rgba(139, 233, 253, 0.4);
+            --bezel-color: #2b2b2b;
+        }
+
+        body {
+            background-color: #050505; /* The "desk" the tablet sits on */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Share Tech Mono', monospace;
+            color: var(--term-white);
+        }
+
+        /* The Tablet Hardware */
+        .datapad-bezel {
+            background-color: var(--bezel-color);
+            padding: 30px 15px 40px 15px;
+            border-radius: 12px;
+            box-shadow: 
+                inset 0 0 10px #000, 
+                0 10px 30px rgba(0,0,0,0.8);
+            width: 90vw;
+            max-width: 800px;
+            height: 85vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* The Glowing Screen */
+        .screen {
+            background-color: var(--term-bg);
+            border: 2px solid var(--term-cyan);
+            border-radius: 4px;
+            flex-grow: 1;
+            padding: 20px;
+            box-shadow: 
+                inset 0 0 20px var(--term-glow),
+                0 0 15px var(--term-glow);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* CRT Scanline Overlay */
+        .screen::after {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+
+        /* Layout Grid */
+        header {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 2px solid var(--term-cyan);
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+
+        .header-info {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .aurebesh {
+            font-family: 'Aurebesh', sans-serif;
+            color: var(--term-cyan);
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+        }
+
+        .imperial-logo {
+            width: 80px;
+            height: 80px;
+            background-image: radial-gradient(circle, var(--term-white) 20%, transparent 21%), 
+                              conic-gradient(transparent 10deg, var(--term-white) 11deg 49deg, transparent 50deg 70deg, var(--term-white) 71deg 109deg, transparent 110deg 130deg, var(--term-white) 131deg 169deg, transparent 170deg 190deg, var(--term-white) 191deg 229deg, transparent 230deg 250deg, var(--term-white) 251deg 289deg, transparent 290deg 310deg, var(--term-white) 311deg 349deg, transparent 350deg);
+            border-radius: 50%;
+            border: 4px solid var(--term-white);
+        }
+
+        /* Droning Connection Bar Animation */
+        .connection-bar {
+            height: 8px;
+            width: 100%;
+            background-color: #222;
+            margin-bottom: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .connection-indicator {
+            height: 100%;
+            width: 20%;
+            background-color: var(--term-cyan);
+            position: absolute;
+            animation: ping 3s infinite ease-in-out;
+        }
+
+        @keyframes ping {
+            0% { left: -20%; }
+            50% { left: 100%; }
+            100% { left: -20%; }
+        }
+
+        /* Main Content Area */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 250px;
+            gap: 20px;
+            flex-grow: 1;
+            overflow: hidden; /* Prevents stretching the tablet */
+        }
+
+        .log-window {
+            background-color: rgba(139, 233, 253, 0.05);
+            border: 1px solid rgba(139, 233, 253, 0.3);
+            padding: 15px;
+            overflow-y: auto; /* Allows scrolling inside the lore dump */
+            z-index: 3;
+            scrollbar-width: thin;
+            scrollbar-color: var(--term-cyan) transparent;
+            line-height: 1.5;
+        }
+
+        .schematics-window {
+            border: 1px solid rgba(139, 233, 253, 0.3);
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 3;
+        }
+
+        .schematic-box {
+            border: 1px dashed var(--term-cyan);
+            height: 120px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="datapad-bezel">
+        <div class="screen">
+            
+            <header>
+                <div class="header-info">
+                    <span class="aurebesh">IMPERIAL DUSK NETWORK</span>
+                    <span>FILE ENCRYPTION: ISB-Pattern 'Aurek_v1.3a'</span>
+                    <span>AUTH: GC-3170 // V. DARREN</span>
+                </div>
+                <div class="imperial-logo"></div>
+            </header>
+
+            <div class="connection-bar">
+                <div class="connection-indicator"></div>
+            </div>
+
+            <div class="content-grid">
+                <div class="log-window">
+                    <p class="aurebesh">ACCESSING HOLOLOG...</p>
+                    <p>▰▰▰▰▰▰</p>
+                    <p><strong><:: TROOPER DESIGNATION:</strong> GC-3170</p>
+                    <p><strong><:: GRS TIMECYCLE:</strong> [AWAITING INPUT]</p>
+                    <p><strong><:: LOCATION:</strong> [AWAITING INPUT]</p>
+                    <p>▰▰▰▰▰▰</p>
+                    <p>-# HoloLog Begins</p>
+                    <p><br>[ Paste your formatted text here in future updates. This area will scroll vertically if the text gets too long, keeping the datapad size static. ]</p>
+                    <p><br>-# HoloLog Ends</p>
+                </div>
+
+                <div class="schematics-window">
+                    <span class="aurebesh">ATTACHED FILES</span>
+                    <div class="schematic-box">
+                        [EQUIPMENT SCHEMATIC PLACEHOLDER]
+                    </div>
+                    <div class="schematic-box">
+                        [GRID MAP PLACEHOLDER]
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
