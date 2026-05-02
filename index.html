@@ -439,16 +439,19 @@
             }
 
             let i = 0;
-            let currentDelay = 120; // Start with a slow 120ms gap to let user see Aurebesh
-
+            // 1. INITIAL DELAY: Change 120 to 250. This makes the very first few letters translate much slower.
+            let currentDelay = 250; 
+            
             function decryptStep() {
                 if (i >= chars.length) return;
                 
-                // Exponential acceleration: Reduce delay by 15% each loop, down to 5ms
-                currentDelay = Math.max(5, currentDelay * 0.85); 
-
-                // If going very fast, process in chunks to avoid lagging the browser
-                let batchSize = currentDelay <= 10 ? Math.max(1, Math.floor(chars.length / 25)) : 1;
+                // 2. MINIMUM SPEED & ACCELERATION: 
+                // Change the floor from 5 to 15 (stops it from getting too fast at the end).
+                // Change the multiplier from 0.85 to 0.96 (accelerates by only 4% per tick instead of 15%).
+                currentDelay = Math.max(15, currentDelay * 0.96); 
+            
+                // 3. BATCHING: Lower the threshold so it translates letter-by-letter for longer before grouping them.
+                let batchSize = currentDelay <= 15 ? Math.max(1, Math.floor(chars.length / 40)) : 1;
                 
                 for (let b = 0; b < batchSize && i < chars.length; b++, i++) {
                     chars[i].classList.remove('aurebesh-char');
