@@ -76,7 +76,7 @@
             pointer-events: none;
         }
 
-        /* --- BOOT SEQUENCE ANIMATIONS --- */
+/* --- BOOT SEQUENCE ANIMATIONS --- */
         .boot-sequence {
             position: absolute;
             top: 0;
@@ -88,27 +88,83 @@
             padding: 20px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            animation: fadeOutBoot 4.5s forwards; /* Controls when the screen disappears */
+            animation: fadeOutBoot 5.5s forwards; /* Extended slightly for the new sequence */
             pointer-events: none;
         }
 
-        .boot-line {
-            opacity: 0;
-            margin: 0;
-            font-size: 1.1rem;
+        .boot-header {
+            border-bottom: 1px solid var(--term-cyan);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
         }
 
-        /* Timing for each line of code appearing */
-        .line-1 { animation: typeText 0.1s 0.5s forwards; }
-        .line-2 { animation: typeText 0.1s 1.2s forwards; }
-        .line-3 { animation: typeText 0.1s 2.0s forwards; }
-        .line-4 { animation: typeText 0.1s 2.5s forwards; }
-        .line-5 { animation: typeText 0.1s 3.2s forwards; color: var(--term-green); font-weight: bold; font-size: 1.3rem; }
+        .layman-line {
+            opacity: 0;
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .jargon-box {
+            display: flex;
+            flex-direction: column;
+            font-size: 0.85rem;
+            color: rgba(139, 233, 253, 0.6);
+            line-height: 1.2;
+            height: 60vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .jargon-line {
+            opacity: 0;
+            margin: 2px 0;
+            font-family: monospace;
+        }
+
+        .access-granted {
+            opacity: 0;
+            color: var(--term-green);
+            font-weight: bold;
+            font-size: 1.5rem;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        /* Timing for Layman Text */
+        .l-1 { animation: typeText 0.1s 0.2s forwards; }
+        .l-2 { animation: typeText 0.1s 1.5s forwards; }
+        .l-3 { animation: typeText 0.1s 3.5s forwards; }
+
+        /* Timing for Rapid Jargon (Loading in and fading out) */
+        .j-1 { animation: flashText 0.4s 0.5s forwards; }
+        .j-2 { animation: flashText 0.3s 0.7s forwards; }
+        .j-3 { animation: flashText 0.5s 0.8s forwards; }
+        .j-4 { animation: flashText 0.2s 1.0s forwards; }
+        .j-5 { animation: flashText 0.4s 1.1s forwards; }
+        .j-6 { animation: flashText 0.3s 1.3s forwards; }
+        .j-7 { animation: flashText 0.2s 1.6s forwards; }
+        .j-8 { animation: flashText 0.5s 1.8s forwards; }
+        .j-9 { animation: flashText 0.3s 2.0s forwards; }
+        .j-10 { animation: flashText 0.4s 2.2s forwards; }
+        .j-11 { animation: flashText 0.2s 2.5s forwards; }
+        .j-12 { animation: flashText 0.5s 2.7s forwards; }
+        .j-13 { animation: flashText 0.3s 2.9s forwards; }
+        .j-14 { animation: flashText 0.4s 3.1s forwards; }
+
+        /* The final Access Granted */
+        .ag-1 { animation: typeText 0.1s 4.0s forwards; }
 
         @keyframes typeText {
             0% { opacity: 0; }
             100% { opacity: 1; }
+        }
+
+        @keyframes flashText {
+            0% { opacity: 0; transform: translateX(-10px); }
+            20% { opacity: 1; transform: translateX(0); }
+            80% { opacity: 1; }
+            100% { opacity: 0; } /* Text disappears after flashing */
         }
 
         @keyframes fadeOutBoot {
