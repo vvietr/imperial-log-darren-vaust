@@ -16,7 +16,9 @@
             --term-bg: #0d1117;
             --term-glow: rgba(139, 233, 253, 0.4);
             --bezel-color: #2b2b2b;
-            --term-green: #50fa7b; /* For the access granted text */
+            --term-green: #50fa7b;
+            --term-dim: rgba(139, 233, 253, 0.2);
+            --term-red: #ff5555;
         }
 
         body {
@@ -28,6 +30,7 @@
             margin: 0;
             font-family: 'Share Tech Mono', monospace;
             color: var(--term-white);
+            user-select: none;
         }
 
         /* The Tablet Hardware */
@@ -35,14 +38,13 @@
             background-color: var(--bezel-color);
             padding: 30px 15px 40px 15px;
             border-radius: 12px;
-            box-shadow: 
-                inset 0 0 10px #000, 
-                0 10px 30px rgba(0,0,0,0.8);
+            box-shadow: inset 0 0 10px #000, 0 10px 30px rgba(0,0,0,0.8);
             width: 95vw;
             max-width: 1400px;
             height: 92vh;
             display: flex;
             flex-direction: column;
+            position: relative;
         }
 
         /* The Glowing Screen */
@@ -52,268 +54,171 @@
             border-radius: 4px;
             flex-grow: 1;
             padding: 20px;
-            box-shadow: 
-                inset 0 0 20px var(--term-glow),
-                0 0 15px var(--term-glow);
+            box-shadow: inset 0 0 20px var(--term-glow), 0 0 15px var(--term-glow);
             position: relative;
             overflow: hidden;
             display: flex;
             flex-direction: column;
         }
 
-        /* CRT Scanline Overlay */
+        /* Moving CRT Scanline Overlay */
         .screen::after {
             content: " ";
             display: block;
             position: absolute;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
+            top: 0; left: 0; bottom: 0; right: 0;
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            z-index: 5;
-            background-size: 100% 2px, 3px 100%;
+            z-index: 20;
+            background-size: 100% 4px, 3px 100%;
             pointer-events: none;
+            animation: scrollLines 10s linear infinite;
         }
 
-/* --- BOOT SEQUENCE ANIMATIONS --- */
-        .boot-sequence {
+        @keyframes scrollLines {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 100%; }
+        }
+
+        /* --- PRE-BOOT SCREEN --- */
+        #pre-boot-screen {
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 0; left: 0; right: 0; bottom: 0;
             background-color: var(--term-bg);
-            z-index: 10;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            animation: fadeOutBoot 5.5s forwards; /* Extended slightly for the new sequence */
-            pointer-events: none;
-        }
-
-        .boot-header {
-            border-bottom: 1px solid var(--term-cyan);
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-        }
-
-        .layman-line {
-            opacity: 0;
-            margin: 0;
-            font-size: 1.2rem;
-            font-weight: bold;
-        }
-
-        .jargon-box {
-            display: flex;
-            flex-direction: column;
-            font-size: 0.85rem;
-            color: rgba(139, 233, 253, 0.6);
-            line-height: 1.2;
-            height: 60vh;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .jargon-line {
-            opacity: 0;
-            margin: 2px 0;
-            font-family: monospace;
-        }
-
-        .access-granted {
-            opacity: 0;
-            color: var(--term-green);
-            font-weight: bold;
-            font-size: 1.5rem;
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        /* Timing for Layman Text */
-        .l-1 { animation: typeText 0.1s 0.2s forwards; }
-        .l-2 { animation: typeText 0.1s 1.5s forwards; }
-        .l-3 { animation: typeText 0.1s 3.5s forwards; }
-
-        /* Timing for Rapid Jargon (Loading in and fading out) */
-        .j-1 { animation: flashText 0.4s 0.5s forwards; }
-        .j-2 { animation: flashText 0.3s 0.7s forwards; }
-        .j-3 { animation: flashText 0.5s 0.8s forwards; }
-        .j-4 { animation: flashText 0.2s 1.0s forwards; }
-        .j-5 { animation: flashText 0.4s 1.1s forwards; }
-        .j-6 { animation: flashText 0.3s 1.3s forwards; }
-        .j-7 { animation: flashText 0.2s 1.6s forwards; }
-        .j-8 { animation: flashText 0.5s 1.8s forwards; }
-        .j-9 { animation: flashText 0.3s 2.0s forwards; }
-        .j-10 { animation: flashText 0.4s 2.2s forwards; }
-        .j-11 { animation: flashText 0.2s 2.5s forwards; }
-        .j-12 { animation: flashText 0.5s 2.7s forwards; }
-        .j-13 { animation: flashText 0.3s 2.9s forwards; }
-        .j-14 { animation: flashText 0.4s 3.1s forwards; }
-
-        /* The final Access Granted */
-        .ag-1 { animation: typeText 0.1s 4.0s forwards; }
-
-        @keyframes typeText {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
-        }
-
-        @keyframes flashText {
-            0% { opacity: 0; transform: translateX(-10px); }
-            20% { opacity: 1; transform: translateX(0); }
-            80% { opacity: 1; }
-            100% { opacity: 0; } /* Text disappears after flashing */
-        }
-
-        @keyframes fadeOutBoot {
-            0%, 90% { opacity: 1; visibility: visible; }
-            100% { opacity: 0; visibility: hidden; }
-        }
-        /* -------------------------------- */
-
-        /* Layout Grid */
-        header {
-            display: flex;
-            justify-content: space-between;
-            border-bottom: 2px solid var(--term-cyan);
-            padding-bottom: 15px;
-            margin-bottom: 15px;
-        }
-
-        .header-info {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .title-main {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: var(--term-white);
-            border-bottom: 1px dashed var(--term-cyan);
-            padding-bottom: 5px;
-            margin: 5px 0 10px 0;
-            display: inline-block;
-        }
-
-        .aurebesh {
-            font-family: 'Aurebesh', sans-serif;
-            color: var(--term-cyan);
-            font-size: 1.2rem;
-            letter-spacing: 2px;
-        }
-
-        .imperial-logo {
-            width: 80px;
-            height: 80px;
-            background-image: radial-gradient(circle, var(--term-white) 20%, transparent 21%), 
-                              conic-gradient(transparent 10deg, var(--term-white) 11deg 49deg, transparent 50deg 70deg, var(--term-white) 71deg 109deg, transparent 110deg 130deg, var(--term-white) 131deg 169deg, transparent 170deg 190deg, var(--term-white) 191deg 229deg, transparent 230deg 250deg, var(--term-white) 251deg 289deg, transparent 290deg 310deg, var(--term-white) 311deg 349deg, transparent 350deg);
-            border-radius: 50%;
-            border: 4px solid var(--term-white);
-            flex-shrink: 0; /* Keeps the logo from squishing */
-        }
-
-        /* Droning Connection Bar Animation */
-        .connection-bar {
-            height: 8px;
-            width: 100%;
-            background-color: #222;
-            margin-bottom: 15px;
-            position: relative;
-            overflow: hidden;
-            flex-shrink: 0;
-        }
-
-        .connection-indicator {
-            height: 100%;
-            width: 20%;
-            background-color: var(--term-cyan);
-            position: absolute;
-            animation: ping 3s infinite ease-in-out;
-        }
-
-        @keyframes ping {
-            0% { left: -20%; }
-            50% { left: 100%; }
-            100% { left: -20%; }
-        }
-
-        /* Main Content Area */
-        .content-grid {
-            display: grid;
-            grid-template-columns: 1fr 250px;
-            gap: 20px;
-            flex-grow: 1;
-            overflow: hidden;
-        }
-
-        .log-window {
-            background-color: rgba(139, 233, 253, 0.05);
-            border: 1px solid rgba(139, 233, 253, 0.3);
-            padding: 15px;
-            overflow-y: auto;
-            z-index: 3;
-            scrollbar-width: thin;
-            scrollbar-color: var(--term-cyan) transparent;
-            line-height: 1.5;
-        }
-
-        .schematics-window {
-            border: 1px solid rgba(139, 233, 253, 0.3);
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            z-index: 3;
-            overflow-y: auto;
-        }
-
-        .schematic-box {
-            border: 1px dashed var(--term-cyan);
-            min-height: 120px;
+            z-index: 15;
             display: flex;
             justify-content: center;
             align-items: center;
-            text-align: center;
-            font-size: 0.8rem;
-            opacity: 0.7;
+            cursor: pointer;
         }
 
+        .blink-text {
+            font-size: 1.5rem;
+            color: var(--term-cyan);
+            animation: blink 1.5s infinite;
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        /* --- BOOT SEQUENCE ANIMATIONS --- */
+        #boot-sequence {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: var(--term-bg);
+            z-index: 10;
+            padding: 30px;
+            display: none;
+            flex-direction: column;
+        }
+
+        .boot-header { border-bottom: 1px solid var(--term-cyan); padding-bottom: 10px; margin-bottom: 15px; }
+        .layman-line { opacity: 0; margin: 5px 0; font-size: 1.2rem; font-weight: bold; }
+        
+        #jargon-box { 
+            display: flex; 
+            flex-direction: column; 
+            font-size: 0.9rem; 
+            color: var(--term-cyan); 
+            line-height: 1.1; 
+            flex-grow: 1; 
+            overflow: hidden; 
+            position: relative;
+            margin-top: 10px;
+        }
+
+        .jargon-line { margin: 2px 0; font-family: monospace; opacity: 0.7; }
+        .ag-text { opacity: 0; color: var(--term-green); font-weight: bold; font-size: 2rem; text-align: center; margin-top: 20px; }
+
+        .l-1 { animation: keepText 0.1s 0.5s forwards; } 
+        .l-2 { animation: keepText 0.1s 2.0s forwards; } 
+        .l-3 { animation: keepText 0.1s 4.0s forwards; }
+        .ag-1 { animation: keepText 0.1s 6.5s forwards; }
+
+        @keyframes keepText { 0% { opacity: 0; } 100% { opacity: 1; } }
+        .fade-out { animation: fadeOutEffect 0.5s forwards; pointer-events: none; }
+        @keyframes fadeOutEffect { 100% { opacity: 0; visibility: hidden; } }
+
+        /* Layout Grid */
+        header { display: flex; justify-content: space-between; border-bottom: 2px solid var(--term-cyan); padding-bottom: 15px; margin-bottom: 15px; }
+        .header-info { display: flex; flex-direction: column; gap: 5px; }
+        .title-main { font-size: 1.2rem; font-weight: bold; color: var(--term-white); border-bottom: 1px dashed var(--term-cyan); padding-bottom: 5px; margin: 5px 0 10px 0; display: inline-block; }
+        .aurebesh { font-family: 'Aurebesh', sans-serif; color: var(--term-cyan); font-size: 1.2rem; letter-spacing: 2px; }
+        
+        .imperial-logo {
+            width: 80px; height: 80px; flex-shrink: 0;
+            background-image: radial-gradient(circle, var(--term-white) 20%, transparent 21%), conic-gradient(transparent 10deg, var(--term-white) 11deg 49deg, transparent 50deg 70deg, var(--term-white) 71deg 109deg, transparent 110deg 130deg, var(--term-white) 131deg 169deg, transparent 170deg 190deg, var(--term-white) 191deg 229deg, transparent 230deg 250deg, var(--term-white) 251deg 289deg, transparent 290deg 310deg, var(--term-white) 311deg 349deg, transparent 350deg);
+            border-radius: 50%; border: 4px solid var(--term-white);
+        }
+
+        .connection-bar { height: 8px; width: 100%; background-color: #222; margin-bottom: 15px; position: relative; overflow: hidden; flex-shrink: 0; }
+        .connection-indicator { height: 100%; width: 20%; background-color: var(--term-cyan); position: absolute; animation: ping 3s infinite ease-in-out; }
+        @keyframes ping { 0% { left: -20%; } 50% { left: 100%; } 100% { left: -20%; } }
+
+        /* TAB NAVIGATION SYSTEM */
+        .tab-nav { display: flex; gap: 10px; margin-bottom: 15px; border-bottom: 1px solid var(--term-dim); padding-bottom: 10px; flex-wrap: wrap; }
+        .tab-btn { background: transparent; color: var(--term-white); border: 1px solid var(--term-dim); padding: 8px 15px; font-family: 'Share Tech Mono', monospace; cursor: pointer; transition: all 0.1s; }
+        .tab-btn:hover { background: var(--term-dim); border-color: var(--term-cyan); }
+        .tab-btn.active { background: rgba(139, 233, 253, 0.2); border-color: var(--term-cyan); box-shadow: 0 0 10px var(--term-glow); }
+
+        .content-grid { display: grid; grid-template-columns: 1fr 250px; gap: 20px; flex-grow: 1; overflow: hidden; }
+        
+        .log-window { background-color: rgba(139, 233, 253, 0.05); border: 1px solid rgba(139, 233, 253, 0.3); padding: 20px; overflow-y: auto; z-index: 3; scrollbar-width: thin; scrollbar-color: var(--term-cyan) transparent; line-height: 1.6; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        .schematics-window { display: flex; flex-direction: column; gap: 15px; z-index: 3; overflow-y: auto; }
+        .schematic-box { border: 1px dashed var(--term-cyan); min-height: 120px; display: flex; justify-content: center; align-items: center; text-align: center; font-size: 0.8rem; opacity: 0.7; }
+        
+        /* Sidebar System Log Feed */
+        .sys-log-box { border: 1px solid rgba(139, 233, 253, 0.3); background-color: rgba(0,0,0,0.5); padding: 10px; flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .sys-log-header { font-size: 0.8rem; border-bottom: 1px solid var(--term-dim); padding-bottom: 5px; margin-bottom: 5px; color: var(--term-cyan); }
+        #sys-log-content { font-size: 0.75rem; color: rgba(139, 233, 253, 0.6); display: flex; flex-direction: column; justify-content: flex-end; flex-grow: 1; gap: 4px; }
+        .log-entry { animation: fadeIn 0.2s; word-wrap: break-word;}
+
+        .highlight { color: var(--term-cyan); font-weight: bold; }
     </style>
 </head>
 <body>
 
+    <audio id="snd-boot-init" src="boot_init.mp3"></audio>
+    <audio id="snd-boot-loop" src="boot_loop.mp3" loop></audio>
+    <audio id="snd-boot-finish" src="boot_finish.mp3"></audio>
+    <audio id="snd-ambient" src="ambient.mp3" loop></audio>
+
+    <audio id="snd-beep-1" src="beep_1.mp3"></audio>
+    <audio id="snd-beep-2" src="beep_2.mp3"></audio>
+    <audio id="snd-beep-3" src="beep_3.mp3"></audio>
+    <audio id="snd-beep-4" src="beep_4.mp3"></audio>
+    <audio id="snd-beep-5" src="beep_5.mp3"></audio>
+    
+    <audio id="snd-beepboop-1" src="beepboop_1.mp3"></audio>
+    <audio id="snd-beepboop-2" src="beepboop_2.mp3"></audio>
+    <audio id="snd-beepboop-3" src="beepboop_3.mp3"></audio>
+    <audio id="snd-beepboop-4" src="beepboop_4.mp3"></audio>
+    <audio id="snd-beepboop-5" src="beepboop_5.mp3"></audio>
+
+    <audio id="snd-denied" src="denied.mp3"></audio>
+    <audio id="snd-whirup-1" src="whirup_1.mp3"></audio>
+    <audio id="snd-whirup-2" src="whirup_2.mp3"></audio>
+    <audio id="snd-whirup-3" src="whirup_3.mp3"></audio>
+    <audio id="snd-powerdown" src="powerdown.mp3"></audio>
+    <audio id="snd-alert" src="alert.mp3" loop></audio>
+    <audio id="snd-keystroke" src="keystroke.mp3"></audio>
+
     <div class="datapad-bezel">
         <div class="screen">
+            
+            <div id="pre-boot-screen">
+                <p class="blink-text">> AWAITING USER INPUT. CLICK TO INITIALIZE.</p>
+            </div>
 
-            <div class="boot-sequence">
+            <div id="boot-sequence">
                 <div class="boot-header">
                     <p class="layman-line l-1">> SYSTEM WAKE...</p>
                     <p class="layman-line l-2">> BYPASSING FELUCIA SECURITY GRID...</p>
                     <p class="layman-line l-3">> DECRYPTING ISB-PATTERN...</p>
                 </div>
-
-                <div class="jargon-box">
-                    <p class="jargon-line j-1">0x88FEA: ALLOCATING MEMORY BLOCKS... OK</p>
-                    <p class="jargon-line j-2">SYS_REQ: INITIALIZING KERNEL MODULES</p>
-                    <p class="jargon-line j-3">0x00A1B: MOUNTING VIRTUAL FILE SYSTEM [100%]</p>
-                    <p class="jargon-line j-4">WARNING: UNREGISTERED DEVICE DETECTED</p>
-                    <p class="jargon-line j-5">REROUTING LOCAL NODE TRAFFIC -> OVERRIDE</p>
-                    <p class="jargon-line j-6">EXEC(AUTH_BYPASS.SH) --FORCE</p>
-                    <p class="jargon-line j-7">INJECTING PACKETS: |||||||||||||||| 64%</p>
-                    <p class="jargon-line j-8">INJECTING PACKETS: |||||||||||||||||||||||| 100%</p>
-                    <p class="jargon-line j-9">HANDSHAKE ACCEPTED. NODE: OP-2 REACTOR</p>
-                    <p class="jargon-line j-10">0x44FF2: FETCHING GC-3170 PERSONNEL FILE</p>
-                    <p class="jargon-line j-11">DECRYPT KEY: 9A-7B-44-2C-11</p>
-                    <p class="jargon-line j-12">PARSING METADATA...</p>
-                    <p class="jargon-line j-13">LOADING SCHEMATICS [UI_GRID_01]</p>
-                    <p class="jargon-line j-14">FINALIZING OVERLAY SYNC...</p>
-                </div>
-
-                <p class="access-granted ag-1 aurebesh">ACCESS GRANTED</p>
-
+                <div id="jargon-box"></div>
+                <p class="ag-text ag-1 aurebesh">ACCESS GRANTED</p>
             </div>
 
             <header>
@@ -327,30 +232,72 @@
                 <div class="imperial-logo"></div>
             </header>
 
-            <div class="connection-bar">
-                <div class="connection-indicator"></div>
+            <div class="connection-bar"><div class="connection-indicator"></div></div>
+
+            <div class="tab-nav">
+                <button class="tab-btn active" onmouseover="playBeep(1)" onclick="openTab('file', this)">[ PERSONNEL FILE ]</button>
+                <button class="tab-btn" onmouseover="playBeep(1)" onclick="openTab('commendations', this)">[ COMMENDATIONS ]</button>
+                <button class="tab-btn" onmouseover="playBeep(1)" onclick="openTab('infractions', this)">[ INFRACTIONS ]</button>
+                <button class="tab-btn" onmouseover="playBeep(1)" onclick="openTab('logs', this, true)">[ PERSONAL LOGS ]</button>
+                <button class="tab-btn" onmouseover="playBeep(1)" onclick="openTab('peer', this, true)">[ PEER EVALUATIONS ]</button>
             </div>
 
             <div class="content-grid">
+                
                 <div class="log-window">
-                    <p class="aurebesh">ACCESSING HOLOLOG...</p>
-                    <p>▰▰▰▰▰▰</p>
-                    <p><strong><:: TROOPER DESIGNATION:</strong> GC-3170</p>
-                    <p><strong><:: GRS TIMECYCLE:</strong> [AWAITING INPUT]</p>
-                    <p><strong><:: LOCATION:</strong> [AWAITING INPUT]</p>
-                    <p>▰▰▰▰▰▰</p>
-                    <p>-# HoloLog Begins</p>
-                    <p><br>[ Paste your formatted text here in future updates. This area will scroll vertically if the text gets too long, keeping the datapad size static. ]</p>
-                    <p><br>-# HoloLog Ends</p>
+                    <div id="file" class="tab-content active">
+                        <p>▰▰▰▰▰▰</p>
+                        <p><span class="highlight"><:: TROOPER NAME:</span> Darren Vaust</p>
+                        <p><span class="highlight"><:: TROOPER DESIGNATION:</span> GC-3170</p>
+                        <p><span class="highlight"><:: D.O.B:</span> ~30 BBY</p>
+                        <p><span class="highlight"><:: PLACE OF ORIGIN:</span> Coronet City, Corellia</p>
+                        <p><span class="highlight"><:: RANK:</span> Enlisted - Corporal</p>
+                        <p>▰▰▰▰▰▰</p>
+                        <br>
+                        <p class="highlight">TROOPER BACKGROUND</p>
+                        <p>Darren Vaust, designated GC-3170, is an enlistee of Corellian origin.</p>
+                        <p>Prior to enlistment, he worked as a scrapper and restorer of small-scale reactors and other (mostly antiquated) energy systems in and around Coronet City. He found moderate success in his endeavors for just under four years, spanning his late teens into young adulthood, until running afoul of the now-defunct Coronet Isotope & Engineering (CIE), which officially registered him as a debtor - What magnitude of debt was owed, if any, was been lost in records mismanagement.</p>
+                        <p>Regardless, he fled to Gus Treta, a large orbital station and mining hub in the same system, where he maintained and occasionally operated small-scale fusion reactors on their localized grid. Unable to afford travel outside of CEC's reach, he operated under a false identity.</p>
+                        <p>After his 36-month contract expired, he enlisted to offer his technical skills to the Empire—or so he claimed. It is far more likely that he was simply fleeing his debt. While this was discovered during pre-enlistment background scraping, the nature of the debt was deemed 'indeterminate' and therefore archived without action.</p>
+                        <p>Following his enlistment, he was stationed on Lothal as a Garrison Power Technician at the Sienar Fleet Systems Factory (which absorbed CIE), managing (in part) their power grid for just over three years. Shortly before his service term ended, he applied for the Janus Program and was selected for transfer to Felucia.</p>
+                        <p>Because his prior enlistment was Naval, this transfer required a service waiver and redesignation to 327th GC. Waiver authorized to fill a critical need for experienced technicians on Felucia, where grid systems are notoriously vulnerable.</p>
+                    </div>
+
+                    <div id="commendations" class="tab-content">
+                        <p>▰▰▰▰▰▰</p>
+                        <p><span class="highlight"><:: COMMENDATION RECORDS</span></p>
+                        <p>▰▰▰▰▰▰</p>
+                        <p><strong><:: Sienar Fleet Systems - Technician of the month x2;</strong> Awarded for superior performance in grid management and power electronics logistics and repair ::></p><br>
+                        <p><strong><:: Sienar Fleet Systems - Technician of the year, 3 BBY;</strong> Awarded for outstanding performance in grid management and power electronics logistics and repair ::></p><br>
+                        <p><strong><:: 327th - Imperial Valor Citation -</strong> As detailed in both his and the adjoining sapper squadron ESK's report of the expedition, in the absence of sufficient escort personnel, GC-3170 volunteered to run over 4000 units through untenable forest-geography between a drill site on Felucia and its overseeing garrison base to acquire a critical repair component. His justification was that he was "out of ammo, out of time, left with only one thing to do: deliver despite the odds". His selfless dedication to service resulted in the restoration of drill 1 and the return of the sapper squad intact. ::></p>
+                    </div>
+
+                    <div id="infractions" class="tab-content">
+                        <p>▰▰▰▰▰▰</p>
+                        <p><span class="highlight"><:: INFRACTION RECORDS</span></p>
+                        <p><em>Technical information included in the following infraction reports are classified beyond the level of personnel records management - Contact the CSM for full-records access...</em></p>
+                        <p>▰▰▰▰▰▰</p>
+                        <p><:: Misdemeanor tampering in the third degree of low-sentience imperial droids - Verbal reprimand ::></p>
+                        <p><:: Misdemeanor tampering in the second degree of moderate-sentience imperial droids- Verbal reprimand, 2 week suspension of elevated code privledges ::></p>
+                        <p><:: /'/'/ RECORD EXPUNGED /'/'/ ::></p>
+                        <p><:: Technical insubordination of the third degree - Verbal reprimand, formal write-up ::></p>
+                        <p><:: /'/'/ RECORD EXPUNGED /'/'/ ::></p>
+                        <p><:: /'/'/ RECORD EXPUNGED /'/'/ ::></p>
+                        <p><:: Misdemeanor tampering in the first degree of low-sentience imperial droids - Board reprimand, letter of Imperial indebtedness totaling ⏹⏹⏹,⏹⏹⏹ Credits, docked from future wages ::></p>
+                    </div>
+
+                    <div id="logs" class="tab-content">
+                        </div>
+
+                    <div id="peer" class="tab-content">
+                         </div>
                 </div>
 
                 <div class="schematics-window">
-                    <span class="aurebesh">ATTACHED FILES</span>
-                    <div class="schematic-box">
-                        [EQUIPMENT SCHEMATIC PLACEHOLDER]
-                    </div>
-                    <div class="schematic-box">
-                        [GRID MAP PLACEHOLDER]
+                    <div class="schematic-box" style="min-height: 100px;">[GRID MAP]</div>
+                    <div class="sys-log-box">
+                        <div class="sys-log-header aurebesh">SYS LOG MONITOR</div>
+                        <div id="sys-log-content"></div>
                     </div>
                 </div>
             </div>
@@ -358,5 +305,127 @@
         </div>
     </div>
 
+    <script>
+        // --- AUDIO HELPERS ---
+        function playAudio(id) {
+            const sound = document.getElementById(id);
+            if(sound) {
+                // Remove the // below when files are uploaded to enable sound playback
+                // sound.currentTime = 0;
+                // sound.play().catch(e => console.log("Audio not found:", id));
+            }
+        }
+        
+        function pauseAudio(id) {
+            const sound = document.getElementById(id);
+            // Remove the // below when files are uploaded
+            // if(sound) sound.pause();
+        }
+
+        // Specific sound triggers
+        function playBeep(num) { playAudio('snd-beep-' + num); }
+        function playWhirup(num) { playAudio('snd-whirup-' + num); }
+        function playDenied() { playAudio('snd-denied'); }
+
+        // --- PRE-BOOT TO BOOT SEQUENCE ---
+        let hasBooted = false;
+        document.getElementById('pre-boot-screen').addEventListener('click', () => {
+            if(hasBooted) return;
+            hasBooted = true;
+            
+            document.getElementById('pre-boot-screen').style.display = 'none';
+            document.getElementById('boot-sequence').style.display = 'flex';
+            
+            playAudio('snd-boot-init');
+            playAudio('snd-boot-loop');
+            playAudio('snd-ambient');
+
+            const jargonBox = document.getElementById('jargon-box');
+            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+            
+            let bootInterval = setInterval(() => {
+                let randomHex = "0x" + Math.floor(Math.random()*16777215).toString(16).toUpperCase();
+                let randomAurebesh = "";
+                for(let i=0; i<8; i++) randomAurebesh += chars.charAt(Math.floor(Math.random() * chars.length));
+                
+                let line = document.createElement("p");
+                line.className = "jargon-line";
+                line.innerHTML = `> ${randomHex}: ALLOCATING... <span class="aurebesh">${randomAurebesh}</span> SYS_OK`;
+                jargonBox.appendChild(line);
+                
+                if(jargonBox.children.length > 25) jargonBox.removeChild(jargonBox.firstChild);
+            }, 60);
+
+            setTimeout(() => {
+                clearInterval(bootInterval);
+                pauseAudio('snd-boot-loop');
+                playAudio('snd-boot-finish');
+                
+                setTimeout(() => {
+                    document.getElementById('boot-sequence').classList.add('fade-out');
+                    startRandomActivity();
+                }, 1500);
+            }, 7000);
+        });
+
+        // --- TAB NAVIGATION WITH DENIED LOGIC ---
+        function openTab(tabId, element, isLocked = false) {
+            // If the tab is marked as locked, play denied sound and flash red
+            if(isLocked) {
+                playDenied();
+                let originalText = element.innerText;
+                element.innerText = "[ ACCESS DENIED ]";
+                element.style.color = "var(--term-red)";
+                element.style.borderColor = "var(--term-red)";
+                
+                // Revert after 1 second
+                setTimeout(() => {
+                    element.innerText = originalText;
+                    element.style.color = "";
+                    element.style.borderColor = "";
+                }, 1000);
+                return; // Stop execution here so the tab doesn't actually switch
+            }
+
+            // If valid, play success sounds
+            playBeep(2);
+            playWhirup(1);
+
+            let contents = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < contents.length; i++) contents[i].classList.remove("active");
+
+            let buttons = document.getElementsByClassName("tab-btn");
+            for (let i = 0; i < buttons.length; i++) buttons[i].classList.remove("active");
+
+            document.getElementById(tabId).classList.add("active");
+            element.classList.add("active");
+        }
+
+        // --- RANDOM AMBIENT BEEPBOOP & SYS LOG TEXT ---
+        function startRandomActivity() {
+            const logBox = document.getElementById('sys-log-content');
+            const statuses = ["NOMINAL", "REROUTED", "STANDBY", "SYNCING", "OVERRIDE"];
+            
+            function triggerRandomEvent() {
+                let randSound = Math.floor(Math.random() * 5) + 1;
+                playAudio('snd-beepboop-' + randSound);
+
+                let randHex = Math.floor(Math.random()*9999).toString(16).toUpperCase();
+                let randStatus = statuses[Math.floor(Math.random() * statuses.length)];
+                
+                let line = document.createElement("div");
+                line.className = "log-entry";
+                line.innerHTML = `<span class="highlight">[NODE ${randHex}]</span> - ${randStatus}`;
+                
+                logBox.appendChild(line);
+                if(logBox.children.length > 8) logBox.removeChild(logBox.firstChild);
+
+                let nextEventTime = Math.floor(Math.random() * 17000) + 8000;
+                setTimeout(triggerRandomEvent, nextEventTime);
+            }
+            
+            setTimeout(triggerRandomEvent, 4000);
+        }
+    </script>
 </body>
 </html>
