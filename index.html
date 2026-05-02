@@ -37,14 +37,14 @@
         .screen::after { content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); z-index: 20; background-size: 100% 4px, 3px 100%; pointer-events: none; animation: scrollLines 10s linear infinite; }
         @keyframes scrollLines { 0% { background-position: 0 0; } 100% { background-position: 0 100%; } }
 
-        #pre-boot-screen { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--term-bg); z-index: 30; display: flex; justify-content: center; align-items: center; cursor: pointer; }
+        #pre-boot-screen { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--term-bg); z-index: 40; display: flex; justify-content: center; align-items: center; cursor: pointer; }
         .blink-text { font-size: 1.5rem; color: var(--term-cyan); animation: blink 1.5s infinite; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-        /* --- UPDATED BOOT SCREEN --- */
-        #boot-sequence { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--term-bg); z-index: 20; padding: 40px; display: none; overflow: hidden; }
+        /* --- UPDATED BOOT SCREEN (Full Span Text) --- */
+        #boot-sequence { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--term-bg); z-index: 30; padding: 40px; display: none; overflow: hidden; }
         
-        .boot-text-column { position: relative; z-index: 5; height: 100%; width: 55%; display: flex; flex-direction: column; justify-content: space-between; }
+        .boot-text-column { position: relative; z-index: 10; height: 100%; width: 50%; display: flex; flex-direction: column; justify-content: space-between; }
         
         .boot-header { border-bottom: 1px solid var(--term-cyan); padding-bottom: 10px; margin-bottom: 15px; }
         .layman-line { opacity: 0; margin: 5px 0; font-size: 1.2rem; font-weight: bold; }
@@ -52,27 +52,27 @@
         .jargon-line { margin: 2px 0; font-family: monospace; opacity: 0.7; }
         .ag-text { opacity: 0; color: var(--term-green); font-weight: bold; font-size: 2rem; margin-top: 20px; }
 
-        /* THE MASSIVE HERO LOGO (Shrouded with Gradient) */
+        /* THE MASSIVE HERO LOGO (Shrouded with Mask) */
         .boot-logo-hero { 
-            position: absolute; right: -10%; top: -5%; height: 110%; width: 70%; 
-            z-index: 2; opacity: 0.25; pointer-events: none;
-            mask-image: linear-gradient(to right, black 20%, transparent 80%);
-            -webkit-mask-image: linear-gradient(to right, black 20%, transparent 80%);
+            position: absolute; right: -15%; top: -5%; height: 110%; width: 75%; 
+            z-index: 5; opacity: 0.3; pointer-events: none;
+            mask-image: linear-gradient(to right, black 25%, transparent 85%);
+            -webkit-mask-image: linear-gradient(to right, black 25%, transparent 85%);
         }
 
         /* --- CONCENTRIC SLICED LOGO SYSTEM --- */
         .sliced-logo-container { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
-        .logo-slice { position: absolute; width: 100%; height: 100%; object-fit: contain; transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        .logo-slice { position: absolute; width: 100%; height: 100%; object-fit: contain; transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1); }
         
-        /* Clipping the rings */
+        /* Clipping rings into the Crest */
         .slice-outer { clip-path: circle(50% at 50% 50%); }
-        .slice-mid   { clip-path: circle(34% at 50% 50%); }
+        .slice-mid   { clip-path: circle(35% at 50% 50%); }
         .slice-inner { clip-path: circle(19% at 50% 50%); }
 
-        /* Animations for "Processing" state (Out of sync rotations) */
-        .processing .slice-outer { animation: spinSlice 15s linear infinite; }
-        .processing .slice-mid   { animation: spinSlice 9s linear infinite reverse; }
-        .processing .slice-inner { animation: spinSlice 6s linear infinite; }
+        /* Out of sync rotations while processing */
+        .processing .slice-outer { animation: spinSlice 18s linear infinite; }
+        .processing .slice-mid   { animation: spinSlice 11s linear infinite reverse; }
+        .processing .slice-inner { animation: spinSlice 7s linear infinite; }
 
         @keyframes spinSlice { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
@@ -81,13 +81,12 @@
         .fade-out { animation: fadeOutEffect 0.5s forwards; pointer-events: none; }
         @keyframes fadeOutEffect { 100% { opacity: 0; visibility: hidden; } }
 
-        /* --- HEADER UPDATES --- */
+        /* --- INTERFACE HEADER --- */
         header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid var(--term-cyan); padding-bottom: 15px; margin-bottom: 15px; z-index: 10; }
         .header-info { display: flex; flex-direction: column; gap: 5px; }
         .title-main { font-size: 1.2rem; font-weight: bold; color: var(--term-white); border-bottom: 1px dashed var(--term-cyan); padding-bottom: 5px; margin: 5px 0 10px 0; display: inline-block; }
         .aurebesh { font-family: 'Aurebesh', sans-serif; color: var(--term-cyan); font-size: 1.2rem; letter-spacing: 2px; }
         
-        /* Small Sliced Header Logo */
         .header-logo-box { width: 85px; height: 85px; flex-shrink: 0; filter: drop-shadow(0 0 5px var(--term-cyan)); }
 
         .connection-bar { height: 8px; width: 100%; background-color: #222; margin-bottom: 15px; position: relative; overflow: hidden; flex-shrink: 0; z-index: 10; }
@@ -107,7 +106,6 @@
 
         .explorer-layout { display: grid; grid-template-columns: 280px 1fr; gap: 20px; height: 100%; }
         .explorer-list { border-right: 1px dashed var(--term-cyan); padding-right: 15px; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; }
-        
         .explorer-btn { background: rgba(0,0,0,0.5); border: 1px solid var(--term-dim); color: var(--term-cyan); padding: 12px 15px; text-align: left; font-family: 'Share Tech Mono', monospace; cursor: pointer; transition: all 0.2s; clip-path: polygon(0 0, 95% 0, 100% 15px, 100% 100%, 5% 100%, 0 calc(100% - 15px)); display: flex; flex-direction: column; gap: 4px; overflow: hidden; }
         .explorer-btn:hover { background: var(--term-dim); color: var(--term-white); }
         .explorer-btn.active { background: var(--term-yellow); color: #000; font-weight: bold; border-color: var(--term-yellow); }
@@ -208,7 +206,7 @@
                     <span>CURRENT USER: [GUEST_AUTHORIZATION]</span>
                 </div>
                 
-                <div id="header-logo-box" class="header-logo-box">
+                <div id="header-logo-box" class="header-logo-box processing">
                     <div class="sliced-logo-container">
                         <img src="empire_logo_blue.PNG" class="logo-slice slice-outer">
                         <img src="empire_logo_blue.PNG" class="logo-slice slice-mid">
@@ -377,8 +375,9 @@
             setTimeout(() => {
                 clearInterval(bootInterval); pauseAudio('snd-boot-loop'); playAudio('snd-boot-finish', 1.0);
                 
-                // UNLOCK LOGO (Stop spinning slices)
+                // UNLOCK LOGO (Align slices)
                 document.querySelector('.boot-logo-hero').classList.remove('processing');
+                document.getElementById('header-logo-box').classList.remove('processing');
 
                 setTimeout(() => {
                     document.getElementById('boot-sequence').classList.add('fade-out');
