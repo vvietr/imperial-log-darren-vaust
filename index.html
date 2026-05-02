@@ -78,7 +78,37 @@
         .slice-mid   { clip-path: circle(35% at 50% 50%); }
         .slice-inner { clip-path: circle(19% at 50% 50%); }
 
-        /* --- AUREBESH DECRYPTION CLASS --- */
+        /* --- AUREBESH TRANSLATION & GLITCH EFFECTS --- */
+        .aurebesh-char { font-family: 'Aurebesh', sans-serif !important; letter-spacing: 1px; }
+        .aurebesh-char.decrypted { font-family: inherit !important; letter-spacing: normal; }
+        .stream-hidden { visibility: hidden; }
+        .stream-revealed { visibility: visible; }
+
+        .cyber-glitch { animation: cyberGlitchAnim 0.5s cubic-bezier(0.25, 1, 0.2, 1) both; position: relative; }
+        .cyber-glitch::before, .cyber-glitch::after { content: ""; position: absolute; z-index: 10; pointer-events: none; }
+        .cyber-glitch::before { background: var(--term-cyan); opacity: 0.4; animation: glitchBox1 0.4s steps(4) infinite; }
+        .cyber-glitch::after { background: var(--term-white); opacity: 0.6; mix-blend-mode: overlay; animation: glitchBox2 0.3s steps(3) infinite; }
+
+        @keyframes cyberGlitchAnim {
+            0% { filter: blur(0px) contrast(1); text-shadow: 0 0 5px var(--term-cyan); transform: skewX(0deg); }
+            20% { filter: blur(4px) contrast(1.5); text-shadow: -4px 0px 0px var(--term-red), 4px 0px 0px var(--term-cyan); transform: skewX(-3deg); }
+            40% { filter: blur(6px) contrast(2); text-shadow: 4px 0px 0px var(--term-red), -4px 0px 0px var(--term-cyan); transform: skewX(4deg); }
+            60% { filter: blur(3px) contrast(1.5); text-shadow: -2px 0px 0px var(--term-red), 2px 0px 0px var(--term-cyan); transform: skewX(-2deg); }
+            100% { filter: blur(0px) contrast(1); text-shadow: 0 0 4px var(--term-glow); transform: skewX(0deg); }
+        }
+        @keyframes glitchBox1 {
+            0% { top: 10%; left: 20%; width: 50px; height: 10px; opacity: 0; }
+            25% { top: 40%; left: 80%; width: 20px; height: 5px; opacity: 0.8; }
+            50% { top: 70%; left: 10%; width: 80px; height: 15px; opacity: 0; }
+            75% { top: 20%; left: 50%; width: 10px; height: 5px; opacity: 0.6; }
+            100% { top: 90%; left: 30%; width: 40px; height: 8px; opacity: 0; }
+        }
+        @keyframes glitchBox2 {
+            0% { top: 80%; left: 10%; width: 100px; height: 2px; opacity: 0.5; }
+            33% { top: 15%; left: 60%; width: 30px; height: 12px; opacity: 0; }
+            66% { top: 50%; left: 20%; width: 200px; height: 1px; opacity: 0.9; background: var(--term-red); }
+            100% { top: 30%; left: 80%; width: 15px; height: 15px; opacity: 0; }
+        }
         .aurebesh-char { font-family: 'Aurebesh', sans-serif !important; letter-spacing: 1px; }
 
         .l-1 { animation: keepText 0.1s 0.5s forwards; } .l-2 { animation: keepText 0.1s 2.0s forwards; } .l-3 { animation: keepText 0.1s 4.0s forwards; } .ag-1 { animation: keepText 0.1s 6.5s forwards; }
@@ -394,76 +424,117 @@
             document.querySelectorAll('.slice-inner').forEach(el => el.style.transform = `rotate(${tInner}deg)`);
         }
 
-        // --- EXPONENTIAL AUREBESH TRANSLATOR ---
+        // --- STREAM & GLITCH DECRYPTION ENGINE ---
         function prepareAurebesh(element) {
             if (element.dataset.prepared) return;
             element.dataset.prepared = "true";
-            
-            const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false);
-            const textNodes = [];
-            while (walker.nextNode()) textNodes.push(walker.currentNode);
-            
-            textNodes.forEach(node => {
-                // Ensure UI specific texts, headers, and dates don't get scrambled
-                if (node.parentNode.closest('.aurebesh, .play-btn, .audio-status, .btn-date, .sensor-val')) return; 
-                const text = node.nodeValue;
-                if (!text.trim()) return;
-                
-                const fragment = document.createDocumentFragment();
-                for (let char of text) {
-                    if (char.trim() === '') {
-                        fragment.appendChild(document.createTextNode(char));
-                    } else {
-                        const span = document.createElement('span');
-                        span.className = 'aurebesh-char';
-                        span.textContent = char;
-                        fragment.appendChild(span);
+
+            // Identify large log content vs small buttons
+            const isStreamable = element.classList.contains('entry-content') || element.classList.contains('tab-content');
+
+            // Break content into individual glitchable blocks
+            const blocks = element.querySelectorAll('p, .full-entry-title, .btn-title, .sys-log-header, .highlight, .tab-btn');
+            let targets = blocks.length > 0 ? blocks : [element];
+
+            targets.forEach(block => {
+                if (block.closest('.aurebesh, .play-btn, .audio-status, .btn-date, .sensor-val')) return;
+                block.classList.add('glitch-target');
+
+                const walker = document.createTreeWalker(block, NodeFilter.SHOW_TEXT, null, false);
+                const textNodes = [];
+                while (walker.nextNode()) textNodes.push(walker.currentNode);
+
+                textNodes.forEach(node => {
+                    const text = node.nodeValue;
+                    if (!text.trim()) return;
+
+                    const fragment = document.createDocumentFragment();
+                    for (let char of text) {
+                        if (char.trim() === '') {
+                            fragment.appendChild(document.createTextNode(char));
+                        } else {
+                            const span = document.createElement('span');
+                            span.className = 'aurebesh-char';
+                            // If it's a main log paragraph, hide it for the typewriter effect
+                            if (isStreamable && block.tagName === 'P') { 
+                                span.classList.add('stream-hidden');
+                            }
+                            span.textContent = char;
+                            fragment.appendChild(span);
+                        }
                     }
-                }
-                node.parentNode.replaceChild(fragment, node);
+                    node.parentNode.replaceChild(fragment, node);
+                });
             });
         }
 
         function decryptAurebesh(element) {
             if (element.dataset.translated === "true") return;
-            element.dataset.translated = "true"; // Lock immediately so hover doesn't trigger it twice
-            
+            element.dataset.translated = "true";
+
             if (!element.dataset.prepared) prepareAurebesh(element);
 
-            const chars = Array.from(element.querySelectorAll('.aurebesh-char'));
-            
-            // Randomly shuffle array
-            for (let i = chars.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [chars[i], chars[j]] = [chars[j], chars[i]];
+            const blocks = Array.from(element.querySelectorAll('.glitch-target'));
+            const isStreamable = element.classList.contains('entry-content') || element.classList.contains('tab-content');
+
+            // UI Elements (Buttons/Tabs) -> Instant Glitch (No typing wait)
+            if (!isStreamable) {
+                blocks.forEach(block => {
+                    block.classList.add('cyber-glitch');
+                    setTimeout(() => block.querySelectorAll('.aurebesh-char').forEach(c => c.classList.add('decrypted')), 250);
+                    setTimeout(() => block.classList.remove('cyber-glitch'), 500);
+                });
+                return;
             }
 
-            let i = 0;
-            // 1. INITIAL DELAY: Change 120 to 250. This makes the very first few letters translate much slower.
-            let currentDelay = 250; 
-            
-            function decryptStep() {
-                if (i >= chars.length) return;
-                
-                // 2. MINIMUM SPEED & ACCELERATION: 
-                // Change the floor from 5 to 15 (stops it from getting too fast at the end).
-                // Change the multiplier from 0.85 to 0.96 (accelerates by only 4% per tick instead of 15%).
-                currentDelay = Math.max(15, currentDelay * 0.96); 
-            
-                // 3. BATCHING: Lower the threshold so it translates letter-by-letter for longer before grouping them.
-                let batchSize = currentDelay <= 15 ? Math.max(1, Math.floor(chars.length / 40)) : 1;
-                
-                for (let b = 0; b < batchSize && i < chars.length; b++, i++) {
-                    chars[i].classList.remove('aurebesh-char');
+            // Main Logs -> Cinematic Typewriter Stream into Glitch
+            let currentBlockIndex = 0;
+
+            function processNextBlock() {
+                if (currentBlockIndex >= blocks.length) return;
+                const block = blocks[currentBlockIndex];
+                const hiddenChars = Array.from(block.querySelectorAll('.stream-hidden'));
+
+                // If it's a title or header (not hidden), glitch instantly and move on
+                if (hiddenChars.length === 0) {
+                    block.classList.add('cyber-glitch');
+                    setTimeout(() => block.querySelectorAll('.aurebesh-char').forEach(c => c.classList.add('decrypted')), 250);
+                    setTimeout(() => {
+                        block.classList.remove('cyber-glitch');
+                        currentBlockIndex++;
+                        processNextBlock();
+                    }, 500);
+                    return;
                 }
-                
-                if (i < chars.length) {
-                    setTimeout(decryptStep, currentDelay);
+
+                // If it's a hidden paragraph, stream it letter by letter
+                let charIndex = 0;
+                let charsPerFrame = Math.max(1, Math.floor(hiddenChars.length / 20)); // Adjust typing speed here
+
+                function typeWriter() {
+                    for (let i = 0; i < charsPerFrame && charIndex < hiddenChars.length; i++, charIndex++) {
+                        hiddenChars[charIndex].classList.replace('stream-hidden', 'stream-revealed');
+                    }
+
+                    if (charIndex < hiddenChars.length) {
+                        requestAnimationFrame(typeWriter);
+                    } else {
+                        // Streaming finished -> Trigger the glitch and font swap
+                        playAudio('snd-keystroke', 0.2);
+                        block.classList.add('cyber-glitch');
+                        
+                        setTimeout(() => block.querySelectorAll('.aurebesh-char').forEach(c => c.classList.add('decrypted')), 250);
+                        
+                        setTimeout(() => {
+                            block.classList.remove('cyber-glitch');
+                            currentBlockIndex++;
+                            processNextBlock();
+                        }, 500);
+                    }
                 }
+                requestAnimationFrame(typeWriter);
             }
-            
-            // Initial 300ms pause so the user registers the hover before translation begins
-            setTimeout(decryptStep, 300);
+            processNextBlock();
         }
 
         let hasBooted = false;
