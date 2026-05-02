@@ -16,10 +16,11 @@
             --term-bg: #0d1117;
             --term-glow: rgba(139, 233, 253, 0.4);
             --bezel-color: #2b2b2b;
+            --term-green: #50fa7b; /* For the access granted text */
         }
 
         body {
-            background-color: #050505; /* The "desk" the tablet sits on */
+            background-color: #050505;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -37,9 +38,9 @@
             box-shadow: 
                 inset 0 0 10px #000, 
                 0 10px 30px rgba(0,0,0,0.8);
-            width: 95vw;          /* <-- Change this from 90vw to 95vw */
-            max-width: 1400px;    /* <-- Change this from 800px to 1400px */
-            height: 92vh;         /* <-- Change this from 85vh to 92vh */
+            width: 95vw;
+            max-width: 1400px;
+            height: 92vh;
             display: flex;
             flex-direction: column;
         }
@@ -70,10 +71,51 @@
             bottom: 0;
             right: 0;
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            z-index: 2;
+            z-index: 5;
             background-size: 100% 2px, 3px 100%;
             pointer-events: none;
         }
+
+        /* --- BOOT SEQUENCE ANIMATIONS --- */
+        .boot-sequence {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--term-bg);
+            z-index: 10;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            animation: fadeOutBoot 4.5s forwards; /* Controls when the screen disappears */
+            pointer-events: none;
+        }
+
+        .boot-line {
+            opacity: 0;
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        /* Timing for each line of code appearing */
+        .line-1 { animation: typeText 0.1s 0.5s forwards; }
+        .line-2 { animation: typeText 0.1s 1.2s forwards; }
+        .line-3 { animation: typeText 0.1s 2.0s forwards; }
+        .line-4 { animation: typeText 0.1s 2.5s forwards; }
+        .line-5 { animation: typeText 0.1s 3.2s forwards; color: var(--term-green); font-weight: bold; font-size: 1.3rem; }
+
+        @keyframes typeText {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes fadeOutBoot {
+            0%, 90% { opacity: 1; visibility: visible; }
+            100% { opacity: 0; visibility: hidden; }
+        }
+        /* -------------------------------- */
 
         /* Layout Grid */
         header {
@@ -90,6 +132,16 @@
             gap: 5px;
         }
 
+        .title-main {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--term-white);
+            border-bottom: 1px dashed var(--term-cyan);
+            padding-bottom: 5px;
+            margin: 5px 0 10px 0;
+            display: inline-block;
+        }
+
         .aurebesh {
             font-family: 'Aurebesh', sans-serif;
             color: var(--term-cyan);
@@ -104,6 +156,7 @@
                               conic-gradient(transparent 10deg, var(--term-white) 11deg 49deg, transparent 50deg 70deg, var(--term-white) 71deg 109deg, transparent 110deg 130deg, var(--term-white) 131deg 169deg, transparent 170deg 190deg, var(--term-white) 191deg 229deg, transparent 230deg 250deg, var(--term-white) 251deg 289deg, transparent 290deg 310deg, var(--term-white) 311deg 349deg, transparent 350deg);
             border-radius: 50%;
             border: 4px solid var(--term-white);
+            flex-shrink: 0; /* Keeps the logo from squishing */
         }
 
         /* Droning Connection Bar Animation */
@@ -114,6 +167,7 @@
             margin-bottom: 15px;
             position: relative;
             overflow: hidden;
+            flex-shrink: 0;
         }
 
         .connection-indicator {
@@ -136,14 +190,14 @@
             grid-template-columns: 1fr 250px;
             gap: 20px;
             flex-grow: 1;
-            overflow: hidden; /* Prevents stretching the tablet */
+            overflow: hidden;
         }
 
         .log-window {
             background-color: rgba(139, 233, 253, 0.05);
             border: 1px solid rgba(139, 233, 253, 0.3);
             padding: 15px;
-            overflow-y: auto; /* Allows scrolling inside the lore dump */
+            overflow-y: auto;
             z-index: 3;
             scrollbar-width: thin;
             scrollbar-color: var(--term-cyan) transparent;
@@ -157,11 +211,12 @@
             flex-direction: column;
             gap: 15px;
             z-index: 3;
+            overflow-y: auto;
         }
 
         .schematic-box {
             border: 1px dashed var(--term-cyan);
-            height: 120px;
+            min-height: 120px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -177,11 +232,21 @@
     <div class="datapad-bezel">
         <div class="screen">
             
+            <div class="boot-sequence">
+                <p class="boot-line line-1">> SYSTEM WAKE...</p>
+                <p class="boot-line line-2">> ALIGNING COM-ROUTING TO FELUCIA RELAY...</p>
+                <p class="boot-line line-3">> DOWNLOADING ENCRYPTED PACKETS [||||||||||] 100%</p>
+                <p class="boot-line line-4">> DECRYPTING ISB-PATTERN...</p>
+                <p class="boot-line line-5 aurebesh">ACCESS GRANTED</p>
+            </div>
+
             <header>
                 <div class="header-info">
                     <span class="aurebesh">IMPERIAL DUSK NETWORK</span>
+                    <span class="title-main">PERSONAL LOG FILES // GC-3170 // DARREN VAUST</span>
                     <span>FILE ENCRYPTION: ISB-Pattern 'Aurek_v1.3a'</span>
-                    <span>AUTH: GC-3170 // V. DARREN</span>
+                    <span>TERMINAL ID: T-88-FELUCIA</span>
+                    <span>CURRENT USER: [GUEST_AUTHORIZATION]</span>
                 </div>
                 <div class="imperial-logo"></div>
             </header>
