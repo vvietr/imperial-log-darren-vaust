@@ -197,6 +197,9 @@
     <audio id="snd-powerdown" src="powerdown.mp3"></audio>
     <audio id="snd-alert" src="alert.mp3" loop></audio>
     <audio id="snd-keystroke" src="keystroke.mp3"></audio>
+    <audio id="snd-warble" src="warble1.mp3"></audio>
+    <audio id="snd-reading-1" src="reading_1.mp3"></audio>
+    <audio id="snd-reading-2" src="reading_2.mp3"></audio>
     <div id="dynamic-audio-container"></div>
 
     <div id="image-lightbox" class="lightbox" onclick="closeLightbox()">
@@ -464,7 +467,7 @@
             });
         }
 
-        function decryptAurebesh(element) {
+       function decryptAurebesh(element) {
             if (element.dataset.translated === "true") return;
             element.dataset.translated = "true";
             if (!element.dataset.prepared) prepareAurebesh(element);
@@ -476,6 +479,7 @@
 
             if (!isStreamable) {
                 blocks.forEach(block => {
+                    playAudio('snd-warble', 0.2); // Subtle Warble
                     block.classList.add('cyber-glitch');
                     setTimeout(() => block.querySelectorAll('.aurebesh-char').forEach(c => c.classList.add('decrypted')), 250);
                     setTimeout(() => block.classList.remove('cyber-glitch'), 500);
@@ -490,6 +494,7 @@
                 const hiddenChars = Array.from(block.querySelectorAll('.stream-hidden'));
 
                 if (hiddenChars.length === 0) {
+                    playAudio('snd-warble', 0.2); // Subtle Warble
                     block.classList.add('cyber-glitch');
                     setTimeout(() => block.querySelectorAll('.aurebesh-char').forEach(c => c.classList.add('decrypted')), 250);
                     setTimeout(() => { block.classList.remove('cyber-glitch'); currentBlockIndex++; processNextBlock(); }, 500);
@@ -506,7 +511,8 @@
                     if (charIndex < hiddenChars.length) {
                         requestAnimationFrame(typeWriter);
                     } else {
-                        playAudio('snd-keystroke', 0.2);
+                        playAudio('snd-keystroke', 0.15);
+                        playAudio('snd-warble', 0.2); // Subtle Warble
                         block.classList.add('cyber-glitch');
                         setTimeout(() => block.querySelectorAll('.aurebesh-char').forEach(c => c.classList.add('decrypted')), 250);
                         setTimeout(() => { block.classList.remove('cyber-glitch'); currentBlockIndex++; processNextBlock(); }, 500);
@@ -712,10 +718,20 @@
                 return; // Fallback if database.js didn't load properly
             }
             
+            // Build the HTML
             let line = document.createElement("div"); 
             line.className = "chat-entry";
             line.innerHTML = `<span class="chat-user">[${userName}]:</span> ${msgBody}`;
             
+            // --- NEW: DYNAMIC READING AUDIO ---
+            let readSound = Math.random() > 0.5 ? 'snd-reading-1' : 'snd-reading-2';
+            playAudio(readSound, 0.17); // Quiet Chat volume
+            
+            // Calculate audio cutoff based on string length (~35ms per character, capped at 2.5s)
+            let readDuration = Math.max(400, Math.min(2500, msgBody.length * 35));
+            setTimeout(() => pauseAudio(readSound), readDuration);
+            // ----------------------------------
+
             chatBox.appendChild(line);
             chatBox.scrollTop = chatBox.scrollHeight; 
             if(chatBox.children.length > 30) chatBox.removeChild(chatBox.firstChild); 
@@ -736,7 +752,7 @@
             const minorWarnings = ["MINOR FLUCTUATION DETECTED", "LATENCY SPIKE COMPENSATED", "REROUTING FROM DEAD ZONE", "SPORE BUILDUP CLEARED", "VOLTAGE ANOMALY LOGGED", "DROPPED PACKET RECOVERED"];
             function triggerRandomEvent() {
                 let randSound = Math.floor(Math.random() * 5) + 1; 
-                playAudio('snd-beepboop-' + randSound, 0.35); // Reduced Volume by 30%
+                playAudio('snd-beepboop-' + randSound, 0.17); // Reduced Volume by 30%
                 let randHex = Math.floor(Math.random()*65535).toString(16).toUpperCase().padStart(4, '0');
                 let prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
                 let isWarning = Math.random() > 0.85; 
