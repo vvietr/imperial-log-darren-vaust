@@ -41,7 +41,7 @@
         .blink-text { font-size: 1.5rem; color: var(--term-cyan); animation: blink 1.5s infinite; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-        /* --- UPDATED BOOT SCREEN (Full Span Text) --- */
+        /* --- BOOT SCREEN --- */
         #boot-sequence { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--term-bg); z-index: 30; padding: 40px; display: none; overflow: hidden; }
         
         .boot-text-column { position: relative; z-index: 10; height: 100%; width: 50%; display: flex; flex-direction: column; justify-content: space-between; }
@@ -52,36 +52,34 @@
         .jargon-line { margin: 2px 0; font-family: monospace; opacity: 0.7; }
         .ag-text { opacity: 0; color: var(--term-green); font-weight: bold; font-size: 2rem; margin-top: 20px; }
 
-        /* THE MASSIVE HERO LOGO (Shrouded with Mask) */
+        /* --- MASSIVE HERO LOGO (Aggressive Gradient) --- */
         .boot-logo-hero { 
             position: absolute; right: -15%; top: -5%; height: 110%; width: 75%; 
             z-index: 5; opacity: 0.3; pointer-events: none;
-            mask-image: linear-gradient(to right, black 25%, transparent 85%);
-            -webkit-mask-image: linear-gradient(to right, black 25%, transparent 85%);
+            mask-image: linear-gradient(to right, black 10%, transparent 50%);
+            -webkit-mask-image: linear-gradient(to right, black 10%, transparent 50%);
         }
 
         /* --- CONCENTRIC SLICED LOGO SYSTEM --- */
         .sliced-logo-container { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
-        .logo-slice { position: absolute; width: 100%; height: 100%; object-fit: contain; transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1); }
         
-        /* Clipping rings into the Crest */
+        /* CSS animations removed; JS handles rotation to allow smooth locking */
+        .logo-slice { position: absolute; width: 100%; height: 100%; object-fit: contain; }
+        .locking { transition: transform 2.5s cubic-bezier(0.25, 1, 0.2, 1) !important; }
+        
         .slice-outer { clip-path: circle(50% at 50% 50%); }
         .slice-mid   { clip-path: circle(35% at 50% 50%); }
         .slice-inner { clip-path: circle(19% at 50% 50%); }
 
-        /* Out of sync rotations while processing */
-        .processing .slice-outer { animation: spinSlice 18s linear infinite; }
-        .processing .slice-mid   { animation: spinSlice 11s linear infinite reverse; }
-        .processing .slice-inner { animation: spinSlice 7s linear infinite; }
-
-        @keyframes spinSlice { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        /* --- AUREBESH DECRYPTION CLASS --- */
+        .aurebesh-char { font-family: 'Aurebesh', sans-serif !important; }
 
         .l-1 { animation: keepText 0.1s 0.5s forwards; } .l-2 { animation: keepText 0.1s 2.0s forwards; } .l-3 { animation: keepText 0.1s 4.0s forwards; } .ag-1 { animation: keepText 0.1s 6.5s forwards; }
         @keyframes keepText { 0% { opacity: 0; } 100% { opacity: 1; } }
         .fade-out { animation: fadeOutEffect 0.5s forwards; pointer-events: none; }
         @keyframes fadeOutEffect { 100% { opacity: 0; visibility: hidden; } }
 
-        /* --- INTERFACE HEADER --- */
+        /* --- HEADER --- */
         header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid var(--term-cyan); padding-bottom: 15px; margin-bottom: 15px; z-index: 10; }
         .header-info { display: flex; flex-direction: column; gap: 5px; }
         .title-main { font-size: 1.2rem; font-weight: bold; color: var(--term-white); border-bottom: 1px dashed var(--term-cyan); padding-bottom: 5px; margin: 5px 0 10px 0; display: inline-block; }
@@ -188,7 +186,7 @@
                     <p class="ag-text ag-1 aurebesh">ACCESS GRANTED</p>
                 </div>
 
-                <div class="boot-logo-hero processing">
+                <div class="boot-logo-hero">
                     <div class="sliced-logo-container">
                         <img src="empire_logo_blue.PNG" class="logo-slice slice-outer">
                         <img src="empire_logo_blue.PNG" class="logo-slice slice-mid">
@@ -206,7 +204,7 @@
                     <span>CURRENT USER: [GUEST_AUTHORIZATION]</span>
                 </div>
                 
-                <div id="header-logo-box" class="header-logo-box processing">
+                <div id="header-logo-box" class="header-logo-box">
                     <div class="sliced-logo-container">
                         <img src="empire_logo_blue.PNG" class="logo-slice slice-outer">
                         <img src="empire_logo_blue.PNG" class="logo-slice slice-mid">
@@ -350,6 +348,104 @@
         function playWhirup(num) { playAudio('snd-whirup-' + num, 1.0); }
         function playDenied() { playAudio('snd-denied', 1.0); }
 
+        // --- JS LOGO ROTATION ENGINE ---
+        let logosSpinning = true;
+        let angleOuter = 0, angleMid = 0, angleInner = 0;
+        const speedOuter = 3.5, speedMid = -1.5, speedInner = 0.5; // Proportional speeds
+
+        function rotateLogos() {
+            if (!logosSpinning) return;
+            angleOuter += speedOuter;
+            angleMid += speedMid;
+            angleInner += speedInner;
+            
+            document.querySelectorAll('.slice-outer').forEach(el => el.style.transform = `rotate(${angleOuter}deg)`);
+            document.querySelectorAll('.slice-mid').forEach(el => el.style.transform = `rotate(${angleMid}deg)`);
+            document.querySelectorAll('.slice-inner').forEach(el => el.style.transform = `rotate(${angleInner}deg)`);
+            
+            requestAnimationFrame(rotateLogos);
+        }
+        requestAnimationFrame(rotateLogos);
+
+        function lockLogos() {
+            logosSpinning = false;
+            
+            function calcTarget(angle, speed) {
+                // Determine nearest multiple of 360 in the direction it was spinning
+                let base = Math.round(angle / 360) * 360;
+                let forward = speed > 0 ? 360 : -360;
+                return base + forward;
+            }
+
+            let tOuter = calcTarget(angleOuter, speedOuter);
+            let tMid = calcTarget(angleMid, speedMid);
+            let tInner = calcTarget(angleInner, speedInner);
+
+            document.querySelectorAll('.logo-slice').forEach(el => el.classList.add('locking'));
+            
+            // Apply the final smooth transition to the locked targets
+            document.querySelectorAll('.slice-outer').forEach(el => el.style.transform = `rotate(${tOuter}deg)`);
+            document.querySelectorAll('.slice-mid').forEach(el => el.style.transform = `rotate(${tMid}deg)`);
+            document.querySelectorAll('.slice-inner').forEach(el => el.style.transform = `rotate(${tInner}deg)`);
+        }
+
+        // --- PROGRESSIVE AUREBESH TRANSLATOR ---
+        function prepareAurebesh(element) {
+            if (element.dataset.prepared) return;
+            element.dataset.prepared = "true";
+            
+            const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false);
+            const textNodes = [];
+            while (walker.nextNode()) textNodes.push(walker.currentNode);
+            
+            textNodes.forEach(node => {
+                // Skip specific UI pieces that shouldn't be encrypted
+                if (node.parentNode.closest('.aurebesh, .play-btn, .audio-status, .btn-date')) return; 
+                const text = node.nodeValue;
+                if (!text.trim()) return;
+                
+                const fragment = document.createDocumentFragment();
+                for (let char of text) {
+                    if (char.trim() === '') {
+                        fragment.appendChild(document.createTextNode(char));
+                    } else {
+                        const span = document.createElement('span');
+                        span.className = 'aurebesh-char';
+                        span.textContent = char;
+                        fragment.appendChild(span);
+                    }
+                }
+                node.parentNode.replaceChild(fragment, node);
+            });
+        }
+
+        function decryptAurebesh(element) {
+            if (element.dataset.translated === "true") return;
+            element.dataset.translated = "true";
+            if (!element.dataset.prepared) prepareAurebesh(element);
+
+            const chars = Array.from(element.querySelectorAll('.aurebesh-char'));
+            
+            // Randomly shuffle array
+            for (let i = chars.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [chars[i], chars[j]] = [chars[j], chars[i]];
+            }
+
+            let i = 0;
+            const batchSize = Math.max(1, Math.floor(chars.length / 45)); // Decrypts over ~45 frames
+            
+            function decryptStep() {
+                for (let b = 0; b < batchSize && i < chars.length; b++, i++) {
+                    chars[i].classList.remove('aurebesh-char');
+                }
+                if (i < chars.length) {
+                    requestAnimationFrame(decryptStep);
+                }
+            }
+            requestAnimationFrame(decryptStep);
+        }
+
         let hasBooted = false;
         document.getElementById('pre-boot-screen').addEventListener('click', () => {
             if(hasBooted) return;
@@ -374,15 +470,16 @@
 
             setTimeout(() => {
                 clearInterval(bootInterval); pauseAudio('snd-boot-loop'); playAudio('snd-boot-finish', 1.0);
-                
-                // UNLOCK LOGO (Align slices)
-                document.querySelector('.boot-logo-hero').classList.remove('processing');
-                document.getElementById('header-logo-box').classList.remove('processing');
+                lockLogos(); // Engage magnetic lock sequence
 
                 setTimeout(() => {
                     document.getElementById('boot-sequence').classList.add('fade-out');
                     startRandomActivity();
                     initEnvironment();
+                    
+                    // Decrypt the active tab once booted
+                    let activeContent = document.querySelector('.tab-content.active');
+                    if(activeContent) decryptAurebesh(activeContent);
                 }, 1500);
             }, 7000);
         });
@@ -395,6 +492,8 @@
             for (let i = 0; i < buttons.length; i++) buttons[i].classList.remove("active");
             document.getElementById(tabId).classList.add("active");
             element.classList.add("active");
+            
+            decryptAurebesh(document.getElementById(tabId));
         }
 
         function openEntry(entryId, element) {
@@ -406,6 +505,8 @@
             document.getElementById(entryId).classList.add("active");
             element.classList.add("active");
             playWhirup(2);
+            
+            decryptAurebesh(document.getElementById(entryId));
         }
 
         function triggerAudioLog(audioId, statusId) {
@@ -467,6 +568,7 @@
                     let btn = document.createElement('button');
                     let isFirstItem = (listContainer.children.length === 0 && log.tab === "logs");
                     btn.className = isFirstItem ? "explorer-btn active" : "explorer-btn";
+                    btn.onmouseenter = function() { decryptAurebesh(this); }; // Translate button on hover
                     btn.onclick = function() { openEntry(log.id, this); playBeep(2); };
                     btn.innerHTML = `<div class="btn-date">[ ${log.date.split('|')[0].trim()} ]</div><div class="btn-title">${log.title.toUpperCase()}</div>`;
                     listContainer.appendChild(btn);
@@ -477,6 +579,9 @@
                     view.innerHTML = `<div class="full-entry-title">${log.title}</div><div style="color: var(--term-cyan); opacity: 0.4; letter-spacing: 2px; margin-bottom: 15px;">// ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬ //</div><div class="audio-player-ui"><button class="play-btn" onclick="triggerAudioLog('${audioFileID}', 'status-${log.id}')">▶</button><div class="waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div><div id="status-${log.id}" class="audio-status" style="color: var(--term-cyan);">[ STANDBY ]</div></div><div style="color: var(--term-cyan); opacity: 0.4; letter-spacing: 2px; margin: 15px 0;">// ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬ //</div><p><span class="highlight">[■] DATE:</span> ${log.date}</p><p><span class="highlight">[■] AUTHOR:</span> ${authorData}</p><p><span class="highlight">[■] TERMINAL ORIGIN:</span> ${terminalID}</p><p><span class="highlight">[■] MENTIONED PERSONNEL:</span> ${personnelData}</p><div style="color: var(--term-cyan); opacity: 0.4; letter-spacing: 2px; margin: 15px 0;">// ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬ //</div><br>${formattedBody}${imageHTML}`;
                     viewContainer.appendChild(view);
                 });
+                
+                // Prepare all text for translation BEFORE the user sees it
+                document.querySelectorAll('.tab-content, .explorer-btn').forEach(el => prepareAurebesh(el));
             }
         });
 
