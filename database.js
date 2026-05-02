@@ -51,6 +51,22 @@ Seriously... in all its wisdom, the Imperial engineers couldn't come up with a s
 
 Does a promotion to Imperial Engineering Officer come with a complimentary fucking cranial excavation or something?`
     },
+    
+    {
+    id: "report_1",
+    tab: "evaluations",
+    date: "33.4.08 | ~20h",
+    title: "Performance Report",
+    personnel: "GC-3170",
+    author: "SP-6167",
+    terminal: "Barracks",
+    imageExt: "jpg",
+    body: `GC-3170 demonstrated relative dependability, despite prior misgivings of technical equipment present. 
+Technician conducted adequate diagnoses of damaged systems. 
+Technician dispatched himself with his knowhow intact in order to retrieve the equipment and return alive to the damaged infrastructure site. 
+Technician did not bring the correct materials for repair in the first place. 
+Moronic.`
+    },
     // --- COPY AND PASTE THIS BLANK TEMPLATE FOR NEW ENTRIES ---
     /*
     {
