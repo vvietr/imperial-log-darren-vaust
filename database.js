@@ -20,7 +20,7 @@
 // DD = Day
 // ~XXh = The estimated local planetary hour on Felucia.
 // ----------------------------------------------------------------------------
-
+// COMMLINK DATABASE IS AT THE BOTOOOOOOOOOOOOOOOM
 const imperialLogs = [
     {
         id: "map_log_1",               // Unique ID. Your audio file MUST be named: map_log_1_audio.mp3
@@ -84,3 +84,32 @@ Moronic.`
     },
     */
 ];
+
+// ==========================================
+// GARRISON COMM-LINK DATABASE
+// ==========================================
+// ENGINE RULES:
+// 1. STATUS REPORTS (50%): Stitches [Name] + [Sector] + [Issue].
+//    - Sectors: Capitalize the subject (e.g., "Reactor B").
+//    - Issues: Start lowercase, end with punctuation (e.g., "needs repair.").
+//    - Outputs -> "[TK-882]: Reactor B needs repair."
+//
+// 2. CASUAL CHATTER (50%): Stitches [Name] + [Casual].
+//    - Casual: Full, capitalized sentences. Add "Negative" or "Copy" to fake replies.
+//    - Outputs -> "[LT. VANE]: Copy that."
+//
+// 3. CUSTOM OVERRIDE: Every 10th message ignores the randomizer and plays 
+//    an exact object from 'customMessages'. Use for lore or direct orders.
+// ==========================================
+const chatDatabase = {
+    names: ["TK-882", "GC-119", "SGT. KALLUS", "TECH-4", "RN-33", "BASE-CMD", "DX-DROID", "MAINT-LEAD", "GC-3170", "LT. VANE", "TK-8821", "TK-4211", "TK-1138", "TK-9091", "TK-5562", "TK-7741", "TK-3312", "TK-8144", "TK-2187", "TK-6651", "TK-4921", "TK-8819", "TK-1044", "TK-7332", "TK-5114", "GC-3170", "GC-8192", "GC-4451", "GC-9912", "GC-5531", "GC-7714", "GC-2291", "GC-8843", "GC-1104", "GC-3991", "GC-6112", "GC-4041", "GC-7881", "SP-8812", "SP-4190", "SP-2214", "SP-9981", "SP-5512", "SP-7124", "SP-1144", "SP-3392", "SP-8113", "SP-6621", "TP-3311", "TP-6641", "TP-8123", "TP-1142", "TP-9915", "TP-4418", "TP-7721", "TP-5519", "FT-4412", "FT-8814", "FT-2291", "FT-7713", "FT-5151", "FT-9911", "FT-3324", "FT-6118", "SGC-1124", "SGC-8841", "SGC-3319", "SGC-5511", "SGC-7721", "SGC-9914", "SGC-4412", "SGT. RENN", "SGT. VEX", "SGT. KALLUS", "SGT. DORN", "SGT. TARN", "SGT. VANE", "SGT. BRANT", "SGT. TYREE", "SGT. 8112", "SGT. 4419", "SGT. 7113", "IG-11", "IG-88", "IG-86", "IG-90", "IG-72", "IG-44", "IG-12", "BMD-7", "BMD-12", "BMD-1", "BMD-44", "BMD-9", "BMD-3", "BMD-81", "MD-5", "MD-1", "MD-9", "MD-2", "MD-11", "MD-77"],
+    sectors: ["Sector 4", "Perimeter Alpha", "Drill Site", "Reactor B", "Spore Filter 2", "Mess Hall", "Hangar Bay", "Barracks", "Comms Relay", "Sector 4", "Sector 7G", "Sector 2", "Perimeter Alpha", "Perimeter Cresh", "Perimeter Aurek", "Drill Site 1", "Drill Site 2", "Drill Site 4", "Reactor Core", "Secondary Reactor", "Spore Filter 1", "Spore Filter 2", "Spore Filter 4", "Mess Hall", "Main Hangar", "Hangar Bay 32", "Hangar Bay 7", "Barracks Block A", "Barracks Block C", "Officer Quarters", "Comms Relay", "Primary Uplink", "Shield Generator", "Detention Block", "Armory", "Vehicle Bay", "AT-ST Walker Pen", "Command Center", "Medical Bay", "Supply Depot", "East Watchtower", "North Ridge Post", "Jungle Patrol Route", "Landing Pad Aurek", "Landing Pad Besh", "Coolant Tower", "Turbolift Shaft 4", "Turbolift Shaft 1", "Outer Perimeter", "Scrap Yard", "Droid Maintenance"],
+    issues: ["reading power drop.", "cleared of wildlife.", "jammed again.", "reporting nominal.", "requesting tech support.", "door mechanism stuck.", "looks quiet.", "reading a massive power drop.", "cleared of local wildlife.", "jammed again.", "reporting nominal.", "requesting tech support.", "door mechanism stuck.", "looks quiet.", "smells like ozone.", "is flooded with spore buildup.", "needs immediate recalibration.", "is offline for maintenance.", "shield harmonics are out of sync.", "showing strange thermal spikes.", "has a breached perimeter fence.", "comms are picking up static.", "requires a full diagnostic.", "is secure.", "reporting a false alarm.", "coolant leak detected.", "lighting system is flickering.", "droids are acting up again.", "logged a security violation.", "environmental controls failing.", "needs a fresh bacta supply.", "requires heavy ordnance restock.", "is operating at 40% capacity.", "needs the debris cleared.", "is locked down.", "shows unauthorized access.", "ventilation is clogged.", "needs a perimeter sweep.", "is reading multiple motion triggers."],
+    casual: ["Anyone seen my hydrospanner?", "Chow hall is serving rations again.", "Another spore storm incoming.", "Maker, it's hot today.", "Copy that.", "On it.", "Negative.", "Stand by.", "Stop tying up the comms.", "Anyone seen my hydrospanner?", "Chow hall is serving rations again.", "Another spore storm incoming.", "Maker, it's hot today.", "Copy that.", "On it.", "Negative.", "Stand by.", "Stop tying up the comms.", "Did anyone else hear that roar?", "I hate this jungle.", "My armor joints are full of mud.", "Is the relief shift awake yet?", "Acknowledge.", "Affirmative.", "I need a fresh power pack.", "These local bugs are the size of speeders.", "Keep your helmets sealed.", "Who left the armory unlocked?", "Has the supply shuttle landed yet?", "They say the rebels are active in the next sector.", "Can we get a medic down here?", "I think my comm-link is busted.", "Don't wander off the path.", "Watch out for the carnivorous plants.", "Roger that.", "Say again? Getting interference.", "I'm not cleaning that up.", "Who's got the sabacc cards?", "My blaster is jammed with dirt.", "When is our next rotation off this rock?", "Understood.", "Send a maintenance droid.", "Keep your eyes peeled.", "That wasn't a drill.", "I'm reading movement on the scanner.", "Check your filters.", "This humidity is frying my circuits.", "Hold position."],
+    customMessages: [
+        { user: "GC-3170", body: "Don't touch my diagnostic tools while I'm out." },
+        { user: "SGT_VEX", body: "All off-duty personnel report to courtyard for inspection." },
+        { user: "GC-9033", body: "Who forgot to seal the secondary exhaust port filter-pod?" },
+        { user: "TB-9006", body: "Which fatass ate all the fruit?" },
+    ]
+};
