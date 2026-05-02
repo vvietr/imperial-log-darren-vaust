@@ -20,25 +20,34 @@
             --term-cyan: #8be9fd;
             --term-white: #f8f8f2;
             --term-bg: #0d1117;
-            --term-glow: rgba(139, 233, 253, 0.4);
+            --term-glow: rgba(139, 233, 253, 0.46); /* +15% Glow */
             --bezel-color: #2b2b2b;
             --term-green: #50fa7b;
-            --term-dim: rgba(139, 233, 253, 0.2);
+            --term-dim: rgba(139, 233, 253, 0.23); /* +15% */
             --term-red: #ff5555;
             --term-yellow: #f1fa8c; 
         }
 
-        body { background-color: #050505; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: 'Share Tech Mono', monospace; color: var(--term-white); user-select: none; overflow: hidden; }
+        body { 
+            background-color: #050505; display: flex; justify-content: center; align-items: center; 
+            height: 100vh; margin: 0; font-family: 'Share Tech Mono', monospace; 
+            color: var(--term-white); user-select: none; overflow: hidden;
+            text-shadow: 0 0 2px rgba(139, 233, 253, 0.35); /* Base CRT Phosphor Glow */
+        }
 
-        .datapad-bezel { background-color: var(--bezel-color); padding: 30px 15px 40px 15px; border-radius: 12px; width: 98vw; max-width: 1600px; height: 95vh; display: flex; flex-direction: column; position: relative; transform: perspective(2000px) rotateX(1.5deg); transform-style: preserve-3d; border-bottom: 12px solid #111; border-top: 2px solid #3a3a3a; box-shadow: inset 0 0 10px #000, 0 30px 60px rgba(0,0,0,0.9); }
+        /* +15% Tilt and Shadow */
+        .datapad-bezel { background-color: var(--bezel-color); padding: 30px 15px 40px 15px; border-radius: 12px; width: 98vw; max-width: 1600px; height: 95vh; display: flex; flex-direction: column; position: relative; transform: perspective(2000px) rotateX(1.75deg); transform-style: preserve-3d; border-bottom: 14px solid #111; border-top: 2px solid #3a3a3a; box-shadow: inset 0 0 12px #000, 0 35px 70px rgba(0,0,0,0.95); }
 
-        .screen { background-color: var(--term-bg); border: 2px solid var(--term-cyan); border-radius: 30px; flex-grow: 1; padding: 20px; position: relative; overflow: hidden; display: flex; flex-direction: column; box-shadow: inset 0 0 100px rgba(0,0,0,0.95), inset 0 0 20px var(--term-glow), 0 0 15px var(--term-glow); }
-        .screen::before { content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0; background: radial-gradient(circle at 50% 5%, rgba(255, 255, 255, 0.08) 0%, transparent 45%); z-index: 25; pointer-events: none; }
-        .screen::after { content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); z-index: 20; background-size: 100% 4px, 3px 100%; pointer-events: none; animation: scrollLines 10s linear infinite; }
+        /* +15% Vignette and Screen Glow */
+        .screen { background-color: var(--term-bg); border: 2px solid rgba(139, 233, 253, 0.8); border-radius: 30px; flex-grow: 1; padding: 20px; position: relative; overflow: hidden; display: flex; flex-direction: column; box-shadow: inset 0 0 115px rgba(0,0,0,0.98), inset 0 0 25px var(--term-glow), 0 0 18px var(--term-glow); }
+        .screen::before { content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0; background: radial-gradient(circle at 50% 5%, rgba(255, 255, 255, 0.09) 0%, transparent 45%); z-index: 25; pointer-events: none; }
+        
+        /* OVERLAY SCANLINES (Z-Index 9999 so they cover text and images) */
+        .screen::after { content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0; background: linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.15) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); z-index: 9999; background-size: 100% 4px, 3px 100%; pointer-events: none; animation: scrollLines 10s linear infinite; }
         @keyframes scrollLines { 0% { background-position: 0 0; } 100% { background-position: 0 100%; } }
 
         #pre-boot-screen { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--term-bg); z-index: 40; display: flex; justify-content: center; align-items: center; cursor: pointer; }
-        .blink-text { font-size: 1.5rem; color: var(--term-cyan); animation: blink 1.5s infinite; }
+        .blink-text { font-size: 1.5rem; color: var(--term-cyan); animation: blink 1.5s infinite; text-shadow: 0 0 8px var(--term-cyan); }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
         /* --- BOOT SCREEN --- */
@@ -47,23 +56,21 @@
         .boot-text-column { position: relative; z-index: 10; height: 100%; width: 50%; display: flex; flex-direction: column; justify-content: space-between; }
         
         .boot-header { border-bottom: 1px solid var(--term-cyan); padding-bottom: 10px; margin-bottom: 15px; }
-        .layman-line { opacity: 0; margin: 5px 0; font-size: 1.2rem; font-weight: bold; }
+        .layman-line { opacity: 0; margin: 5px 0; font-size: 1.2rem; font-weight: bold; text-shadow: 0 0 5px var(--term-cyan); }
         #jargon-box { display: flex; flex-direction: column; font-size: 0.9rem; color: var(--term-cyan); line-height: 1.1; flex-grow: 1; overflow: hidden; position: relative; margin-top: 10px; }
         .jargon-line { margin: 2px 0; font-family: monospace; opacity: 0.7; }
-        .ag-text { opacity: 0; color: var(--term-green); font-weight: bold; font-size: 2rem; margin-top: 20px; }
+        .ag-text { opacity: 0; color: var(--term-green); font-weight: bold; font-size: 2rem; margin-top: 20px; text-shadow: 0 0 10px var(--term-green); }
 
-        /* --- MASSIVE HERO LOGO (Aggressive Gradient) --- */
+        /* --- MASSIVE HERO LOGO (Shifted Right, Aggressive Gradient) --- */
         .boot-logo-hero { 
-            position: absolute; right: -15%; top: -5%; height: 110%; width: 75%; 
-            z-index: 5; opacity: 0.3; pointer-events: none;
-            mask-image: linear-gradient(to right, black 10%, transparent 50%);
-            -webkit-mask-image: linear-gradient(to right, black 10%, transparent 50%);
+            position: absolute; right: -28%; top: -5%; height: 110%; width: 85%; 
+            z-index: 5; opacity: 0.35; pointer-events: none;
+            mask-image: linear-gradient(to right, black 5%, transparent 50%);
+            -webkit-mask-image: linear-gradient(to right, black 5%, transparent 50%);
         }
 
         /* --- CONCENTRIC SLICED LOGO SYSTEM --- */
         .sliced-logo-container { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
-        
-        /* CSS animations removed; JS handles rotation to allow smooth locking */
         .logo-slice { position: absolute; width: 100%; height: 100%; object-fit: contain; }
         .locking { transition: transform 2.5s cubic-bezier(0.25, 1, 0.2, 1) !important; }
         
@@ -72,7 +79,7 @@
         .slice-inner { clip-path: circle(19% at 50% 50%); }
 
         /* --- AUREBESH DECRYPTION CLASS --- */
-        .aurebesh-char { font-family: 'Aurebesh', sans-serif !important; }
+        .aurebesh-char { font-family: 'Aurebesh', sans-serif !important; letter-spacing: 1px; }
 
         .l-1 { animation: keepText 0.1s 0.5s forwards; } .l-2 { animation: keepText 0.1s 2.0s forwards; } .l-3 { animation: keepText 0.1s 4.0s forwards; } .ag-1 { animation: keepText 0.1s 6.5s forwards; }
         @keyframes keepText { 0% { opacity: 0; } 100% { opacity: 1; } }
@@ -82,31 +89,31 @@
         /* --- HEADER --- */
         header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid var(--term-cyan); padding-bottom: 15px; margin-bottom: 15px; z-index: 10; }
         .header-info { display: flex; flex-direction: column; gap: 5px; }
-        .title-main { font-size: 1.2rem; font-weight: bold; color: var(--term-white); border-bottom: 1px dashed var(--term-cyan); padding-bottom: 5px; margin: 5px 0 10px 0; display: inline-block; }
+        .title-main { font-size: 1.2rem; font-weight: bold; color: var(--term-white); border-bottom: 1px dashed var(--term-cyan); padding-bottom: 5px; margin: 5px 0 10px 0; display: inline-block; text-shadow: 0 0 6px var(--term-cyan); }
         .aurebesh { font-family: 'Aurebesh', sans-serif; color: var(--term-cyan); font-size: 1.2rem; letter-spacing: 2px; }
         
-        .header-logo-box { width: 85px; height: 85px; flex-shrink: 0; filter: drop-shadow(0 0 5px var(--term-cyan)); }
+        .header-logo-box { width: 85px; height: 85px; flex-shrink: 0; filter: drop-shadow(0 0 6px var(--term-cyan)); }
 
-        .connection-bar { height: 8px; width: 100%; background-color: #222; margin-bottom: 15px; position: relative; overflow: hidden; flex-shrink: 0; z-index: 10; }
-        .connection-indicator { height: 100%; width: 20%; background-color: var(--term-cyan); position: absolute; animation: ping 3s infinite ease-in-out; }
+        .connection-bar { height: 8px; width: 100%; background-color: #222; margin-bottom: 15px; position: relative; overflow: hidden; flex-shrink: 0; z-index: 10; box-shadow: inset 0 0 5px #000; }
+        .connection-indicator { height: 100%; width: 20%; background-color: var(--term-cyan); position: absolute; animation: ping 3s infinite ease-in-out; box-shadow: 0 0 10px var(--term-cyan); }
         @keyframes ping { 0% { left: -20%; } 50% { left: 100%; } 100% { left: -20%; } }
 
         .tab-nav { display: flex; gap: 10px; margin-bottom: 15px; border-bottom: 1px solid var(--term-dim); padding-bottom: 10px; flex-wrap: wrap; z-index: 10; }
-        .tab-btn { background: transparent; color: var(--term-white); border: 1px solid var(--term-dim); padding: 8px 15px; font-family: 'Share Tech Mono', monospace; cursor: pointer; transition: all 0.1s; }
-        .tab-btn:hover { background: var(--term-dim); border-color: var(--term-cyan); }
-        .tab-btn.active { background: rgba(139, 233, 253, 0.2); border-color: var(--term-cyan); box-shadow: 0 0 10px var(--term-glow); }
+        .tab-btn { background: rgba(0,0,0,0.4); color: var(--term-white); border: 1px solid var(--term-dim); padding: 8px 15px; font-family: 'Share Tech Mono', monospace; cursor: pointer; transition: all 0.1s; text-shadow: 0 0 3px rgba(248, 248, 242, 0.4); }
+        .tab-btn:hover { background: var(--term-dim); border-color: var(--term-cyan); text-shadow: 0 0 5px var(--term-cyan); }
+        .tab-btn.active { background: rgba(139, 233, 253, 0.25); border-color: var(--term-cyan); box-shadow: 0 0 12px var(--term-glow); text-shadow: 0 0 5px var(--term-cyan); font-weight: bold; }
 
         .content-grid { display: grid; grid-template-columns: 1fr 280px; gap: 20px; flex-grow: 1; overflow: hidden; z-index: 10; }
-        .log-window { background-color: rgba(139, 233, 253, 0.05); border: 1px solid rgba(139, 233, 253, 0.3); padding: 20px; overflow-y: auto; z-index: 3; scrollbar-width: thin; scrollbar-color: var(--term-cyan) transparent; line-height: 1.6; }
+        .log-window { background-color: rgba(139, 233, 253, 0.05); border: 1px solid rgba(139, 233, 253, 0.35); padding: 20px; overflow-y: auto; z-index: 3; scrollbar-width: thin; scrollbar-color: var(--term-cyan) transparent; line-height: 1.6; box-shadow: inset 0 0 20px rgba(0,0,0,0.5); }
         .tab-content { display: none; height: 100%; }
         .tab-content.active { display: block; animation: fadeIn 0.3s ease-in; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
         .explorer-layout { display: grid; grid-template-columns: 280px 1fr; gap: 20px; height: 100%; }
         .explorer-list { border-right: 1px dashed var(--term-cyan); padding-right: 15px; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; }
-        .explorer-btn { background: rgba(0,0,0,0.5); border: 1px solid var(--term-dim); color: var(--term-cyan); padding: 12px 15px; text-align: left; font-family: 'Share Tech Mono', monospace; cursor: pointer; transition: all 0.2s; clip-path: polygon(0 0, 95% 0, 100% 15px, 100% 100%, 5% 100%, 0 calc(100% - 15px)); display: flex; flex-direction: column; gap: 4px; overflow: hidden; }
-        .explorer-btn:hover { background: var(--term-dim); color: var(--term-white); }
-        .explorer-btn.active { background: var(--term-yellow); color: #000; font-weight: bold; border-color: var(--term-yellow); }
+        .explorer-btn { background: rgba(0,0,0,0.6); border: 1px solid var(--term-dim); color: var(--term-cyan); padding: 12px 15px; text-align: left; font-family: 'Share Tech Mono', monospace; cursor: pointer; transition: all 0.2s; clip-path: polygon(0 0, 95% 0, 100% 15px, 100% 100%, 5% 100%, 0 calc(100% - 15px)); display: flex; flex-direction: column; gap: 4px; overflow: hidden; box-shadow: inset 0 0 10px rgba(0,0,0,0.8); }
+        .explorer-btn:hover { background: var(--term-dim); color: var(--term-white); border-color: var(--term-cyan); text-shadow: 0 0 4px var(--term-cyan); }
+        .explorer-btn.active { background: var(--term-yellow); color: #000; font-weight: bold; border-color: var(--term-yellow); box-shadow: 0 0 10px rgba(241, 250, 140, 0.3); text-shadow: none; }
         .btn-date { font-size: 0.75rem; opacity: 0.7; }
         .btn-title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; font-size: 0.95rem; }
 
@@ -114,34 +121,34 @@
         .entry-content { display: none; }
         .entry-content.active { display: block; animation: fadeIn 0.2s ease-in; }
 
-        .full-entry-title { font-size: 1.3rem; font-weight: bold; color: var(--term-white); border-bottom: 1px solid var(--term-dim); padding-bottom: 10px; margin-bottom: 15px; text-transform: uppercase; }
+        .full-entry-title { font-size: 1.3rem; font-weight: bold; color: var(--term-white); border-bottom: 1px solid var(--term-dim); padding-bottom: 10px; margin-bottom: 15px; text-transform: uppercase; text-shadow: 0 0 6px var(--term-cyan); }
+        .highlight { color: var(--term-cyan); font-weight: bold; text-shadow: 0 0 4px var(--term-glow); }
 
-        .audio-player-ui { border: 1px solid var(--term-cyan); background: rgba(0, 0, 0, 0.4); padding: 15px; margin-bottom: 20px; display: flex; align-items: center; gap: 20px; }
-        .play-btn { width: 50px; height: 50px; background: transparent; border: 2px solid var(--term-cyan); color: var(--term-cyan); cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 1.5rem; transition: all 0.1s; }
-        .play-btn:hover { background: var(--term-cyan); color: #000; }
+        .audio-player-ui { border: 1px solid var(--term-cyan); background: rgba(0, 0, 0, 0.6); padding: 15px; margin-bottom: 20px; display: flex; align-items: center; gap: 20px; box-shadow: inset 0 0 15px rgba(0,0,0,0.8), 0 0 8px var(--term-glow); }
+        .play-btn { width: 50px; height: 50px; background: transparent; border: 2px solid var(--term-cyan); color: var(--term-cyan); cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 1.5rem; transition: all 0.1s; box-shadow: inset 0 0 8px var(--term-glow); text-shadow: 0 0 5px var(--term-cyan); }
+        .play-btn:hover { background: var(--term-cyan); color: #000; box-shadow: 0 0 10px var(--term-cyan); text-shadow: none; }
         .play-btn:active { transform: scale(0.95); }
         .waveform { display: flex; align-items: flex-end; gap: 3px; height: 40px; flex-grow: 1; }
-        .wave-bar { width: 5px; background: var(--term-cyan); opacity: 0.6; }
+        .wave-bar { width: 5px; background: var(--term-cyan); opacity: 0.6; box-shadow: 0 0 4px var(--term-cyan); }
         .wave-bar:nth-child(even) { height: 70%; } .wave-bar:nth-child(odd) { height: 30%; } .wave-bar:nth-child(3n) { height: 90%; } .wave-bar:nth-child(5n) { height: 50%; }
-        .audio-status { font-family: 'Share Tech Mono', monospace; font-size: 0.9rem; text-align: right; min-width: 150px; }
+        .audio-status { font-family: 'Share Tech Mono', monospace; font-size: 0.9rem; text-align: right; min-width: 150px; text-shadow: 0 0 4px var(--term-cyan); }
 
         .schematics-window { display: flex; flex-direction: column; gap: 15px; z-index: 5; overflow-y: auto; }
         
-        .sensor-readout { border: 1px solid var(--term-cyan); background: rgba(0,0,0,0.5); padding: 15px; display: flex; flex-direction: column; gap: 8px; font-size: 0.85rem; position: relative; }
-        .sensor-readout::before { content: ""; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--term-cyan); }
-        .sensor-header { font-family: 'Aurebesh', sans-serif; color: var(--term-cyan); font-size: 1.1rem; border-bottom: 1px dashed var(--term-dim); padding-bottom: 5px; margin-bottom: 5px; }
+        .sensor-readout { border: 1px solid var(--term-cyan); background: rgba(0,0,0,0.6); padding: 15px; display: flex; flex-direction: column; gap: 8px; font-size: 0.85rem; position: relative; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); }
+        .sensor-readout::before { content: ""; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--term-cyan); box-shadow: 0 0 8px var(--term-cyan); }
+        .sensor-header { font-family: 'Aurebesh', sans-serif; color: var(--term-cyan); font-size: 1.1rem; border-bottom: 1px dashed var(--term-dim); padding-bottom: 5px; margin-bottom: 5px; text-shadow: 0 0 5px var(--term-cyan); }
         .sensor-row { display: flex; justify-content: space-between; align-items: center; }
         .sensor-label { opacity: 0.7; }
-        .sensor-val { font-weight: bold; color: var(--term-white); }
-        .sensor-val.danger { color: var(--term-red); animation: blink 1.5s infinite; }
+        .sensor-val { font-weight: bold; color: var(--term-white); text-shadow: 0 0 4px rgba(248, 248, 242, 0.6); }
+        .sensor-val.danger { color: var(--term-red); animation: blink 1.5s infinite; text-shadow: 0 0 6px var(--term-red); }
 
-        .sys-log-box { border: 1px solid rgba(139, 233, 253, 0.3); background-color: rgba(0,0,0,0.5); padding: 10px; flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
-        .sys-log-header { font-size: 0.8rem; border-bottom: 1px solid var(--term-dim); padding-bottom: 5px; margin-bottom: 5px; color: var(--term-cyan); }
-        #sys-log-content { font-size: 0.75rem; color: rgba(139, 233, 253, 0.6); display: flex; flex-direction: column; justify-content: flex-end; flex-grow: 1; gap: 4px; }
+        .sys-log-box { border: 1px solid rgba(139, 233, 253, 0.4); background-color: rgba(0,0,0,0.6); padding: 10px; flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; box-shadow: inset 0 0 15px rgba(0,0,0,0.8); }
+        .sys-log-header { font-size: 0.8rem; border-bottom: 1px solid var(--term-dim); padding-bottom: 5px; margin-bottom: 5px; color: var(--term-cyan); text-shadow: 0 0 4px var(--term-cyan); }
+        #sys-log-content { font-size: 0.75rem; color: rgba(139, 233, 253, 0.7); display: flex; flex-direction: column; justify-content: flex-end; flex-grow: 1; gap: 4px; }
         .log-entry { animation: fadeIn 0.2s; word-wrap: break-word;}
-        .highlight { color: var(--term-cyan); font-weight: bold; }
         
-        .img-attachment { max-width: 100%; border: 1px solid var(--term-cyan); margin-top: 10px; display: block; }
+        .img-attachment { max-width: 100%; border: 1px solid var(--term-cyan); margin-top: 10px; display: block; box-shadow: 0 0 10px var(--term-glow); }
     </style>
 </head>
 <body>
@@ -216,11 +223,11 @@
             <div class="connection-bar"><div class="connection-indicator"></div></div>
 
             <div class="tab-nav">
-                <button class="tab-btn active" onmouseover="playBeep(1)" onclick="openTab('file', this)">[ PERSONNEL FILE ]</button>
-                <button class="tab-btn" onmouseover="playBeep(1)" onclick="openTab('commendations', this)">[ COMMENDATIONS ]</button>
-                <button class="tab-btn" onmouseover="playBeep(1)" onclick="openTab('infractions', this)">[ INFRACTIONS ]</button>
-                <button class="tab-btn" onmouseover="playBeep(1)" onclick="openTab('logs', this)">[ PERSONAL LOGS ]</button>
-                <button class="tab-btn" onmouseover="playBeep(1)" onclick="openTab('evaluations', this)">[ EVALUATIONS ]</button>
+                <button class="tab-btn active" onclick="openTab('file', this)">[ PERSONNEL FILE ]</button>
+                <button class="tab-btn" onclick="openTab('commendations', this)">[ COMMENDATIONS ]</button>
+                <button class="tab-btn" onclick="openTab('infractions', this)">[ INFRACTIONS ]</button>
+                <button class="tab-btn" onclick="openTab('logs', this)">[ PERSONAL LOGS ]</button>
+                <button class="tab-btn" onclick="openTab('evaluations', this)">[ EVALUATIONS ]</button>
             </div>
 
             <div class="content-grid">
@@ -371,7 +378,6 @@
             logosSpinning = false;
             
             function calcTarget(angle, speed) {
-                // Determine nearest multiple of 360 in the direction it was spinning
                 let base = Math.round(angle / 360) * 360;
                 let forward = speed > 0 ? 360 : -360;
                 return base + forward;
@@ -383,13 +389,12 @@
 
             document.querySelectorAll('.logo-slice').forEach(el => el.classList.add('locking'));
             
-            // Apply the final smooth transition to the locked targets
             document.querySelectorAll('.slice-outer').forEach(el => el.style.transform = `rotate(${tOuter}deg)`);
             document.querySelectorAll('.slice-mid').forEach(el => el.style.transform = `rotate(${tMid}deg)`);
             document.querySelectorAll('.slice-inner').forEach(el => el.style.transform = `rotate(${tInner}deg)`);
         }
 
-        // --- PROGRESSIVE AUREBESH TRANSLATOR ---
+        // --- EXPONENTIAL AUREBESH TRANSLATOR ---
         function prepareAurebesh(element) {
             if (element.dataset.prepared) return;
             element.dataset.prepared = "true";
@@ -399,8 +404,8 @@
             while (walker.nextNode()) textNodes.push(walker.currentNode);
             
             textNodes.forEach(node => {
-                // Skip specific UI pieces that shouldn't be encrypted
-                if (node.parentNode.closest('.aurebesh, .play-btn, .audio-status, .btn-date')) return; 
+                // Ensure UI specific texts, headers, and dates don't get scrambled
+                if (node.parentNode.closest('.aurebesh, .play-btn, .audio-status, .btn-date, .sensor-val')) return; 
                 const text = node.nodeValue;
                 if (!text.trim()) return;
                 
@@ -421,7 +426,8 @@
 
         function decryptAurebesh(element) {
             if (element.dataset.translated === "true") return;
-            element.dataset.translated = "true";
+            element.dataset.translated = "true"; // Lock immediately so hover doesn't trigger it twice
+            
             if (!element.dataset.prepared) prepareAurebesh(element);
 
             const chars = Array.from(element.querySelectorAll('.aurebesh-char'));
@@ -433,17 +439,28 @@
             }
 
             let i = 0;
-            const batchSize = Math.max(1, Math.floor(chars.length / 45)); // Decrypts over ~45 frames
-            
+            let currentDelay = 120; // Start with a slow 120ms gap to let user see Aurebesh
+
             function decryptStep() {
+                if (i >= chars.length) return;
+                
+                // Exponential acceleration: Reduce delay by 15% each loop, down to 5ms
+                currentDelay = Math.max(5, currentDelay * 0.85); 
+
+                // If going very fast, process in chunks to avoid lagging the browser
+                let batchSize = currentDelay <= 10 ? Math.max(1, Math.floor(chars.length / 25)) : 1;
+                
                 for (let b = 0; b < batchSize && i < chars.length; b++, i++) {
                     chars[i].classList.remove('aurebesh-char');
                 }
+                
                 if (i < chars.length) {
-                    requestAnimationFrame(decryptStep);
+                    setTimeout(decryptStep, currentDelay);
                 }
             }
-            requestAnimationFrame(decryptStep);
+            
+            // Initial 300ms pause so the user registers the hover before translation begins
+            setTimeout(decryptStep, 300);
         }
 
         let hasBooted = false;
@@ -480,6 +497,9 @@
                     // Decrypt the active tab once booted
                     let activeContent = document.querySelector('.tab-content.active');
                     if(activeContent) decryptAurebesh(activeContent);
+                    let activeBtn = document.querySelector('.tab-btn.active');
+                    if(activeBtn) decryptAurebesh(activeBtn);
+
                 }, 1500);
             }, 7000);
         });
@@ -493,6 +513,8 @@
             document.getElementById(tabId).classList.add("active");
             element.classList.add("active");
             
+            // Allow clicking to force decrypt
+            decryptAurebesh(element); 
             decryptAurebesh(document.getElementById(tabId));
         }
 
@@ -506,6 +528,7 @@
             element.classList.add("active");
             playWhirup(2);
             
+            decryptAurebesh(element);
             decryptAurebesh(document.getElementById(entryId));
         }
 
@@ -545,6 +568,12 @@
         }
 
         window.addEventListener('DOMContentLoaded', () => {
+            // Apply preparation to hardcoded Tabs
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                prepareAurebesh(btn);
+                btn.addEventListener('mouseenter', function() { playBeep(1); decryptAurebesh(this); });
+            });
+
             if(typeof imperialLogs !== 'undefined') {
                 const audioContainer = document.getElementById('dynamic-audio-container');
                 imperialLogs.sort((a, b) => parseGRSDate(b.date) - parseGRSDate(a.date));
@@ -568,7 +597,7 @@
                     let btn = document.createElement('button');
                     let isFirstItem = (listContainer.children.length === 0 && log.tab === "logs");
                     btn.className = isFirstItem ? "explorer-btn active" : "explorer-btn";
-                    btn.onmouseenter = function() { decryptAurebesh(this); }; // Translate button on hover
+                    btn.addEventListener('mouseenter', function() { decryptAurebesh(this); }); 
                     btn.onclick = function() { openEntry(log.id, this); playBeep(2); };
                     btn.innerHTML = `<div class="btn-date">[ ${log.date.split('|')[0].trim()} ]</div><div class="btn-title">${log.title.toUpperCase()}</div>`;
                     listContainer.appendChild(btn);
@@ -580,7 +609,7 @@
                     viewContainer.appendChild(view);
                 });
                 
-                // Prepare all text for translation BEFORE the user sees it
+                // Prepare all text for translation before the user sees it
                 document.querySelectorAll('.tab-content, .explorer-btn').forEach(el => prepareAurebesh(el));
             }
         });
