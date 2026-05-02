@@ -19,7 +19,7 @@
             --term-green: #50fa7b;
             --term-dim: rgba(139, 233, 253, 0.2);
             --term-red: #ff5555;
-            --term-yellow: #f1fa8c; /* For SOMA-style active highlights */
+            --term-yellow: #f1fa8c; 
         }
 
         body {
@@ -32,34 +32,57 @@
             font-family: 'Share Tech Mono', monospace;
             color: var(--term-white);
             user-select: none;
+            overflow: hidden; /* Prevents scrollbars from the 3D tilt */
         }
 
-        /* The Tablet Hardware (Expanded Width) */
+        /* --- THE TABLET HARDWARE (With 3D Tilt) --- */
         .datapad-bezel {
             background-color: var(--bezel-color);
             padding: 30px 15px 40px 15px;
             border-radius: 12px;
-            box-shadow: inset 0 0 10px #000, 0 10px 30px rgba(0,0,0,0.8);
             width: 98vw;
             max-width: 1600px;
             height: 95vh;
             display: flex;
             flex-direction: column;
             position: relative;
+            
+            /* The 3D Perspective Tilt */
+            transform: perspective(2000px) rotateX(1.5deg);
+            transform-style: preserve-3d;
+            border-bottom: 12px solid #111; /* Simulates physical thickness on the bottom edge */
+            border-top: 2px solid #3a3a3a; /* Light catch on the top edge */
+            box-shadow: inset 0 0 10px #000, 0 30px 60px rgba(0,0,0,0.9); /* Heavy drop shadow */
         }
 
-        /* The Glowing Screen */
+        /* --- THE GLOWING CRT SCREEN --- */
         .screen {
             background-color: var(--term-bg);
             border: 2px solid var(--term-cyan);
-            border-radius: 4px;
+            border-radius: 30px; /* Highly rounded corners to mimic a glass tube inside the square bezel */
             flex-grow: 1;
             padding: 20px;
-            box-shadow: inset 0 0 20px var(--term-glow), 0 0 15px var(--term-glow);
             position: relative;
             overflow: hidden;
             display: flex;
             flex-direction: column;
+            
+            /* The Vignette: Heavy black shadow pushing inward to create a pseudo-bulge */
+            box-shadow: 
+                inset 0 0 100px rgba(0,0,0,0.95), 
+                inset 0 0 20px var(--term-glow), 
+                0 0 15px var(--term-glow);
+        }
+
+        /* The Glass Dome Glare */
+        .screen::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: radial-gradient(circle at 50% 5%, rgba(255, 255, 255, 0.08) 0%, transparent 45%);
+            z-index: 25;
+            pointer-events: none;
         }
 
         /* Moving CRT Scanline Overlay */
@@ -154,12 +177,12 @@
         @keyframes ping { 0% { left: -20%; } 50% { left: 100%; } 100% { left: -20%; } }
 
         /* TAB NAVIGATION SYSTEM */
-        .tab-nav { display: flex; gap: 10px; margin-bottom: 15px; border-bottom: 1px solid var(--term-dim); padding-bottom: 10px; flex-wrap: wrap; }
+        .tab-nav { display: flex; gap: 10px; margin-bottom: 15px; border-bottom: 1px solid var(--term-dim); padding-bottom: 10px; flex-wrap: wrap; z-index: 5; }
         .tab-btn { background: transparent; color: var(--term-white); border: 1px solid var(--term-dim); padding: 8px 15px; font-family: 'Share Tech Mono', monospace; cursor: pointer; transition: all 0.1s; }
         .tab-btn:hover { background: var(--term-dim); border-color: var(--term-cyan); }
         .tab-btn.active { background: rgba(139, 233, 253, 0.2); border-color: var(--term-cyan); box-shadow: 0 0 10px var(--term-glow); }
 
-        .content-grid { display: grid; grid-template-columns: 1fr 250px; gap: 20px; flex-grow: 1; overflow: hidden; }
+        .content-grid { display: grid; grid-template-columns: 1fr 250px; gap: 20px; flex-grow: 1; overflow: hidden; z-index: 5; }
         
         .log-window { background-color: rgba(139, 233, 253, 0.05); border: 1px solid rgba(139, 233, 253, 0.3); padding: 20px; overflow-y: auto; z-index: 3; scrollbar-width: thin; scrollbar-color: var(--term-cyan) transparent; line-height: 1.6; }
         .tab-content { display: none; height: 100%; }
@@ -444,24 +467,24 @@
     </div>
 
     <script>
-        // --- AUDIO HELPERS ---
-        // Added a volume parameter (default 1.0)
+        // --- AUDIO HELPERS (FIXED: UNCOMMENTED THE PLAY COMMANDS) ---
         function playAudio(id, vol = 1.0) {
             const sound = document.getElementById(id);
             if(sound) {
-                // Remove the // below when files are uploaded to enable sound playback
-                // sound.currentTime = 0;
-                // sound.volume = vol;
-                // sound.play().catch(e => console.log("Audio not found:", id));
+                // These are now un-commented so the audio will play!
+                sound.currentTime = 0;
+                sound.volume = vol;
+                sound.play().catch(e => console.log("Audio not found or blocked by browser:", id));
             }
         }
         
         function pauseAudio(id) {
             const sound = document.getElementById(id);
-            // Remove the // below when files are uploaded
-            // if(sound) sound.pause();
+            // Un-commented to allow audio to pause (used during boot sequence transition)
+            if(sound) sound.pause();
         }
 
+        // Specific sound triggers
         function playBeep(num) { playAudio('snd-beep-' + num, 1.0); }
         function playWhirup(num) { playAudio('snd-whirup-' + num, 1.0); }
         function playDenied() { playAudio('snd-denied', 1.0); }
@@ -559,10 +582,8 @@
         function triggerAudioLog(audioId, statusId) {
             const statusText = document.getElementById(statusId);
             
-            // INSTRUCTION: To activate a real voice log, uncomment the block below.
-            // Until then, the system will assume the file is missing and trigger the DENIED protocol.
-            
-            /*
+            // The logic below has also been un-commented. If the audio file does not exist, 
+            // the system will immediately catch the failure and trigger the fallback [ FILE MISSING ] error.
             const sound = document.getElementById(audioId);
             if (sound && sound.readyState >= 2) { 
                 sound.volume = 1.0;
@@ -572,7 +593,6 @@
                 statusText.style.color = "var(--term-green)";
                 return;
             }
-            */
 
             // Default fallback when locked/missing:
             playDenied();
