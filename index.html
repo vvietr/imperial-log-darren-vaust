@@ -146,7 +146,23 @@
         .lightbox { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 99999; display: none; justify-content: center; align-items: center; cursor: pointer; backdrop-filter: blur(5px); }
         .lightbox.active { display: flex; animation: fadeIn 0.2s ease-in; }
         .lightbox img { max-width: 90%; max-height: 90%; border: 2px solid var(--term-cyan); box-shadow: 0 0 30px var(--term-glow); object-fit: contain; }
-        .img-attachment { max-width: 100%; border: 1px solid var(--term-cyan); margin-top: 10px; display: block; box-shadow: 0 0 10px var(--term-glow); cursor: zoom-in; transition: transform 0.2s; }
+        .img-attachment { 
+            max-width: 100%; 
+            border: 1px solid var(--term-cyan); 
+            margin-top: 10px; 
+            display: block; 
+            box-shadow: 0 0 10px var(--term-glow); 
+            cursor: zoom-in; 
+            transition: transform 0.2s, box-shadow 0.2s; 
+            /* NEW: Forces the image hitbox above the 3D tilt and invisible elements */
+            position: relative; 
+            z-index: 100; 
+            transform: translateZ(10px); 
+        }
+        .img-attachment:hover { 
+            transform: scale(1.02) translateZ(10px); 
+            box-shadow: 0 0 20px var(--term-cyan); 
+        }
         .img-attachment:hover { transform: scale(1.02); }
 
         /* SIDEBAR MODULES */
