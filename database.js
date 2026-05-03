@@ -39,7 +39,7 @@ There are some interesting conclusions supported by this map, though: Drills 1 a
     {
         id: "bff_1",
         tab: "logs",
-        date: "33.2.01 | ~07h",
+        date: "33.2.02 | ~07h",
         title: "A Friendly Face In A Chaos Waste",
         personnel: "SP-6167",
         author: "",
@@ -61,11 +61,116 @@ Does a promotion to Imperial Engineering Officer come with a complimentary fucki
     author: "SP-6167",
     terminal: "Barracks",
     imageExt: "jpg",
-    body: `GC-3170 demonstrated relative dependability, despite prior misgivings of technical equipment present. 
+    body: `GC-3170 demonstrated [UNINTELIGABLE] dependability, despite prior misgivings of technical equipment present. 
 Technician conducted adequate diagnoses of damaged systems. 
-Technician dispatched himself with his knowhow intact in order to retrieve the equipment and return alive to the damaged infrastructure site. 
+Technician dispatched himself with his [UNINTELIGABLE] intact in order to retrieve the equipment and return alive to the damaged infrastructure site. 
 Technician did not bring the correct materials for repair in the first place. 
 Moronic.`
+    },
+
+    {
+    id: "report_2",
+    tab: "logs",
+    date: "33.4.09 | ~15h",
+    title: "I Hate Scouts, Somtimes",
+    personnel: "",
+    author: "",
+    terminal: "Command",
+    imageExt: "jpg",
+    body: `I can't stand scouts sometimes, man. These imbeciles have the highest tendency to fuck right off into the sunset when you make them run point. Do they know that scouting ahead doesn't mean scouting ten-thousand units away? It means scouting ahead- As in ahead of the squad they are traveling with. 
+
+Y'know what, come to think of it, even when they do lead squads I see them go so often in the wrong direction anyways that it baffles me as to how their training isn't more heavily scrutinized. We really ought to put scouts to the test before they get to wear their swamp-green shit-armor. 
+
+Yeah: You think you're tough shit, new-scout? Go trod off in the forest, find Drill 4, and come back within an hour, or DON'T FUCKING COME BACK AT ALL!
+
+Fucking scouts...`
+    },
+    {
+    id: "report_3",
+    tab: "logs",
+    date: "33.2.01 | ~10h",
+    title: "A Good, Fresh Start... Well, at least it's a fresh start.",
+    personnel: "",
+    author: "",
+    terminal: "Barracks",
+    imageExt: "jpg",
+    body: `I'm here on Felucia now. There are a great many things I did not know about this place when I volunteered for this program. In order to vent my frustration, I've decided to put them all in a long list here. Maybe that'll help calm my nerves...
+
+The fauna wants to kill you.
+The flora wants to kill you.
+The food wants to kill you.
+The air wants to kill you.
+The water wants to kill you.
+The natives want to kill you.
+The base, in its crumbling brilliance, wants to kill you.
+The troopers are, in all-liklihood, going to get you killed.
+The base is a wreck, from antiquated core infrastructure to a lack of even a morsal of funding.
+No, seriously, our logistics terminal doesn't even access the Imperial Logistics Registrar... it just says "Supplies" with a big check box.
+I've seen more reliable welds in a scrapyard.
+I've seen more reliable metalurgy in a scrapyard.
+I've seen more reliable reactor systems in a scrapyard.
+I've seen more reliable electrical work in a scrapyard, in machines freshly stripped clean of all metal by Sienar-Pattern Corrosive.
+I've seen better-maintained weaponry in a Coronetian orphanage. 
+I've seen better looking faces in a Coronetion orphanage.
+I've seen happier people in the terminal ward of a Coronetian orphanage.
+I've been happier in the terminal ward of a Coronetian orphanage.
+I've seen better medical droids in the terminal ward of a Coronetian orphanage.
+
+On second thought, this isn't making me feel better. At the very least, some of the personnel here are amicable. That's about all I have to say about that.
+My code cylinder doesn't even work. I typed this out on my holodeck. 
+Fuck Felucia. In-fact, attached is a to-scale drawing of all planets in the known galaxy in order of how good they are. Enjoy. 
+`
+    },
+    {
+    id: "infraction_1",
+    tab: "infractions",
+    date: "33.2.05 | ~00h",
+    title: "GC-3170 - Tampering",
+    personnel: "",
+    author: "SGC-1093",
+    terminal: "Command",
+    imageExt: "",
+    body: `GC-3170 has, on numerous occasions, been caught tampering with Imperial droid assets in and around the main and auxiliary facilities, on Felucia. His actions have earned him a reprimand and a formal write up. If he continues on with it any further, he'll have to speak to the board. 
+[AUDIBLE SIGH]
+I mean, he hasn't done anything we haven't all thought've doing before but, y'know as a junior techie... at least we have the self control not to do it- most of us, at least- most of the time- sometimes.
+The dumb fuck just had to get caught, too. Would make my life easier if he'd at least hide it better. 
+
+Mouse droids aren't supposed to fucking speak Felucian...
+Or- or English for that matter. If I have to get talked to because of this imbecile one more time I'm sending him to Drill 4.
+
+Alone.
+
+And preferably naked.
+
+Senior, out.`
+    },
+    {
+    id: "infraction_2",
+    tab: "infractions",
+    date: "33.2.20 | ~00h",
+    title: "GC-3170 - Tampering... again",
+    personnel: "",
+    author: "SGC-1093",
+    terminal: "Command",
+    imageExt: "",
+    body: `Y'know, I thought the mouse droid thing was kind of funny, I won't lie.
+
+Mouse droid speaking the common tongue...
+Not something you see every day.
+
+You know what else you don't see every day?
+
+A FUCKING [VULGARITIES EXPUNGED] INSIDE THE [VULGARITIES EXPUNGED] OF A DROID WHEREIN [VULGARITIES EXPUNGED] WITH NOT EVEN A SHRED OF PLATING LEFT ON HIS BARE [VULGARITIES EXPUNGED] SLIME EVERYWHERE.
+
+Seriously... where do you even get a 14" inch zap rod? I've been working here for years and I've never even seen one in the registry. They're usually only availiable for requisition to agricultural facilities unless you scrap up the necessary capacitors and barstock to-
+
+to...
+
+Ah... fuck! That's where all our proto-capacitors went!
+
+I'm going to strangle that man to death when he gets out of the penal board, if there's anything left of him.
+
+Senior, out.`
     },
     // --- COPY AND PASTE THIS BLANK TEMPLATE FOR NEW ENTRIES ---
     /*
@@ -118,6 +223,6 @@ const chatDatabase = {
         { user: "TK-4498", body: "Gotta whip them into shape." },
         { user: "SGM-8351", body: "You jelly baby boy." },
         { user: "GC-3170", body: "God forbid a team communicate..." },
-    
+
     ]
 };
